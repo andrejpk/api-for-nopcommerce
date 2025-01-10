@@ -32,12 +32,13 @@ namespace Nop.Plugin.Api.Infrastructure
         public void Apply(OpenApiSchema schema, SchemaFilterContext context)
         {
             if (context.Type is Type type &&
-              type.IsGenericType &&
-              !type.IsGenericTypeDefinition &&
-              type.GetGenericTypeDefinition() == typeof(Delta<>))
+                type.IsGenericType &&
+                !type.IsGenericTypeDefinition &&
+                type.GetGenericTypeDefinition() == typeof(Delta<>))
             {
                 var underlyingType = type.GetGenericArguments()[0];
-                var attribute = underlyingType.GetCustomAttributes(typeof(JsonObjectAttribute), inherit: false).Cast<JsonObjectAttribute>().FirstOrDefault();
+                var attribute = underlyingType.GetCustomAttributes(typeof(JsonObjectAttribute), inherit: false)
+                    .Cast<JsonObjectAttribute>().FirstOrDefault();
                 string title = attribute?.Title;
                 if (title is not null)
                 {
@@ -56,29 +57,29 @@ namespace Nop.Plugin.Api.Infrastructure
     {
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-
             var apiConfigSection = configuration.GetSection("Api");
 
             if (apiConfigSection != null)
             {
                 //fix due to nopCommerce 4.7 invert the order of the plugin initialization and the AppSettings singleton initialization
-               // var apiConfig = Singleton<AppSettings>.Instance.Get<ApiConfiguration>();
-               var apiConfig = new ApiConfiguration();
+                // var apiConfig = Singleton<AppSettings>.Instance.Get<ApiConfiguration>();
+                var apiConfig = new ApiConfiguration();
 
 
                 if (!string.IsNullOrEmpty(apiConfig.SecurityKey))
                 {
                     services.AddAuthentication(options =>
-                    {
-                        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                    })
+                        {
+                            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                        })
                         .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, jwtBearerOptions =>
                         {
                             jwtBearerOptions.TokenValidationParameters = new TokenValidationParameters
                             {
                                 ValidateIssuerSigningKey = true,
-                                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(apiConfig.SecurityKey)),
+                                IssuerSigningKey =
+                                    new SymmetricSecurityKey(Encoding.UTF8.GetBytes(apiConfig.SecurityKey)),
                                 ValidateIssuer = false, // ValidIssuer = "The name of the issuer",
                                 ValidateAudience = false, // ValidAudience = "The name of the audience",
                                 ValidateLifetime = true, // validate the expiration and not before values in the token
@@ -89,17 +90,11 @@ namespace Nop.Plugin.Api.Infrastructure
                     // JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
                     JsonWebTokenHandler.DefaultInboundClaimTypeMap.Clear();
                     AddAuthorizationPipeline(services);
-
                 }
             }
-            services.Configure<KestrelServerOptions>(options =>
-            {
-                options.AllowSynchronousIO = true;
-            });
-            services.Configure<IISServerOptions>(options =>
-            {
-                options.AllowSynchronousIO = true;
-            });
+
+            services.Configure<KestrelServerOptions>(options => { options.AllowSynchronousIO = true; });
+            services.Configure<IISServerOptions>(options => { options.AllowSynchronousIO = true; });
             services.Configure<MvcNewtonsoftJsonOptions>(options =>
             {
                 options.SerializerSettings.Converters.Add(new StringEnumConverter());
@@ -117,27 +112,26 @@ namespace Nop.Plugin.Api.Infrastructure
                     Type = SecuritySchemeType.ApiKey
                 });
                 options.AddSecurityRequirement(new OpenApiSecurityRequirement
-              {
-          {
-            new OpenApiSecurityScheme
-            {
-              Reference = new OpenApiReference
-              {
-                Type = ReferenceType.SecurityScheme,
-                Id = "Bearer"
-              }
-            },
-            Array.Empty<string>()
-          }
-              });
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        Array.Empty<string>()
+                    }
+                });
                 // custom type mappings >>
-                options.MapType<decimal>(() => new OpenApiSchema { Type = "number", Format = "decimal" }); // correct currency typings
+                options.MapType<decimal>(() => new OpenApiSchema
+                    { Type = "number", Format = "decimal" }); // correct currency typings
                 options.SchemaFilter<DeltaSchemaFilter>();
                 // TODO: options.UseAllOfToExtendReferenceSchemas(); // https://github.com/stepanbenes/api-for-nopcommerce/issues/16
             });
             services.AddSwaggerGenNewtonsoftSupport();
-
-
         }
 
         public void Configure(IApplicationBuilder app)
@@ -148,54 +142,55 @@ namespace Nop.Plugin.Api.Infrastructure
             app.UseRewriter(rewriteOptions);
 
             app.UseCors(x => x
-                     .AllowAnyOrigin()
-                     .AllowAnyMethod()
-                     .AllowAnyHeader());
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
 
 
             app.MapWhen(context => context.Request.Path.StartsWithSegments(new PathString("/api")),
-              a =>
-              {
-                  if (environment.IsDevelopment())
-                  {
-                      a.UseDeveloperExceptionPage();
-                  }
-
-                  a.Use(async (context, next) =>
-            {
-                // API Call
-                context.Request.EnableBuffering();
-                await next();
-            });
-
-                  a.UseExceptionHandler(a => a.Run(async context =>
-            {
-                var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
-                var exception = exceptionHandlerPathFeature.Error;
-                await context.Response.WriteAsJsonAsync(new { error = exception.Message });
-            }));
-
-                  a.UseRouting();
-                  a.UseAuthentication();
-                  a.UseAuthorization();
-                  a.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
-
-                  // swagger configuration
-                  {
-                      // http://eatcodelive.com/2017/05/19/change-default-swagger-route-in-an-asp-net-core-web-api/
-
-                      a.UseSwagger(options => options.RouteTemplate = "api/swagger/{documentName}/swagger.json");
-                      a.UseSwaggerUI(c =>
+                a =>
                 {
-                    c.RoutePrefix = "api/swagger";
-                    c.SwaggerEndpoint("/api/swagger/v1/swagger.json", "Nop.Plugin.Api v4.70");
-                    c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None);
-                });
-                  }
-              }
+                    if (environment.IsDevelopment())
+                    {
+                        a.UseDeveloperExceptionPage();
+                    }
+
+                    a.Use(async (context, next) =>
+                    {
+                        // API Call
+                        context.Request.EnableBuffering();
+                        await next();
+                    });
+
+                    a.UseExceptionHandler(a => a.Run(async context =>
+                    {
+                        var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
+                        var exception = exceptionHandlerPathFeature.Error;
+                        await context.Response.WriteAsJsonAsync(new { error = exception.Message });
+                    }));
+
+                    a.UseRouting();
+                    a.UseAuthentication();
+                    a.UseAuthorization();
+                    a.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+
+                    // http://eatcodelive.com/2017/05/19/change-default-swagger-route-in-an-asp-net-core-web-api/
+
+                    a.UseSwagger(options => options.RouteTemplate = "api/swagger/{documentName}/swagger.json");
+                    a.UseSwaggerUI(c =>
+                    {
+                        c.RoutePrefix = "api/swagger";
+                        // c.SwaggerEndpoint("/api/swagger/v1/swagger.json", "Nop.Plugin.Api v4.70");
+                        // c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None);
+                        var context = a.ApplicationServices.GetRequiredService<IHttpContextAccessor>().HttpContext;
+                        if (context != null)
+                        {
+                            c.SwaggerEndpoint($"{context.Request.PathBase}/api/swagger/v1/swagger.json",
+                                "Nop.Plugin.Api v4.70");
+                        }
+                        c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None);
+                    });
+                }
             );
         }
 
@@ -218,7 +213,6 @@ namespace Nop.Plugin.Api.Infrastructure
             services.AddSingleton<IAuthorizationHandler, ActiveApiPluginAuthorizationPolicy>();
             services.AddSingleton<IAuthorizationHandler, ValidSchemeAuthorizationPolicy>();
             services.AddSingleton<IAuthorizationHandler, CustomerRoleAuthorizationPolicy>();
-
         }
     }
 }
