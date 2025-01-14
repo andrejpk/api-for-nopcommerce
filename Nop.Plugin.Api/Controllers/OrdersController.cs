@@ -269,7 +269,7 @@ namespace Nop.Plugin.Api.Controllers
         /// <response code="200">OK</response>
         /// <response code="401">Unauthorized</response>
         [HttpGet]
-        [Route("/api/orders/product/{productId}", Name = nameof(GetOrdersByProductId))]
+        [Route("/api/products/{productId}/orders", Name = nameof(GetOrdersByProductId))]
         [ProducesResponseType(typeof(OrdersRootObject), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.Unauthorized)]
         [GetRequestsErrorInterceptorActionFilter]
@@ -290,7 +290,7 @@ namespace Nop.Plugin.Api.Controllers
         /// <response code="200">OK</response>
         /// <response code="401">Unauthorized</response>
         [HttpGet]
-        [Route("/api/orders/category/{categoryId}", Name = nameof(GetOrdersByCategoryId))]
+        [Route("/api/categories/{categoryId}/orders", Name = nameof(GetOrdersByCategoryId))]
         [ProducesResponseType(typeof(OrdersRootObject), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.Unauthorized)]
         [GetRequestsErrorInterceptorActionFilter]
