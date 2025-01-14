@@ -3,7 +3,17 @@ import authn.http
 ## Get Token
 run authn.http
 
-### Get shipments for an order
+### Get an order by ID
 @orderId = 38920
 GET {{host}}/api/orders/{{orderId}}
+Authorization: Bearer {{auth_token}}
+
+### Get orders by Product ID
+@productId = 945
+GET {{host}}/api/orders/product/{{productId}}
+Authorization: Bearer {{auth_token}}
+
+### Get orders by Category ID
+@categoryId = 10
+GET {{host}}/api/orders/category/{{categoryId}}
 Authorization: Bearer {{auth_token}}
