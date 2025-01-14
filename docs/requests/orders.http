@@ -1,0 +1,9 @@
+import authn.http
+
+## Get Token
+run authn.http
+
+### Get shipments for an order
+@orderId = 38920
+GET {{host}}/api/orders/{{orderId}}
+Authorization: Bearer {{auth_token}}

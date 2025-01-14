@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Orders;
+﻿using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Data;
@@ -10,10 +11,17 @@ namespace Nop.Plugin.Api.Services
     public class OrderApiService : IOrderApiService
     {
         private readonly IRepository<Order> _orderRepository;
+        private readonly IRepository<OrderItem> _orderItemRepository;
+        private readonly IRepository<Category> _categoryRepository;
+        private readonly IRepository<ProductCategory> _productCategoryRepository;
 
-        public OrderApiService(IRepository<Order> orderRepository)
+        public OrderApiService(IRepository<Order> orderRepository, IRepository<OrderItem> orderItemRepository, 
+            IRepository<Category> categoryRepository, IRepository<ProductCategory> productCategoryRepository)
         {
             _orderRepository = orderRepository;
+            _orderItemRepository = orderItemRepository;
+            _categoryRepository = categoryRepository;
+            _productCategoryRepository = productCategoryRepository;
         }
 
         public IList<Order> GetOrdersByCustomerId(int customerId)
@@ -126,6 +134,72 @@ namespace Nop.Plugin.Api.Services
             //query = query.Include(c => c.Shipments);
 
             return query;
+        }
+        
+        public IList<Order> GetOrdersForProductId(int productId, 
+            DateTime? createdAtMin = null, DateTime? createdAtMax = null, 
+            OrderStatus? status = null, int? storeId = null)
+        {
+            var query = from orderItem in _orderItemRepository.Table
+                join order in _orderRepository.Table on orderItem.OrderId equals order.Id
+                where orderItem.ProductId == productId
+                select order;
+            
+            if (createdAtMin != null)
+            {
+                query = query.Where(order => order.CreatedOnUtc > createdAtMin.Value.ToUniversalTime());
+            }
+
+            if (createdAtMax != null)
+            {
+                query = query.Where(order => order.CreatedOnUtc < createdAtMax.Value.ToUniversalTime());
+            }
+            
+            if (status != null)
+            {
+                query = query.Where(order => order.OrderStatusId == (int)status);
+            }
+
+            if (storeId != null)
+            {
+                query = query.Where(order => order.StoreId == storeId);
+            }
+            
+            return new ApiList<Order>(query, 0, Constants.Configurations.MaxLimit);
+        }
+        
+        public IList<Order> GetOrdersForCategoryId(int categoryId, 
+            DateTime? createdAtMin = null, DateTime? createdAtMax = null, 
+            OrderStatus? status = null, int? storeId = null)
+        {
+            var query = from productCategory in _productCategoryRepository.Table 
+                join orderItem in _orderItemRepository.Table on productCategory.ProductId equals orderItem.ProductId
+                join order in _orderRepository.Table on orderItem.OrderId equals order.Id
+                where productCategory.CategoryId == categoryId
+                select order;
+            query = query.Distinct();
+            
+            if (createdAtMin != null)
+            {
+                query = query.Where(order => order.CreatedOnUtc > createdAtMin.Value.ToUniversalTime());
+            }
+
+            if (createdAtMax != null)
+            {
+                query = query.Where(order => order.CreatedOnUtc < createdAtMax.Value.ToUniversalTime());
+            }
+            
+            if (status != null)
+            {
+                query = query.Where(order => order.OrderStatusId == (int)status);
+            }
+
+            if (storeId != null)
+            {
+                query = query.Where(order => order.StoreId == storeId);
+            }
+
+            return new ApiList<Order>(query, 0, Constants.Configurations.MaxLimit);
         }
     }
 }
