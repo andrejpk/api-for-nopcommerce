@@ -52,7 +52,9 @@ jobs:
         dotnet build nopCommerce/src/Presentation/Nop.Web.Framework/Nop.Web.Framework.csproj --configuration ${{ env.CONFIGURATION }}
     
     - name: Build API plugin
-      run: dotnet build --configuration ${{ env.CONFIGURATION }}
+      run: |
+        echo "Building API plugin projects (excluding outdated ClientApp)..."
+        dotnet build Nop.Plugin.Api/Nop.Plugin.Api.csproj --configuration ${{ env.CONFIGURATION }}
       working-directory: api-for-nopcommerce
     
     - name: Verify build output
