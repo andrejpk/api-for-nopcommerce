@@ -1,0 +1,83 @@
+name: CI Build
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+  workflow_dispatch:
+
+env:
+  # nopCommerce version that matches the plugin's SupportedVersions in plugin.json
+  NOPCOMMERCE_VERSION: release-4.90.3
+  DOTNET_VERSION: '9.0.x'
+  # Build configuration
+  CONFIGURATION: Release
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout API repository
+      uses: actions/checkout@v4
+      with:
+        path: api-for-nopcommerce
+
+    - name: Checkout nopCommerce at ${{ env.NOPCOMMERCE_VERSION }}
+      uses: actions/checkout@v4
+      with:
+        repository: nopSolutions/nopCommerce
+        ref: ${{ env.NOPCOMMERCE_VERSION }}
+        path: nopCommerce
+    
+    - name: Setup .NET ${{ env.DOTNET_VERSION }}
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+    
+    - name: Cache NuGet packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json', '**/*.csproj') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+    
+    - name: Restore nopCommerce dependencies
+      run: dotnet restore
+      working-directory: nopCommerce/src
+    
+    - name: Build nopCommerce
+      run: dotnet build --configuration ${{ env.CONFIGURATION }} --no-restore
+      working-directory: nopCommerce/src
+    
+    - name: Restore API plugin dependencies
+      run: dotnet restore
+      working-directory: api-for-nopcommerce
+    
+    - name: Build API plugin
+      run: dotnet build --configuration ${{ env.CONFIGURATION }} --no-restore
+      working-directory: api-for-nopcommerce
+    
+    - name: Verify build output
+      run: |
+        echo "✅ Build completed successfully!"
+        echo ""
+        echo "Plugin output directory:"
+        if [ -d "nopCommerce/src/Presentation/Nop.Web/Plugins/Nop.Plugin.Api" ]; then
+          ls -lh nopCommerce/src/Presentation/Nop.Web/Plugins/Nop.Plugin.Api/
+          echo ""
+          echo "Plugin DLL found at expected location"
+        else
+          echo "⚠️ Plugin directory not found at expected location"
+          exit 1
+        fi
+      
+    # Note: Tests are commented out due to .NET Framework 4.6.1 compatibility issues
+    # The test project (Nop.Plugin.Api.Tests) uses net461 which is not supported on Linux runners
+    # To enable tests, the test project needs to be upgraded to .NET 6+ and project references fixed
+    # - name: Run tests
+    #   run: dotnet test --configuration ${{ env.CONFIGURATION }} --no-build --verbosity normal
+    #   working-directory: api-for-nopcommerce

@@ -1,11 +1,56 @@
 # API plugin for nopCommerce 4.90
 
+<!-- Replace YOUR_USERNAME with your GitHub username/organization -->
+[![CI Build](https://github.com/YOUR_USERNAME/api-for-nopcommerce/actions/workflows/ci.yml/badge.svg)](https://github.com/YOUR_USERNAME/api-for-nopcommerce/actions/workflows/ci.yml)
+
 This plugin provides a RESTful API for managing resources in nopCommerce 4.9.
 For the other versions of nopCommerce, please refer to the other releases and branches.
 
+## Continuous Integration
+
+This project uses GitHub Actions for CI/CD. The build process:
+
+1. Checks out this repository and nopCommerce at the compatible version (currently `release-4.90.3`)
+2. Builds nopCommerce core and framework
+3. Builds the API plugin
+4. Verifies the plugin output is in the correct location
+
+The nopCommerce version is automatically pulled based on the `NOPCOMMERCE_VERSION` environment variable in the workflow file (`.github/workflows/ci.yml`). This ensures the build always uses a compatible version.
+
+**Note:** Tests are currently disabled in CI because the test project uses .NET Framework 4.6.1, which is not supported on Linux runners. To enable tests, the test project needs to be upgraded to .NET 6+.
+
+### Updating nopCommerce Version
+
+To update the nopCommerce version used in CI and development:
+
+1. Update `NOPCOMMERCE_VERSION` in `.github/workflows/ci.yml`
+2. Update the version in both `setup-dev.sh` and `setup-dev.ps1`
+3. Update `SupportedVersions` in `Nop.Plugin.Api/plugin.json`
+4. Test the build locally before pushing changes
+
 ## Installation
 
-1. clone the [NopCommerce](https://github.com/nopSolutions/nopCommerce) repository (`develop` branch) into folder called `nopCommerce`
+### Quick Setup (Recommended)
+
+Use the provided setup script to automatically clone and build nopCommerce at the correct version:
+
+```bash
+# Linux/macOS
+./setup-dev.sh
+
+# Windows (PowerShell)
+.\setup-dev.ps1
+```
+
+The setup script will:
+- Clone nopCommerce at the compatible version (release-4.90.3) if not already present
+- Check for version mismatches in existing installations
+- Build both nopCommerce and the API plugin
+- Display next steps
+
+### Manual Installation
+
+1. clone the [NopCommerce](https://github.com/nopSolutions/nopCommerce) repository (tag `release-4.90.3` or compatible) into folder called `nopCommerce`
 1. clone this repository into the same folder where the `nopCommerce` folder is located
 1. build the nopCommerce solution
 1. build the api-for-nopcommerce solution (the output will be placed inside the nopCommerce directory)
