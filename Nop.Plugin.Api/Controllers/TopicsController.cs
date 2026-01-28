@@ -4,6 +4,7 @@ using Nop.Core.Domain.Topics;
 using Nop.Plugin.Api.Attributes;
 using Nop.Plugin.Api.Authorization.Attributes;
 using Nop.Plugin.Api.Delta;
+using Nop.Plugin.Api.Domain;
 using Nop.Plugin.Api.DTO.Errors;
 using Nop.Plugin.Api.DTO.Orders;
 using Nop.Plugin.Api.DTOs.Topics;

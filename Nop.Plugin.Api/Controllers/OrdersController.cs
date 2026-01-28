@@ -30,6 +30,7 @@ using Nop.Services.Security;
 using Nop.Services.Shipping;
 using Nop.Services.Stores;
 using System.Net;
+using Nop.Plugin.Api.Domain;
 
 namespace Nop.Plugin.Api.Controllers
 {

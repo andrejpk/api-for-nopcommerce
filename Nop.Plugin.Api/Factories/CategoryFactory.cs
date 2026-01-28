@@ -1,4 +1,4 @@
-﻿using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
 
 namespace Nop.Plugin.Api.Factories
@@ -31,7 +31,7 @@ namespace Nop.Plugin.Api.Factories
             defaultCategory.PageSize = _catalogSettings.DefaultCategoryPageSize;
             defaultCategory.PageSizeOptions = _catalogSettings.DefaultCategoryPageSizeOptions;
             defaultCategory.Published = true;
-            defaultCategory.IncludeInTopMenu = true;
+            defaultCategory.ShowOnHomepage = true;
             defaultCategory.AllowCustomersToSelectPageSize = true;
 
             defaultCategory.CreatedOnUtc = DateTime.UtcNow;

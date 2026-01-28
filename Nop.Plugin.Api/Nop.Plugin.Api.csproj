@@ -1,7 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <Version Condition=" '$(BUILD_BUILDNUMBER)' == '' ">0.0.1-local</Version>
     <Version Condition=" '$(BUILD_BUILDNUMBER)' != '' ">$(BUILD_BUILDNUMBER)</Version>
     <Description>This plugin allows you to access/create Nop resources outside of the system</Description>
@@ -42,13 +42,14 @@
 
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="13.0.1" />
-    <PackageReference Include="JetBrains.Annotations" Version="2019.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.22" />
+    <PackageReference Include="AutoMapper" Version="14.0.0" />
+    <PackageReference Include="JetBrains.Annotations" Version="2024.3.0" />
+    <!-- Use JwtBearer 8.x to align with nopCommerce's IdentityModel 7.x dependencies -->
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.11" />
     <PackageReference Include="Microsoft.AspNetCore.Rewrite" Version="2.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="6.7.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="7.2.0" />
     <PackageReference Include="MimeTypes" Version="2.5.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -75,12 +76,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
-  <Target Name="FilterCopyLocalItems" AfterTargets="ResolveLockFileCopyLocalProjectDeps">
-    <ItemGroup>
-      <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" Condition="'%(Filename)' != 'Microsoft.AspNetCore.Rewrite' AND '%(Filename)' != 'System.IdentityModel.Tokens.Jwt'" />
-    </ItemGroup>
-  </Target>
 
   <!-- This target execute after "Build" target -->
   <Target Name="NopTarget" AfterTargets="Build">
