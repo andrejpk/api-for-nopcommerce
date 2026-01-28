@@ -25,8 +25,8 @@ using System.Net;
 
 namespace Nop.Plugin.Api.Controllers
 {
-    [AuthorizePermission(nameof(StandardPermissionProvider.ManageProducts))]
-    [AuthorizePermission(nameof(StandardPermissionProvider.ManageCategories))]
+    [AuthorizePermission(nameof(StandardPermission.Catalog.PRODUCTS_CREATE_EDIT_DELETE))]
+    [AuthorizePermission(nameof(StandardPermission.Catalog.CATEGORIES_CREATE_EDIT_DELETE))]
     public class ProductCategoryMappingsController : BaseApiController
     {
         private readonly ICategoryApiService _categoryApiService;
