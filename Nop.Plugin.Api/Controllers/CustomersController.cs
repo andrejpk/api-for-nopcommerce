@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Infrastructure;
 using Nop.Plugin.Api.Attributes;
 using Nop.Plugin.Api.Authorization.Attributes;
 using Nop.Plugin.Api.Delta;
+using Nop.Plugin.Api.Domain;
 using Nop.Plugin.Api.DTO;
 using Nop.Plugin.Api.DTO.Customers;
 using Nop.Plugin.Api.DTO.Errors;
@@ -464,8 +465,8 @@ namespace Nop.Plugin.Api.Controllers
             //remove newsletter subscription (if exists)
             foreach (var store in await StoreService.GetAllStoresAsync())
             {
-                var subscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, store.Id);
-                if (subscription != null)
+                var subscriptions = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionsByEmailAsync(customer.Email, store.Id);
+                foreach (var subscription in subscriptions)
                 {
                     await _newsLetterSubscriptionService.DeleteNewsLetterSubscriptionAsync(subscription);
                 }

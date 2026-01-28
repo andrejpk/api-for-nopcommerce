@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Plugin.Api.Attributes;
 using Nop.Plugin.Api.Authorization.Attributes;
+using Nop.Plugin.Api.Domain;
 using Nop.Plugin.Api.DTO.Errors;
 using Nop.Plugin.Api.DTO.NewsLetterSubscriptions;
 using Nop.Plugin.Api.Infrastructure;
@@ -107,7 +108,9 @@ namespace Nop.Plugin.Api.Controllers
                 return Error(HttpStatusCode.BadRequest, "The email parameter could not be empty.");
             }
 
-            var existingSubscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(email, _storeContext.GetCurrentStore().Id);
+            var currentStoreId = (await _storeContext.GetCurrentStoreAsync()).Id;
+            var existingSubscriptions = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionsByEmailAsync(email, currentStoreId);
+            var existingSubscription = existingSubscriptions.FirstOrDefault();
 
             if (existingSubscription == null)
             {

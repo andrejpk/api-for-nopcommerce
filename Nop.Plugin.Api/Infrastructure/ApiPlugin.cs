@@ -1,4 +1,4 @@
-﻿using Nop.Core;
+using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Infrastructure;
@@ -153,7 +153,7 @@ namespace Nop.Plugin.Api.Infrastructure
             return $"{_webHelper.GetStoreLocation()}Admin/ApiAdmin/Settings";
         }
 
-        public async Task ManageSiteMapAsync(SiteMapNode rootNode)
+        public async Task ManageSiteMapAsync(AdminMenuItem rootNode)
         {
             var workingLanguage = await _workContext.GetWorkingLanguageAsync();
 
@@ -163,7 +163,7 @@ namespace Nop.Plugin.Api.Infrastructure
 
             const string adminUrlPart = "Admin/";
 
-            var pluginMainMenu = new SiteMapNode
+            var pluginMainMenu = new AdminMenuItem
             {
                 Title = pluginMenuName,
                 Visible = true,
@@ -171,7 +171,7 @@ namespace Nop.Plugin.Api.Infrastructure
                 IconClass = "fa-genderless"
             };
 
-            pluginMainMenu.ChildNodes.Add(new SiteMapNode
+            pluginMainMenu.ChildNodes.Add(new AdminMenuItem
             {
                 Title = settingsMenuName,
                 Url = _webHelper.GetStoreLocation() + adminUrlPart + "ApiAdmin/Settings",

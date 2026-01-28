@@ -1,7 +1,7 @@
-# API plugin for nopCommerce 4.80
+# API plugin for nopCommerce 4.90
 
-This plugin provides a RESTful API for managing resources in nopCommerce 4.8.
-For the other versions of nopCommerce, please refer to the the other releases and branches.
+This plugin provides a RESTful API for managing resources in nopCommerce 4.9.
+For the other versions of nopCommerce, please refer to the other releases and branches.
 
 ## Installation
 

@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Shipping;
 using Nop.Plugin.Api.Attributes;
 using Nop.Plugin.Api.Authorization.Attributes;
 using Nop.Plugin.Api.Delta;
+using Nop.Plugin.Api.Domain;
 using Nop.Plugin.Api.DTO.Errors;
 using Nop.Plugin.Api.DTO.Warehouses;
 using Nop.Plugin.Api.Factories;
@@ -29,14 +30,14 @@ namespace Nop.Plugin.Api.Controllers
     public class WarehousesController : BaseApiController
     {
         private readonly IWarehouseApiService _warehouseApiService;
-        private readonly IShippingService _shippingService;
+        private readonly IWarehouseService _warehouseService;
         private readonly IAddressService _addressService;
         private readonly IDTOHelper _dtoHelper;
         private readonly IFactory<Warehouse> _factory;
 
         public WarehousesController(
             IWarehouseApiService warehouseApiService,
-            IShippingService shippingService,
+            IWarehouseService warehouseService,
             IAddressService addressService,
             IJsonFieldsSerializer jsonFieldsSerializer,
             IAclService aclService,
@@ -53,7 +54,7 @@ namespace Nop.Plugin.Api.Controllers
             localizationService, pictureService)
         {
             _warehouseApiService = warehouseApiService;
-            _shippingService = shippingService;
+            _warehouseService = warehouseService;
             _addressService = addressService;
             _dtoHelper = dtoHelper;
             _factory = factory;
@@ -164,7 +165,7 @@ namespace Nop.Plugin.Api.Controllers
 
             warehouseDelta.Merge(warehouse);
 
-            await _shippingService.InsertWarehouseAsync(warehouse);
+            await _warehouseService.InsertWarehouseAsync(warehouse);
 
             await CustomerActivityService.InsertActivityAsync("AddNewWarehouse",
                                                    await LocalizationService.GetResourceAsync("ActivityLog.AddNewWarehouse"), warehouse);
@@ -220,7 +221,7 @@ namespace Nop.Plugin.Api.Controllers
 
             warehouseDelta.Merge(warehouse);
 
-            await _shippingService.UpdateWarehouseAsync(warehouse);
+            await _warehouseService.UpdateWarehouseAsync(warehouse);
 
             await CustomerActivityService.InsertActivityAsync("UpdateWarehouse",
                                                    await LocalizationService.GetResourceAsync("ActivityLog.UpdateWarehouse"), warehouse);
@@ -258,7 +259,7 @@ namespace Nop.Plugin.Api.Controllers
                 return Error(HttpStatusCode.NotFound, "warehouse", "warehouse not found");
             }
 
-            await _shippingService.DeleteWarehouseAsync(warehouseToDelete);
+            await _warehouseService.DeleteWarehouseAsync(warehouseToDelete);
 
             //activity log
             await CustomerActivityService.InsertActivityAsync("DeleteWarehouse", await LocalizationService.GetResourceAsync("ActivityLog.DeleteWarehouse"), warehouseToDelete);

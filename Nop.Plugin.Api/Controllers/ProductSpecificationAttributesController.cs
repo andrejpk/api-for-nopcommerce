@@ -13,6 +13,7 @@ using Nop.Plugin.Api.ModelBinders;
 using Nop.Plugin.Api.Models.ProductSpecificationAttributesParameters;
 using Nop.Plugin.Api.Services;
 using Nop.Services.Catalog;
+using Nop.Plugin.Api.Domain;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
 using Nop.Services.Localization;

@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Catalog;
 using Nop.Plugin.Api.Attributes;
 using Nop.Plugin.Api.Authorization.Attributes;
 using Nop.Plugin.Api.Delta;
+using Nop.Plugin.Api.Domain;
 using Nop.Plugin.Api.DTO.Errors;
 using Nop.Plugin.Api.DTO.ProductCategoryMappings;
 using Nop.Plugin.Api.Infrastructure;

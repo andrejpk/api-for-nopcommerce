@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Plugin.Api.Attributes;
 using Nop.Plugin.Api.Authorization.Attributes;
+using Nop.Plugin.Api.Domain;
 using Nop.Plugin.Api.DTO.CustomerRoles;
 using Nop.Plugin.Api.DTO.Errors;
 using Nop.Plugin.Api.JSON.ActionResults;

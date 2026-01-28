@@ -2,6 +2,7 @@
 using Nop.Core;
 using Nop.Plugin.Api.Attributes;
 using Nop.Plugin.Api.Authorization.Attributes;
+using Nop.Plugin.Api.Domain;
 using Nop.Plugin.Api.DTO.Errors;
 using Nop.Plugin.Api.DTO.Stores;
 using Nop.Plugin.Api.Helpers;
