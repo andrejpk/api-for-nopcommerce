@@ -25,7 +25,7 @@ using System.Net;
 
 namespace Nop.Plugin.Api.Controllers
 {
-    [AuthorizePermission(nameof(StandardPermissionProvider.ManageAttributes))]
+    [AuthorizePermission(nameof(StandardPermission.Catalog.PRODUCT_ATTRIBUTES_CREATE_EDIT_DELETE))]
     public class SpecificationAttributesController : BaseApiController
     {
         private readonly IDTOHelper _dtoHelper;

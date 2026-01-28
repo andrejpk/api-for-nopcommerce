@@ -480,16 +480,16 @@ namespace Nop.Plugin.Api.Controllers
                 switch (shoppingCartType)
                 {
                     case ShoppingCartType.ShoppingCart:
-                        return await _permissionService.AuthorizeAsync(nameof(StandardPermissionProvider.EnableShoppingCart), currentCustomer);
+                        return await _permissionService.AuthorizeAsync(nameof(StandardPermission.PublicStore.ENABLE_SHOPPING_CART), currentCustomer);
                     case ShoppingCartType.Wishlist:
-                        return await _permissionService.AuthorizeAsync(nameof(StandardPermissionProvider.EnableWishlist), currentCustomer);
+                        return await _permissionService.AuthorizeAsync(nameof(StandardPermission.PublicStore.ENABLE_WISHLIST), currentCustomer);
                     default:
-                        return await _permissionService.AuthorizeAsync(nameof(StandardPermissionProvider.EnableShoppingCart), currentCustomer)
-                          && await _permissionService.AuthorizeAsync(nameof(StandardPermissionProvider.EnableWishlist), currentCustomer);
+                        return await _permissionService.AuthorizeAsync(nameof(StandardPermission.PublicStore.ENABLE_SHOPPING_CART), currentCustomer)
+                          && await _permissionService.AuthorizeAsync(nameof(StandardPermission.PublicStore.ENABLE_WISHLIST), currentCustomer);
                 }
             }
             // if I want to handle other customer's shopping carts, check admin permission
-            return await _permissionService.AuthorizeAsync(nameof(StandardPermissionProvider.ManageOrders), currentCustomer);
+            return await _permissionService.AuthorizeAsync(nameof(StandardPermission.Orders.ORDERS_CREATE_EDIT_DELETE), currentCustomer);
         }
 
         private async Task<ShoppingCartItemsRootObject> LoadCurrentShoppingCartItems(ShoppingCartType shoppingCartType, Core.Domain.Customers.Customer customer)
