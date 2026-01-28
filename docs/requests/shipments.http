@@ -1,0 +1,50 @@
+import authn.http
+
+## Get Token
+run authn.http
+
+### Get shipments for an order
+@orderId = 38920
+GET {{host}}/api/orders/{{orderId}}/shipments
+Authorization: Bearer {{auth_token}}
+
+### Create shipment for an order
+POST {{host}}/api/orders/{{orderId}}/shipments
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json-patch+json
+
+{
+  "shipment": {
+    "tracking_number": "1234567",
+    "admin_comment": "",
+    "weight": 1.6,
+    "shipment_items": [
+      {
+        "order_item_id": 67170,
+        "quantity": 1
+      }]
+  }
+}
+
+> {% client.global.set("shipmentId", response.body.shipments[0].id); %}
+
+### Update shipped date
+PUT {{host}}/api/orders/{{orderId}}/shipments/{{shipmentId}}
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json-patch+json
+
+{
+  "shipment": {
+    "shipped_date_utc": "{{$isoTimestamp}}"
+  }
+}
+
+
+### Get a shipment by ID for an order
+GET {{host}}/api/orders/{{orderId}}/shipments/{{shipmentId}}
+Authorization: Bearer {{auth_token}}
+
+### Delete shipment for an order
+@shipmentId = 40
+DELETE {{host}}/api/orders/{{orderId}}/shipments/{{shipmentId}}
+Authorization: Bearer {{auth_token}}

@@ -261,6 +261,48 @@ namespace Nop.Plugin.Api.Controllers
 
             return Ok(ordersRootObject);
         }
+        
+        /// <summary>
+        ///     Retrieve all orders that contain a specified product
+        /// </summary>
+        /// <param name="productId">Id of the product we are checking for</param>
+        /// <response code="200">OK</response>
+        /// <response code="401">Unauthorized</response>
+        [HttpGet]
+        [Route("/api/products/{productId}/orders", Name = nameof(GetOrdersByProductId))]
+        [ProducesResponseType(typeof(OrdersRootObject), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.Unauthorized)]
+        [GetRequestsErrorInterceptorActionFilter]
+        public async Task<IActionResult> GetOrdersByProductId([FromRoute] int productId)
+        {
+            IList<OrderDto> ordersForProduct = await _orderApiService.GetOrdersForProductId(productId)
+                .SelectAwait(async x => await _dtoHelper.PrepareOrderDTOAsync(x)).ToListAsync();
+
+            var ordersRootObject = new OrdersRootObject { Orders = ordersForProduct };
+
+            return Ok(ordersRootObject);
+        }
+        
+        /// <summary>
+        ///     Retrieve all orders that contain a product in mapped to the specified category
+        /// </summary>
+        /// <param name="categoryId">Id of the product we are checking for</param>
+        /// <response code="200">OK</response>
+        /// <response code="401">Unauthorized</response>
+        [HttpGet]
+        [Route("/api/categories/{categoryId}/orders", Name = nameof(GetOrdersByCategoryId))]
+        [ProducesResponseType(typeof(OrdersRootObject), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.Unauthorized)]
+        [GetRequestsErrorInterceptorActionFilter]
+        public async Task<IActionResult> GetOrdersByCategoryId([FromRoute] int categoryId)
+        {
+            IList<OrderDto> ordersForCategory = await _orderApiService.GetOrdersForCategoryId(categoryId)
+                .SelectAwait(async x => await _dtoHelper.PrepareOrderDTOAsync(x)).ToListAsync();
+
+            var ordersRootObject = new OrdersRootObject { Orders = ordersForCategory };
+
+            return Ok(ordersRootObject);
+        }
 
         [HttpPost]
         [Route("/api/orders", Name = "CreateOrder")]
@@ -543,12 +585,12 @@ namespace Nop.Plugin.Api.Controllers
             if (customerId.HasValue && currentCustomer.Id == customerId)
             {
                 // if I want to handle my own orders, check only public store permission
-                return await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_SHOPPING_CART, currentCustomer);
+                return await _permissionService.AuthorizeAsync(nameof(StandardPermissionProvider.EnableShoppingCart), currentCustomer);
             }
             // if I want to handle other customer's orders, check admin permission
-            return await _permissionService.AuthorizeAsync(StandardPermission.Orders.ORDERS_CREATE_EDIT_DELETE, currentCustomer);
+            return await _permissionService.AuthorizeAsync(nameof(StandardPermissionProvider.ManageOrders), currentCustomer);
         }
-
+        
         private async Task<bool> SetShippingOptionAsync(
           string shippingRateComputationMethodSystemName, string shippingOptionName, int storeId, Customer customer, List<ShoppingCartItem> shoppingCartItems)
         {

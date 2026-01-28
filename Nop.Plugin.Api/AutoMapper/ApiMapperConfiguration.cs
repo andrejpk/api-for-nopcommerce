@@ -31,6 +31,7 @@ using Nop.Plugin.Api.DTO.ShoppingCarts;
 using Nop.Plugin.Api.DTO.SpecificationAttributes;
 using Nop.Plugin.Api.DTO.Stores;
 using Nop.Plugin.Api.DTO.Warehouses;
+using Nop.Plugin.Api.DTOs.ShipmentItems;
 using Nop.Plugin.Api.DTOs.StateProvinces;
 using Nop.Plugin.Api.DTOs.Taxes;
 using Nop.Plugin.Api.DTOs.Topics;
@@ -74,6 +75,8 @@ namespace Nop.Plugin.Api.AutoMapper
 
             CreateMap<OrderItem, OrderItemDto>();
             CreateOrderEntityToOrderDtoMap();
+            CreateMap<Shipment, ShipmentDto>();
+            CreateMap<ShipmentItem, ShipmentItemDto>();
 
             CreateProductMap();
 
@@ -103,9 +106,9 @@ namespace Nop.Plugin.Api.AutoMapper
 
         public int Order => 0;
 
-        private new static void CreateMap<TSource, TDestination>()
+        private new static IMappingExpression<TSource, TDestination> CreateMap<TSource, TDestination>()
         {
-            AutoMapperApiConfiguration.MapperConfigurationExpression.CreateMap<TSource, TDestination>()
+            return AutoMapperApiConfiguration.MapperConfigurationExpression.CreateMap<TSource, TDestination>()
                                       .IgnoreAllNonExisting();
         }
 
@@ -125,7 +128,7 @@ namespace Nop.Plugin.Api.AutoMapper
                                       .ForMember(x => x.Id, y => y.MapFrom(src => src.Id));
             //.ForMember(x => x.OrderItems, y => y.MapFrom(src => src.OrderItems.Select(x => x.ToDto())));
         }
-
+        
         private void CreateAddressMap()
         {
             AutoMapperApiConfiguration.MapperConfigurationExpression.CreateMap<Address, AddressDto>()

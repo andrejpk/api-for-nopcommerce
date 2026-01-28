@@ -22,7 +22,7 @@ namespace Nop.Plugin.Api.Models.OrdersParameters
         ///     A comma-separated list of order ids
         /// </summary>
         [JsonProperty("ids")]
-        public List<int> Ids { get; set; }
+        public HashSet<int> Ids { get; set; }
 
         /// <summary>
         ///     Amount of results (default: 50) (maximum: 250)
