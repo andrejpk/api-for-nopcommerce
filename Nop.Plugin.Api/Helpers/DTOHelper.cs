@@ -36,6 +36,7 @@ using Nop.Services.Media;
 using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Services.Seo;
+using Nop.Services.Shipping;
 using Nop.Services.Stores;
 
 namespace Nop.Plugin.Api.Helpers
@@ -62,6 +63,7 @@ namespace Nop.Plugin.Api.Helpers
         private readonly IStoreService _storeService;
         private readonly IUrlRecordService _urlRecordService;
         private readonly ISpecificationAttributeService _specificationAttributeService;
+        private readonly IShipmentService _shipmentService;
 
         private readonly Lazy<Task<Language>> _customerLanguage;
 
@@ -85,6 +87,7 @@ namespace Nop.Plugin.Api.Helpers
           IAuthenticationService authenticationService,
           ICustomerApiService customerApiService,
           ICurrencyService currencyService,
+          IShipmentService shipmentService,
           ISpecificationAttributeService specificationAttributeService)
         {
             _productService = productService;
@@ -105,6 +108,7 @@ namespace Nop.Plugin.Api.Helpers
             _addressService = addressService;
             _authenticationService = authenticationService;
             _customerApiService = customerApiService;
+            _shipmentService = shipmentService;
             _currencyService = currencyService;
             _specificationAttributeService = specificationAttributeService;
 
@@ -357,6 +361,16 @@ namespace Nop.Plugin.Api.Helpers
         {
             var taxCategoryDto = taxCategory.ToDto();
             return taxCategoryDto;
+        }
+
+        public async Task<ShipmentDto> PrepareShipmentDTOAsync(Shipment shipment)
+        {
+            var shipmentDto = shipment.ToDto();
+            var items = await _shipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id);
+            shipmentDto.ShipmentItems = items
+                .Select(shipmentItem => shipmentItem.ToDto())
+                .ToList();
+            return shipmentDto;
         }
 
         #region Private methods

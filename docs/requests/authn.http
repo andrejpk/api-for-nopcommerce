@@ -1,0 +1,12 @@
+### Authenticate get token
+POST {{host}}/token
+Content-Type: application/json-patch+json
+
+{
+  "guest": false,
+  "username": "{{username}}",
+  "password": "{{password}}",
+  "remember_me": true
+}
+
+> {% client.global.set("auth_token", response.body.access_token); %}

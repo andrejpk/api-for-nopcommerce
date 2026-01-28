@@ -44,5 +44,6 @@ namespace Nop.Plugin.Api.Helpers
         Task<WarehouseDto> PrepareWarehouseDtoAsync(Warehouse warehouse);
         TopicDto PrepareTopicDTO(Topic topic);
         TaxCategoryDto prepareTaxCategoryDto(TaxCategory taxCategory);
+        Task<ShipmentDto> PrepareShipmentDTOAsync(Shipment item);
     }
 }
