@@ -22,13 +22,13 @@ namespace Nop.Plugin.Api.Services
         public AddressApiService(
             IRepository<Address> addressRepository,
             IRepository<CustomerAddressMapping> customerAddressMappingRepository,
-            IShortTermCacheManager shortTermShortTermCacheManager,
+            IShortTermCacheManager staticShortTermCacheManager,
             ICountryService countryService,
             IStateProvinceService stateProvinceService)
         {
             _addressRepository = addressRepository;
             _customerAddressMappingRepository = customerAddressMappingRepository;
-            _shortTermCacheManager = shortTermShortTermCacheManager;
+            _shortTermCacheManager = staticShortTermCacheManager;
             _countryService = countryService;
             _stateProvinceService = stateProvinceService;
         }
@@ -44,9 +44,9 @@ namespace Nop.Plugin.Api.Services
         public async Task<IList<AddressDto>> GetAddressesByCustomerIdAsync(int customerId)
         {
             var query = from address in _addressRepository.Table
-                        join cam in _customerAddressMappingRepository.Table on address.Id equals cam.AddressId
-                        where cam.CustomerId == customerId
-                        select address;
+                join cam in _customerAddressMappingRepository.Table on address.Id equals cam.AddressId
+                where cam.CustomerId == customerId
+                select address;
             
 
             var addresses = await _shortTermCacheManager.GetAsync(async () => await query.ToListAsync(),NopCustomerServicesDefaults.CustomerAddressesCacheKey, customerId);
@@ -65,9 +65,9 @@ namespace Nop.Plugin.Api.Services
         public async Task<AddressDto> GetCustomerAddressAsync(int customerId, int addressId)
         {
             var query = from address in _addressRepository.Table
-                        join cam in _customerAddressMappingRepository.Table on address.Id equals cam.AddressId
-                        where cam.CustomerId == customerId && address.Id == addressId
-                        select address;
+                join cam in _customerAddressMappingRepository.Table on address.Id equals cam.AddressId
+                where cam.CustomerId == customerId && address.Id == addressId
+                select address;
  
 
             var addressEntity = await _shortTermCacheManager.GetAsync( async () => await query.FirstOrDefaultAsync(),NopCustomerServicesDefaults.CustomerAddressCacheKey, customerId, addressId );
