@@ -14,10 +14,28 @@ This project uses GitHub Actions for CI/CD. The build process:
 2. Builds nopCommerce core and framework
 3. Builds the API plugin
 4. Verifies the plugin output is in the correct location
+5. Creates a distribution-ready ZIP artifact
+6. Uploads the artifact to GitHub Actions
 
 The nopCommerce version is automatically pulled based on the `NOPCOMMERCE_VERSION` environment variable in the workflow file (`.github/workflows/ci.yml`). This ensures the build always uses a compatible version.
 
 **Note:** Tests are currently disabled in CI because the test project uses .NET Framework 4.6.1, which is not supported on Linux runners. To enable tests, the test project needs to be upgraded to .NET 6+.
+
+### Plugin Artifacts
+
+The CI build automatically creates a distribution-ready ZIP package following the nopCommerce plugin standard:
+
+- **Naming**: `Plugin.{SystemName}.v{Version}.zip` (e.g., `Plugin.Nop.Plugin.Api.v4.9.0.zip`)
+- **Structure**: Plugin files are at the root of the ZIP (no nested folders)
+- **Contents**: 
+  - Compiled DLL files
+  - `plugin.json`
+  - `Areas/` (admin views)
+  - `wwwroot/` (static files, if present)
+  - `logo.jpg`
+- **Excluded**: `.pdb` files, `.deps.json`, and `ref/` directories
+
+The artifact can be downloaded from the GitHub Actions run and directly unzipped into nopCommerce's `Plugins` directory.
 
 ### Updating nopCommerce Version
 
