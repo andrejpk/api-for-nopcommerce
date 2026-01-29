@@ -29,7 +29,7 @@ using System.Net;
 
 namespace Nop.Plugin.Api.Controllers
 {
-    [AuthorizePermission(nameof(StandardPermission.Orders.ORDERS_CREATE_EDIT_DELETE))]
+    [AuthorizePermission(StandardPermission.Orders.ORDERS_CREATE_EDIT_DELETE)]
     public class OrderItemsController : BaseApiController
     {
         private readonly IDTOHelper _dtoHelper;

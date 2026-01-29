@@ -25,7 +25,7 @@ using Nop.Plugin.Api.Models.ShipmentsParameters;
 
 namespace Nop.Plugin.Api.Controllers
 {
-    [AuthorizePermission(nameof(StandardPermission.Orders.ORDERS_CREATE_EDIT_DELETE))]
+    [AuthorizePermission(StandardPermission.Orders.ORDERS_CREATE_EDIT_DELETE)]
     public class ShipmentsController(
         IJsonFieldsSerializer jsonFieldsSerializer,
         IAclService aclService,

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Plugin.Api.Attributes;
 using Nop.Plugin.Api.Authorization.Attributes;
@@ -19,7 +19,7 @@ using System.Net;
 
 namespace Nop.Plugin.Api.Controllers
 {
-    [AuthorizePermission(nameof(StandardPermission.Configuration.MANAGE_STORES))]
+    [AuthorizePermission(StandardPermission.Configuration.MANAGE_STORES)]
     public class StoreController : BaseApiController
     {
         private readonly IDTOHelper _dtoHelper;
@@ -57,7 +57,7 @@ namespace Nop.Plugin.Api.Controllers
         /// <param name="fields">Fields you want your json to contain</param>
         [HttpGet]
         [Route("/api/stores/current", Name = "GetCurrentStore")]
-        [AuthorizePermission(nameof(StandardPermission.Configuration.MANAGE_STORES), ignore: true)] // turn off all permission authorizations, access to this action is allowed to all authenticated customers
+        [AuthorizePermission(StandardPermission.Configuration.MANAGE_STORES, ignore: true)] // turn off all permission authorizations, access to this action is allowed to all authenticated customers
         [ProducesResponseType(typeof(StoresRootObject), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.Unauthorized)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
