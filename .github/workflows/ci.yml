@@ -76,6 +76,17 @@ jobs:
       run: |
         VERSION=$(jq -r '.Version' nopCommerce/src/Presentation/Nop.Web/Plugins/Nop.Plugin.Api/plugin.json)
         SYSTEM_NAME=$(jq -r '.SystemName' nopCommerce/src/Presentation/Nop.Web/Plugins/Nop.Plugin.Api/plugin.json)
+        
+        # Validate that we got valid values
+        if [ -z "$VERSION" ] || [ "$VERSION" = "null" ]; then
+          echo "❌ Failed to extract Version from plugin.json"
+          exit 1
+        fi
+        if [ -z "$SYSTEM_NAME" ] || [ "$SYSTEM_NAME" = "null" ]; then
+          echo "❌ Failed to extract SystemName from plugin.json"
+          exit 1
+        fi
+        
         echo "version=$VERSION" >> $GITHUB_OUTPUT
         echo "system_name=$SYSTEM_NAME" >> $GITHUB_OUTPUT
         echo "Plugin Version: $VERSION"
@@ -90,8 +101,17 @@ jobs:
         
         # Create ZIP with plugin folder contents at root level
         cd "$PLUGIN_DIR"
-        zip -r "../../../../../$ARTIFACT_NAME" . -x '*.pdb' -x '*.deps.json' -x 'ref/*' -x 'refs/*'
+        zip -r "../../../../../$ARTIFACT_NAME" . -x '*.pdb' -x '*.deps.json' -x 'ref/*' || {
+          echo "❌ Failed to create ZIP artifact"
+          exit 1
+        }
         cd -
+        
+        # Verify ZIP was created
+        if [ ! -f "$ARTIFACT_NAME" ]; then
+          echo "❌ ZIP artifact was not created"
+          exit 1
+        fi
         
         echo "Artifact created successfully!"
         ls -lh "$ARTIFACT_NAME"
