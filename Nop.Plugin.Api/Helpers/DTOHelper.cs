@@ -504,12 +504,19 @@ namespace Nop.Plugin.Api.Helpers
                     productAttributeValueDto.ImageSquaresImage = imageDto;
                 }
 
-                if (productAttributeValue.PictureId > 0)
+                // Use the new ProductAttributeValuePicture entity (nopCommerce 4.70+)
+                // This replaces the deprecated PictureId property
+                var attributeValuePictures = await _productAttributeService.GetProductAttributeValuePicturesAsync(productAttributeValue.Id);
+                if (attributeValuePictures.Any())
                 {
+                    // Use the first picture for backward compatibility
+                    // (nopCommerce 4.70+ supports multiple pictures per attribute value)
+                    var firstPicture = attributeValuePictures.FirstOrDefault();
+                    
                     // make sure that the picture is mapped to the product
-                    // This is needed since if you delete the product picture mapping from the nopCommerce administrationthe
+                    // This is needed since if you delete the product picture mapping from the nopCommerce administration
                     // then the attribute value is not updated and it will point to a picture that has been deleted
-                    var productPicture = (await _productService.GetProductPicturesByProductIdAsync(product.Id)).FirstOrDefault(pp => pp.PictureId == productAttributeValue.PictureId);
+                    var productPicture = (await _productService.GetProductPicturesByProductIdAsync(product.Id)).FirstOrDefault(pp => pp.PictureId == firstPicture.PictureId);
                     if (productPicture != null)
                     {
                         productAttributeValueDto.ProductPictureId = productPicture.Id;

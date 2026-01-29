@@ -20,7 +20,6 @@ using System.Text;
 
 namespace Nop.Plugin.Api.Controllers
 {
-    [AllowAnonymous]
     public class TokenController : Controller
     {
         private readonly ApiSettings _apiSettings;
@@ -50,6 +49,7 @@ namespace Nop.Plugin.Api.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         [Route("/token", Name = "RequestToken")]
         [ProducesResponseType(typeof(TokenResponse), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
