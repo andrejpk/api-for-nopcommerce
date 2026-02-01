@@ -78,8 +78,17 @@ foreach (var file in Directory.GetFiles(pluginOutputPath, "*.dll"))
     File.Copy(file, Path.Combine(packageOutputPath, fileName), true);
 }
 
-// Copy views
-Console.WriteLine("   Copying views...");
+// Copy Areas (contains Admin views)
+Console.WriteLine("   Copying Areas...");
+var areasSource = Path.Combine(pluginProjectPath, "Areas");
+var areasTarget = Path.Combine(packageOutputPath, "Areas");
+if (Directory.Exists(areasSource))
+{
+    CopyDirectory(areasSource, areasTarget);
+}
+
+// Copy Views folder if it exists (for front-end views)
+Console.WriteLine("   Copying Views...");
 var viewsSource = Path.Combine(pluginProjectPath, "Views");
 var viewsTarget = Path.Combine(packageOutputPath, "Views");
 if (Directory.Exists(viewsSource))
@@ -90,6 +99,7 @@ if (Directory.Exists(viewsSource))
 // Copy metadata files
 Console.WriteLine("   Copying metadata...");
 File.Copy(Path.Combine(pluginProjectPath, "plugin.json"), Path.Combine(packageOutputPath, "plugin.json"), true);
+CopyIfExists(Path.Combine(pluginProjectPath, "logo.jpg"), packageOutputPath);
 CopyIfExists(Path.Combine(pluginProjectPath, "logo.png"), packageOutputPath);
 
 // Create ZIP
