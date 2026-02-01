@@ -64,6 +64,7 @@ namespace Nop.Plugin.Api.Helpers
         private readonly IUrlRecordService _urlRecordService;
         private readonly ISpecificationAttributeService _specificationAttributeService;
         private readonly IShipmentService _shipmentService;
+        private readonly IEntityAttributeService _entityAttributeService;
 
         private readonly Lazy<Task<Language>> _customerLanguage;
 
@@ -88,7 +89,8 @@ namespace Nop.Plugin.Api.Helpers
           ICustomerApiService customerApiService,
           ICurrencyService currencyService,
           IShipmentService shipmentService,
-          ISpecificationAttributeService specificationAttributeService)
+          ISpecificationAttributeService specificationAttributeService,
+          IEntityAttributeService entityAttributeService)
         {
             _productService = productService;
             _aclService = aclService;
@@ -111,6 +113,7 @@ namespace Nop.Plugin.Api.Helpers
             _shipmentService = shipmentService;
             _currencyService = currencyService;
             _specificationAttributeService = specificationAttributeService;
+            _entityAttributeService = entityAttributeService;
 
             _customerLanguage = new Lazy<Task<Language>>(GetAuthenticatedCustomerLanguage);
         }
@@ -370,6 +373,10 @@ namespace Nop.Plugin.Api.Helpers
             shipmentDto.ShipmentItems = items
                 .Select(shipmentItem => shipmentItem.ToDto())
                 .ToList();
+            
+            // Load generic attributes for the shipment using the generic service
+            shipmentDto.Attributes = await _entityAttributeService.GetAttributesAsync<Shipment>(shipment.Id);
+            
             return shipmentDto;
         }
 

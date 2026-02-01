@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
+using Nop.Plugin.Api.Attributes;
 using Nop.Plugin.Api.DTO.Base;
 using Nop.Plugin.Api.DTO.Images;
 
@@ -6,8 +7,9 @@ namespace Nop.Plugin.Api.DTO.Manufacturers
 {
     [JsonObject(Title = "manufacturer")]
     //[Validator(typeof(ManufacturerDtoValidator))]
-    public class ManufacturerDto : BaseDto
+    public class ManufacturerDto : BaseDto, IAttributeDto
     {
+        private Dictionary<string, string> _attributes;
         /// <summary>
         ///     Gets or sets the name
         /// </summary>
@@ -130,5 +132,16 @@ namespace Nop.Plugin.Api.DTO.Manufacturers
 
         [JsonProperty("se_name")]
         public string SeName { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the manufacturer generic attributes
+        /// </summary>
+        [JsonProperty("attributes")]
+        [DoNotMap]
+        public Dictionary<string, string> Attributes
+        {
+            get => _attributes ??= new Dictionary<string, string>();
+            set => _attributes = value;
+        }
     }
 }

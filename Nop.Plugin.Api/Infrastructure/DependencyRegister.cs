@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -55,6 +55,7 @@ namespace Nop.Plugin.Api.Infrastructure
             services.AddScoped<ICustomerRolesHelper, CustomerRolesHelper>();
             services.AddScoped<IJsonHelper, JsonHelper>();
             services.AddScoped<IDTOHelper, DTOHelper>();
+            services.AddScoped<IEntityAttributeService, EntityAttributeService>();
 
             services.AddScoped<IJsonFieldsSerializer, JsonFieldsSerializer>();
 

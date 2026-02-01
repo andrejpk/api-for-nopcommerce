@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
+using Nop.Plugin.Api.Attributes;
 using Nop.Plugin.Api.DTO.Base;
 using Nop.Plugin.Api.DTO.OrderItems;
 using Nop.Plugin.Api.DTOs.Orders;
@@ -7,9 +8,10 @@ namespace Nop.Plugin.Api.DTO.Orders
 {
     [JsonObject(Title = "order")]
     //[Validator(typeof(OrderDtoValidator))]
-    public class OrderDto : BaseDto
+    public class OrderDto : BaseDto, IAttributeDto
     {
         private ICollection<OrderItemDto> _orderItems;
+        private Dictionary<string, string> _attributes;
 
         [JsonProperty("store_id")]
         public int? StoreId { get; set; }
@@ -286,5 +288,16 @@ namespace Nop.Plugin.Api.DTO.Orders
         /// </summary>
         [JsonProperty("customer_tax_display_type")]
         public string CustomerTaxDisplayType { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the order generic attributes
+        /// </summary>
+        [JsonProperty("attributes")]
+        [DoNotMap]
+        public Dictionary<string, string> Attributes
+        {
+            get => _attributes ??= new Dictionary<string, string>();
+            set => _attributes = value;
+        }
     }
 }
