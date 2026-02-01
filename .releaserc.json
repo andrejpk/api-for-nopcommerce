@@ -11,7 +11,11 @@
             "path": "Nop.Plugin.Api.zip",
             "label": "API Plugin v${nextRelease.version}"
           }
-        ]
+        ],
+        "successComment": false,
+        "failComment": false,
+        "failTitle": false,
+        "releasedLabels": false
       }
     ]
   ]
