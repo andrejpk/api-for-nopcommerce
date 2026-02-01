@@ -28,6 +28,63 @@ To update the nopCommerce version used in CI and development:
 3. Update `SupportedVersions` in `Nop.Plugin.Api/plugin.json`
 4. Test the build locally before pushing changes
 
+## Releases and Plugin Packaging
+
+This project uses automated release management with semantic versioning:
+
+### How It Works
+
+1. **Build**: Every push to `main` builds the plugin and creates a distributable ZIP package
+2. **Artifacts**: Built plugin packages are available as GitHub Actions artifacts for 30 days
+3. **Releases**: Automatic releases are created based on conventional commit messages
+
+### Creating a Release
+
+The project uses [semantic-release](https://semantic-release.gitbook.io/) for automated version management and release creation. Releases are triggered automatically when you push commits to the `main` branch using conventional commit messages:
+
+- **Breaking changes**: `feat!: description` or `fix!: description` → Major version bump (e.g., 1.0.0 → 2.0.0)
+- **Features**: `feat: add new endpoint` → Minor version bump (e.g., 1.0.0 → 1.1.0)
+- **Bug fixes**: `fix: resolve issue with customers` → Patch version bump (e.g., 1.0.0 → 1.0.1)
+- **Other**: `docs:`, `chore:`, `style:`, `refactor:`, `test:` → No release
+
+#### Example Workflow
+
+```bash
+# Make your changes
+git add .
+
+# Commit with conventional commit message
+git commit -m "feat: add product variants API endpoint"
+
+# Push to main
+git push origin main
+```
+
+The CI/CD pipeline will automatically:
+1. Build and test the plugin
+2. Create a plugin ZIP package
+3. Determine the next version based on commit messages
+4. Create a GitHub release with the plugin ZIP attached
+
+### Manual Plugin Packaging
+
+To create a plugin package locally:
+
+```bash
+# Build the plugin first
+dotnet build Nop.Plugin.Api/Nop.Plugin.Api.csproj --configuration Release
+
+# Package it
+dotnet script build.cs
+```
+
+This creates `Nop.Plugin.Api.zip` ready for nopCommerce installation.
+
+### Downloading Plugin Packages
+
+- **Latest Release**: Go to the [Releases page](../../releases) for production-ready versions
+- **Development Builds**: Available as artifacts in [GitHub Actions](../../actions) for 30 days after each build
+
 ## Installation
 
 ### Quick Setup (Recommended)

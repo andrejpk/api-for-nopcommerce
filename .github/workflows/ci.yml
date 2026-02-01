@@ -21,12 +21,12 @@ jobs:
     
     steps:
     - name: Checkout API repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         path: api-for-nopcommerce
 
     - name: Checkout nopCommerce at ${{ env.NOPCOMMERCE_VERSION }}
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         repository: nopSolutions/nopCommerce
         ref: ${{ env.NOPCOMMERCE_VERSION }}
@@ -77,3 +77,51 @@ jobs:
     # - name: Run tests
     #   run: dotnet test --configuration ${{ env.CONFIGURATION }} --no-build --verbosity normal
     #   working-directory: api-for-nopcommerce
+    
+    - name: Install dotnet-script
+      run: dotnet tool install -g dotnet-script
+
+    - name: Package plugin
+      run: dotnet script build.cs
+      working-directory: api-for-nopcommerce
+      env:
+        NopCommerceRoot: ${{ github.workspace }}/nopCommerce/src
+
+    - name: Upload plugin package
+      uses: actions/upload-artifact@v4
+      with:
+        name: Nop.Plugin.Api
+        path: api-for-nopcommerce/Nop.Plugin.Api.zip
+        retention-days: 30
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+
+    steps:
+    - uses: actions/checkout@v6
+      with:
+        fetch-depth: 0
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 'lts/*'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Download plugin package
+      uses: actions/download-artifact@v4
+      with:
+        name: Nop.Plugin.Api
+
+    - name: Release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: npx semantic-release

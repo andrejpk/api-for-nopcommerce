@@ -1,0 +1,13 @@
+{
+  "name": "nop-plugin-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "RESTful API plugin for nopCommerce",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/andrejpk/api-for-nopcommerce.git"
+  },
+  "devDependencies": {
+    "semantic-release": "^24.0.0"
+  }
+}

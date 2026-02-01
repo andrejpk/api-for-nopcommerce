@@ -448,3 +448,7 @@ $RECYCLE.BIN/
 !.vscode/extensions.json
 
 ClientApp/Properties/launchSettings.json
+
+# Plugin packaging
+package/
+*.zip
