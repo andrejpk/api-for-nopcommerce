@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Plugin.Api.Attributes;
 using Nop.Plugin.Api.Authorization.Attributes;
 using Nop.Plugin.Api.DTO.Errors;
@@ -22,6 +22,7 @@ using Nop.Plugin.Api.DTOs.Shipments;
 using Nop.Plugin.Api.MappingExtensions;
 using Nop.Plugin.Api.ModelBinders;
 using Nop.Plugin.Api.Models.ShipmentsParameters;
+using Nop.Services.Common;
 
 namespace Nop.Plugin.Api.Controllers
 {
@@ -38,7 +39,8 @@ namespace Nop.Plugin.Api.Controllers
         IOrderApiService orderApiService,
         IShipmentApiService shipmentApiService,
         IPictureService pictureService,
-        IDTOHelper dtoHelper)
+        IDTOHelper dtoHelper,
+        IEntityAttributeService entityAttributeService)
         : BaseApiController(jsonFieldsSerializer,
             aclService,
             customerService,
@@ -49,6 +51,7 @@ namespace Nop.Plugin.Api.Controllers
             localizationService,
             pictureService)
     {
+        private readonly IEntityAttributeService _entityAttributeService = entityAttributeService;
         [HttpGet]
         [Route("/api/orders/{orderId}/shipments", Name = "GetOrderShipments")]
         [ProducesResponseType(typeof(ShipmentsRootObject), (int)HttpStatusCode.OK)]
@@ -173,6 +176,10 @@ namespace Nop.Plugin.Api.Controllers
             }).ToList();
             await shipmentApiService.InsertShipmentItemsAsync(shipmentItems);
             
+            // Save generic attributes to the shipment entity (not customer!)
+            var attributes = _entityAttributeService.ExtractAttributesFromJson(Request.Body, "shipment");
+            await _entityAttributeService.SaveAttributesAsync(newShipment, attributes);
+            
             await CustomerActivityService.InsertActivityAsync("AddNewShipment", await LocalizationService.GetResourceAsync("ActivityLog.AddNewShipment"), newShipment);
             var orderItemsRootObject = new ShipmentsRootObject();
             var shipmentDto = await dtoHelper.PrepareShipmentDTOAsync(newShipment);
@@ -221,11 +228,17 @@ namespace Nop.Plugin.Api.Controllers
             shipmentToUpdate.CreatedOnUtc = createdOnUtc;
 
             await shipmentApiService.UpdateShipmentAsync(shipmentToUpdate);
+            
+            // Save generic attributes to the shipment entity (not customer!)
+            var attributes = _entityAttributeService.ExtractAttributesFromJson(Request.Body, "shipment");
+            await _entityAttributeService.SaveAttributesAsync(shipmentToUpdate, attributes);
+            
             await CustomerActivityService.InsertActivityAsync("UpdateShipment", await LocalizationService.GetResourceAsync("ActivityLog.UpdateShipment"), shipmentToUpdate);
 
             var shipmentsRootObject = new ShipmentsRootObject();
 
-            shipmentsRootObject.Shipments.Add(shipmentToUpdate.ToDto());
+            var updatedShipmentDto = await dtoHelper.PrepareShipmentDTOAsync(shipmentToUpdate);
+            shipmentsRootObject.Shipments.Add(updatedShipmentDto);
 
             var json = JsonFieldsSerializer.Serialize(shipmentsRootObject, string.Empty);
 
