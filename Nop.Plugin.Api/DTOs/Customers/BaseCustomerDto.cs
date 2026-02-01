@@ -1,11 +1,13 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
+using Nop.Plugin.Api.Attributes;
 using Nop.Plugin.Api.DTO.Base;
 
 namespace Nop.Plugin.Api.DTO.Customers
 {
-    public class BaseCustomerDto : BaseDto
+    public class BaseCustomerDto : BaseDto, IAttributeDto
     {
         private List<int> _roleIds;
+        private Dictionary<string, string> _attributes;
 
         [JsonProperty("customer_guid")]
         public Guid CustomerGuid { get; set; }
@@ -151,6 +153,17 @@ namespace Nop.Plugin.Api.DTO.Customers
                 return _roleIds;
             }
             set => _roleIds = value;
+        }
+
+        /// <summary>
+        ///     Gets or sets the customer generic attributes
+        /// </summary>
+        [JsonProperty("attributes")]
+        [DoNotMap]
+        public Dictionary<string, string> Attributes
+        {
+            get => _attributes ??= new Dictionary<string, string>();
+            set => _attributes = value;
         }
     }
 }

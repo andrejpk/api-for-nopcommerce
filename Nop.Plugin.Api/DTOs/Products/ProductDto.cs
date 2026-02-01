@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Nop.Core.Domain.Catalog;
 using Nop.Plugin.Api.Attributes;
 using Nop.Plugin.Api.DTO.Base;
@@ -9,9 +9,10 @@ namespace Nop.Plugin.Api.DTO.Products
 {
     [JsonObject(Title = "product")]
     //[Validator(typeof(ProductDtoValidator))]
-    public class ProductDto : BaseDto
+    public class ProductDto : BaseDto, IAttributeDto
     {
         private int? _productTypeId;
+        private Dictionary<string, string> _attributes;
 
         /// <summary>
         ///     Gets or sets the values indicating whether this product is visible in catalog or search results.
@@ -613,5 +614,16 @@ namespace Nop.Plugin.Api.DTO.Products
 
         [JsonProperty("se_name")]
         public string SeName { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the product generic attributes
+        /// </summary>
+        [JsonProperty("attributes")]
+        [DoNotMap]
+        public Dictionary<string, string> Attributes
+        {
+            get => _attributes ??= new Dictionary<string, string>();
+            set => _attributes = value;
+        }
     }
 }
