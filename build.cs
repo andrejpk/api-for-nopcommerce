@@ -36,16 +36,46 @@ Console.WriteLine("   Copying binaries...");
 CopyIfExists(Path.Combine(pluginOutputPath, "Nop.Plugin.Api.dll"), packageOutputPath);
 CopyIfExists(Path.Combine(pluginOutputPath, "Nop.Plugin.Api.pdb"), packageOutputPath);
 
-// Copy all dependency DLLs (excluding nopCommerce core assemblies)
+// Copy all dependency DLLs (excluding nopCommerce core assemblies and framework assemblies)
 Console.WriteLine("   Copying dependencies...");
-var excludedPrefixes = new[] { "Nop.Core", "Nop.Data", "Nop.Services", "Nop.Web", "Microsoft.", "System.", "netstandard" };
+// Exclude nopCommerce assemblies and .NET framework assemblies, but keep third-party packages
+var excludedPrefixes = new[] 
+{ 
+    "Nop.Core", "Nop.Data", "Nop.Services", "Nop.Web",
+    "System.", "netstandard", "mscorlib"
+};
+
+// More selective Microsoft exclusions - only exclude framework assemblies, not third-party packages
+var excludedMicrosoftPrefixes = new[]
+{
+    "Microsoft.AspNetCore.App.Runtime",
+    "Microsoft.CSharp",
+    "Microsoft.Extensions.",
+    "Microsoft.NETCore.",
+    "Microsoft.TestPlatform",
+    "Microsoft.VisualBasic",
+    "Microsoft.Win32",
+    "Microsoft.WindowsDesktop"
+};
+
 foreach (var file in Directory.GetFiles(pluginOutputPath, "*.dll"))
 {
     var fileName = Path.GetFileName(file);
-    if (!excludedPrefixes.Any(prefix => fileName.StartsWith(prefix)) && fileName != "Nop.Plugin.Api.dll")
-    {
-        File.Copy(file, Path.Combine(packageOutputPath, fileName), true);
-    }
+    
+    // Skip the main plugin DLL
+    if (fileName == "Nop.Plugin.Api.dll")
+        continue;
+        
+    // Check general exclusions
+    if (excludedPrefixes.Any(prefix => fileName.StartsWith(prefix)))
+        continue;
+        
+    // Check Microsoft-specific exclusions (more selective)
+    if (fileName.StartsWith("Microsoft.") && excludedMicrosoftPrefixes.Any(prefix => fileName.StartsWith(prefix)))
+        continue;
+    
+    // Copy the dependency
+    File.Copy(file, Path.Combine(packageOutputPath, fileName), true);
 }
 
 // Copy views
