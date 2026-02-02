@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Nop.Core.Infrastructure;
 using Nop.Plugin.Api.DTO.Errors;
@@ -12,16 +13,25 @@ namespace Nop.Plugin.Api.Attributes
     public class GetRequestsErrorInterceptorActionFilter : ActionFilterAttribute
     {
         private readonly IJsonFieldsSerializer _jsonFieldsSerializer;
+        private readonly ILogger<GetRequestsErrorInterceptorActionFilter> _logger;
 
         public GetRequestsErrorInterceptorActionFilter()
         {
             _jsonFieldsSerializer = EngineContext.Current.Resolve<IJsonFieldsSerializer>();
+            _logger = EngineContext.Current.Resolve<ILogger<GetRequestsErrorInterceptorActionFilter>>();
         }
 
         public override void OnActionExecuted(ActionExecutedContext actionExecutedContext)
         {
             if (actionExecutedContext.Exception != null && !actionExecutedContext.ExceptionHandled)
             {
+                // Log the full exception details for debugging
+                _logger.LogError(actionExecutedContext.Exception, 
+                    "API Error in {Controller}.{Action}: {Message}", 
+                    actionExecutedContext.RouteData.Values["controller"],
+                    actionExecutedContext.RouteData.Values["action"],
+                    actionExecutedContext.Exception.Message);
+
                 var error = new KeyValuePair<string, List<string>>("internal_server_error",
                                                                    new List<string>
                                                                    {
