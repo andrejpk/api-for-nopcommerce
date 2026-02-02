@@ -452,3 +452,6 @@ ClientApp/Properties/launchSettings.json
 # Plugin packaging
 package/
 *.zip
+
+# Access tokens (sensitive)
+nop_access_token*
