@@ -8,6 +8,7 @@
     "url": "https://github.com/andrejpk/api-for-nopcommerce.git"
   },
   "devDependencies": {
-    "semantic-release": "^24.0.0"
+    "semantic-release": "^24.0.0",
+    "@semantic-release/exec": "^6.0.3"
   }
 }

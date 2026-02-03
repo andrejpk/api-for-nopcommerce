@@ -4,11 +4,17 @@
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
     [
+      "@semantic-release/exec",
+      {
+        "prepareCmd": "VERSION=${nextRelease.version} dotnet script build.cs"
+      }
+    ],
+    [
       "@semantic-release/github",
       {
         "assets": [
           {
-            "path": "Nop.Plugin.Api.zip",
+            "path": "Nop.Plugin.Api_v*.zip",
             "label": "API Plugin v${nextRelease.version}"
           }
         ],
