@@ -1,4 +1,4 @@
-﻿using Nop.Core;
+using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Data;
 using Nop.Plugin.Api.DataStructures;
@@ -20,10 +20,10 @@ namespace Nop.Plugin.Api.Services
         public List<ShoppingCartItem> GetShoppingCartItems(
             int? customerId = null, DateTime? createdAtMin = null, DateTime? createdAtMax = null,
             DateTime? updatedAtMin = null, DateTime? updatedAtMax = null, int? limit = null,
-            int? page = null, ShoppingCartType? shoppingCartType = null)
+            int? page = null, ShoppingCartType? shoppingCartType = null, int? storeId = null)
         {
             var query = GetShoppingCartItemsQuery(customerId, createdAtMin, createdAtMax,
-                                                  updatedAtMin, updatedAtMax, shoppingCartType);
+                                                  updatedAtMin, updatedAtMax, shoppingCartType, storeId);
 
             return new ApiList<ShoppingCartItem>(query, (page ?? Constants.Configurations.DefaultPageValue) - 1, limit ?? Constants.Configurations.DefaultLimit);
         }
@@ -35,7 +35,8 @@ namespace Nop.Plugin.Api.Services
 
         private IQueryable<ShoppingCartItem> GetShoppingCartItemsQuery(
             int? customerId = null, DateTime? createdAtMin = null, DateTime? createdAtMax = null,
-            DateTime? updatedAtMin = null, DateTime? updatedAtMax = null, ShoppingCartType? shoppingCartType = null)
+            DateTime? updatedAtMin = null, DateTime? updatedAtMax = null, ShoppingCartType? shoppingCartType = null,
+            int? storeId = null)
         {
             var query = _shoppingCartItemsRepository.Table;
 
@@ -46,7 +47,7 @@ namespace Nop.Plugin.Api.Services
 
             if (createdAtMin != null)
             {
-                query = query.Where(c => c.CreatedOnUtc > createdAtMin.Value);
+                query = query.Where(c => c.CreatedOnUtc >= createdAtMin.Value);
             }
 
             if (createdAtMax != null)
@@ -56,7 +57,7 @@ namespace Nop.Plugin.Api.Services
 
             if (updatedAtMin != null)
             {
-                query = query.Where(c => c.UpdatedOnUtc > updatedAtMin.Value);
+                query = query.Where(c => c.UpdatedOnUtc >= updatedAtMin.Value);
             }
 
             if (updatedAtMax != null)
@@ -69,9 +70,10 @@ namespace Nop.Plugin.Api.Services
                 query = query.Where(c => c.ShoppingCartTypeId == (int)shoppingCartType.Value);
             }
 
-            // items for the current store only
-            var currentStoreId = _storeContext.GetCurrentStore().Id;
-            query = query.Where(c => c.StoreId == currentStoreId);
+            if (storeId != null)
+            {
+                query = query.Where(c => c.StoreId == storeId.Value);
+            }
 
             query = query.OrderBy(shoppingCartItem => shoppingCartItem.Id);
 

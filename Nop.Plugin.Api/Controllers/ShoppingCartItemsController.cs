@@ -124,7 +124,8 @@ namespace Nop.Plugin.Api.Controllers
                                                            parameters.UpdatedAtMax,
                                                            parameters.Limit,
                                                            parameters.Page,
-                                                           shoppingCartType);
+                                                           shoppingCartType,
+                                                           parameters.StoreId);
 
             var shoppingCartItemsDtos = await shoppingCartItems
                           .SelectAwait(async shoppingCartItem => await _dtoHelper.PrepareShoppingCartItemDTOAsync(shoppingCartItem))

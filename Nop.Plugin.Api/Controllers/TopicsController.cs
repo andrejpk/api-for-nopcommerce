@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Topics;
 using Nop.Plugin.Api.Attributes;
@@ -72,9 +72,7 @@ namespace Nop.Plugin.Api.Controllers
         [GetRequestsErrorInterceptorActionFilter]
         public async Task<IActionResult> GetTopics([FromQuery] TopicsParametersModel parameters)
         {
-            var storeId = _storeContext.GetCurrentStore().Id;
-
-            var topics = await _topicService.GetAllTopicsAsync(storeId);
+            var topics = await _topicService.GetAllTopicsAsync(parameters.StoreId ?? 0);
 
             IList<TopicDto> topicsAsDtos = topics.Select(x => _dtoHelper.PrepareTopicDTO(x)).ToList();
 

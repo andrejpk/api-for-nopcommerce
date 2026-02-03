@@ -21,6 +21,7 @@ using Nop.Plugin.Api.DTO.ShoppingCarts;
 using Nop.Plugin.Api.DTO.SpecificationAttributes;
 using Nop.Plugin.Api.DTO.Stores;
 using Nop.Plugin.Api.DTO.Warehouses;
+using Nop.Plugin.Api.DTOs.GiftCards;
 using Nop.Plugin.Api.DTOs.Taxes;
 using Nop.Plugin.Api.DTOs.Topics;
 using Nop.Plugin.Api.MappingExtensions;
@@ -65,6 +66,7 @@ namespace Nop.Plugin.Api.Helpers
         private readonly ISpecificationAttributeService _specificationAttributeService;
         private readonly IShipmentService _shipmentService;
         private readonly IEntityAttributeService _entityAttributeService;
+        private readonly IGiftCardService _giftCardService;
 
         private readonly Lazy<Task<Language>> _customerLanguage;
 
@@ -90,7 +92,8 @@ namespace Nop.Plugin.Api.Helpers
           ICurrencyService currencyService,
           IShipmentService shipmentService,
           ISpecificationAttributeService specificationAttributeService,
-          IEntityAttributeService entityAttributeService)
+          IEntityAttributeService entityAttributeService,
+          IGiftCardService giftCardService)
         {
             _productService = productService;
             _aclService = aclService;
@@ -114,6 +117,7 @@ namespace Nop.Plugin.Api.Helpers
             _currencyService = currencyService;
             _specificationAttributeService = specificationAttributeService;
             _entityAttributeService = entityAttributeService;
+            _giftCardService = giftCardService;
 
             _customerLanguage = new Lazy<Task<Language>>(GetAuthenticatedCustomerLanguage);
         }
@@ -188,6 +192,17 @@ namespace Nop.Plugin.Api.Helpers
 
             orderDto.BillingAddress = (await _addressService.GetAddressByIdAsync(order.BillingAddressId))?.ToDto();
             orderDto.ShippingAddress = (await _addressService.GetAddressByIdAsync(order.ShippingAddressId ?? 0))?.ToDto();
+
+            // Populate gift card usage history
+            var giftCardUsageHistory = await _giftCardService.GetGiftCardUsageHistoryAsync(order);
+            orderDto.GiftCardUsageHistory = await giftCardUsageHistory.SelectAwait(async gcuh =>
+            {
+                var dto = gcuh.ToDto();
+                // Populate custom order number from the associated order
+                var usedWithOrder = await _orderService.GetOrderByIdAsync(gcuh.UsedWithOrderId);
+                dto.CustomOrderNumber = usedWithOrder?.CustomOrderNumber;
+                return dto;
+            }).ToListAsync();
 
             return orderDto;
         }
