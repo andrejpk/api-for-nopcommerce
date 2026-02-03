@@ -592,7 +592,7 @@ namespace Nop.Plugin.Api.DTO.Products
         [JsonProperty("images")]
         public List<ImageMappingDto> Images { get; set; }
 
-        [JsonProperty("attributes")]
+        [JsonProperty("product_attribute_mappings")]
         public List<ProductAttributeMappingDto> ProductAttributeMappings { get; set; }
 
         [JsonProperty("product_attribute_combinations")]
