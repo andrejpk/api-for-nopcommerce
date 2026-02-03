@@ -618,7 +618,7 @@ namespace Nop.Plugin.Api.DTO.Products
         /// <summary>
         ///     Gets or sets the product generic attributes
         /// </summary>
-        [JsonProperty("attributes")]
+        [JsonProperty("generic_attributes")]
         [DoNotMap]
         public Dictionary<string, string> Attributes
         {
