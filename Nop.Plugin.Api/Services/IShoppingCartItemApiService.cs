@@ -1,4 +1,4 @@
-﻿using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Orders;
 
 namespace Nop.Plugin.Api.Services
 {
@@ -7,7 +7,7 @@ namespace Nop.Plugin.Api.Services
         List<ShoppingCartItem> GetShoppingCartItems(
             int? customerId = null, DateTime? createdAtMin = null, DateTime? createdAtMax = null,
             DateTime? updatedAtMin = null, DateTime? updatedAtMax = null, int? limit = null,
-            int? page = null, ShoppingCartType? shoppingCartType = null);
+            int? page = null, ShoppingCartType? shoppingCartType = null, int? storeId = null);
 
         Task<ShoppingCartItem> GetShoppingCartItemAsync(int id);
     }

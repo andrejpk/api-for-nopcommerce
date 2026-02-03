@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
@@ -132,15 +132,13 @@ namespace Nop.Plugin.Api.Controllers
                 return AccessDenied();
             }
 
-            var storeId = _storeContext.GetCurrentStore().Id;
-
             var orders = _orderApiService.GetOrders(parameters.Ids, parameters.CreatedAtMin,
                                 parameters.CreatedAtMax,
                                 parameters.Limit, parameters.Page, parameters.SinceId,
                                 parameters.Status.HasValue ? (Core.Domain.Orders.OrderStatus)parameters.Status : null,
                                 parameters.PaymentStatus.HasValue ? (Core.Domain.Payments.PaymentStatus)parameters.PaymentStatus : null,
                                 parameters.ShippingStatus.HasValue ? (Core.Domain.Shipping.ShippingStatus)parameters.ShippingStatus : null,
-                                parameters.CustomerId, storeId);
+                                parameters.CustomerId, parameters.StoreId);
 
             IList<OrderDto> ordersAsDtos = await orders.SelectAwait(async x => await _dtoHelper.PrepareOrderDTOAsync(x)).ToListAsync();
 
@@ -174,13 +172,11 @@ namespace Nop.Plugin.Api.Controllers
 
             // TODO: make async
 
-            var storeId = _storeContext.GetCurrentStore().Id;
-
             var ordersCount = _orderApiService.GetOrdersCount(parameters.CreatedAtMin, parameters.CreatedAtMax,
                                       parameters.Status.HasValue ? (Core.Domain.Orders.OrderStatus)parameters.Status : null,
                                       parameters.PaymentStatus.HasValue ? (Core.Domain.Payments.PaymentStatus)parameters.PaymentStatus : null,
                                       parameters.ShippingStatus.HasValue ? (Core.Domain.Shipping.ShippingStatus)parameters.ShippingStatus : null,
-                                      parameters.CustomerId, storeId);
+                                      parameters.CustomerId, parameters.StoreId);
 
             var ordersCountRootObject = new OrdersCountRootObject
             {

@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Nop.Plugin.Api.Infrastructure;
 
 namespace Nop.Plugin.Api.Models.TopicsParameters
@@ -44,5 +44,10 @@ namespace Nop.Plugin.Api.Models.TopicsParameters
         [JsonProperty("fields")]
         public string Fields { get; set; }
 
+        /// <summary>
+        ///     Filter topics by store. If not specified, returns topics from all stores.
+        /// </summary>
+        [JsonProperty("store_id")]
+        public int? StoreId { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -31,6 +31,7 @@ using Nop.Plugin.Api.DTO.ShoppingCarts;
 using Nop.Plugin.Api.DTO.SpecificationAttributes;
 using Nop.Plugin.Api.DTO.Stores;
 using Nop.Plugin.Api.DTO.Warehouses;
+using Nop.Plugin.Api.DTOs.GiftCards;
 using Nop.Plugin.Api.DTOs.ShipmentItems;
 using Nop.Plugin.Api.DTOs.StateProvinces;
 using Nop.Plugin.Api.DTOs.Taxes;
@@ -75,6 +76,7 @@ namespace Nop.Plugin.Api.AutoMapper
 
             CreateMap<OrderItem, OrderItemDto>();
             CreateOrderEntityToOrderDtoMap();
+            CreateMap<GiftCardUsageHistory, GiftCardUsageHistoryDto>();
             CreateMap<Shipment, ShipmentDto>();
             CreateMap<ShipmentItem, ShipmentItemDto>();
 

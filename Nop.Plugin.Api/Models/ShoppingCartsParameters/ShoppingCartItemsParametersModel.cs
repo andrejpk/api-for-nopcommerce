@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Nop.Plugin.Api.DTOs.ShoppingCarts;
 using Nop.Plugin.Api.Infrastructure;
@@ -74,5 +74,11 @@ namespace Nop.Plugin.Api.Models.ShoppingCartsParameters
         /// </summary>
         [JsonProperty("customer_id", Required = Required.AllowNull)]
         public int? CustomerId { get; set; }
+
+        /// <summary>
+        ///     Filter shopping cart items by store. If not specified, returns items from all stores.
+        /// </summary>
+        [JsonProperty("store_id")]
+        public int? StoreId { get; set; }
     }
 }

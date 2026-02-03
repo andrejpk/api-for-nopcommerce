@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
@@ -137,13 +137,13 @@ namespace Nop.Plugin.Api.Services
         public static IQueryable<Order> WhereCreatedAtMin(this IQueryable<Order> order, DateTime? createdAtMin) => createdAtMin switch
         {
             null => order,
-            _ => order.Where(o => o.CreatedOnUtc > createdAtMin.Value.ToUniversalTime())
+            _ => order.Where(o => o.CreatedOnUtc >= createdAtMin.Value)
         };
         
         public static IQueryable<Order> WhereCreatedAtMax(this IQueryable<Order> order, DateTime? createdAtMax) => createdAtMax switch
         {
             null => order,
-            _ => order.Where(o => o.CreatedOnUtc < createdAtMax.Value.ToUniversalTime())
+            _ => order.Where(o => o.CreatedOnUtc < createdAtMax.Value)
         };
         
         public static IQueryable<Order> WhereStoreId(this IQueryable<Order> order, int? storeId) => storeId switch

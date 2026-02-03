@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Nop.Plugin.Api.DTOs.Orders;
 
 namespace Nop.Plugin.Api.Models.OrdersParameters
@@ -69,5 +69,11 @@ namespace Nop.Plugin.Api.Models.OrdersParameters
         /// </summary>
         [JsonProperty("customer_id")]
         public int? CustomerId { get; set; }
+
+        /// <summary>
+        ///     Filter orders by store. If not specified, returns orders from all stores.
+        /// </summary>
+        [JsonProperty("store_id")]
+        public int? StoreId { get; set; }
     }
 }

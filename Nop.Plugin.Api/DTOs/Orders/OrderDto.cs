@@ -2,6 +2,7 @@ using Newtonsoft.Json;
 using Nop.Plugin.Api.Attributes;
 using Nop.Plugin.Api.DTO.Base;
 using Nop.Plugin.Api.DTO.OrderItems;
+using Nop.Plugin.Api.DTOs.GiftCards;
 using Nop.Plugin.Api.DTOs.Orders;
 
 namespace Nop.Plugin.Api.DTO.Orders
@@ -11,6 +12,7 @@ namespace Nop.Plugin.Api.DTO.Orders
     public class OrderDto : BaseDto, IAttributeDto
     {
         private ICollection<OrderItemDto> _orderItems;
+        private ICollection<GiftCardUsageHistoryDto> _giftCardUsageHistory;
         private Dictionary<string, string> _attributes;
 
         [JsonProperty("store_id")]
@@ -263,6 +265,24 @@ namespace Nop.Plugin.Api.DTO.Orders
                 return _orderItems;
             }
             set => _orderItems = value;
+        }
+
+        /// <summary>
+        ///     Gets or sets gift card usage history for this order
+        /// </summary>
+        [JsonProperty("gift_card_usage_history")]
+        public ICollection<GiftCardUsageHistoryDto> GiftCardUsageHistory
+        {
+            get
+            {
+                if (_giftCardUsageHistory == null)
+                {
+                    _giftCardUsageHistory = new List<GiftCardUsageHistoryDto>();
+                }
+
+                return _giftCardUsageHistory;
+            }
+            set => _giftCardUsageHistory = value;
         }
 
         /// <summary>
