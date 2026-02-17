@@ -450,7 +450,11 @@ namespace Nop.Plugin.Api.Controllers
 
             var customer = await CustomerService.GetCustomerByIdAsync(currentOrder.CustomerId);
 
-            var shippingRequired = await (await _orderService.GetOrderItemsAsync(currentOrder.Id)).AnyAwaitAsync(async item => !(await _productService.GetProductByIdAsync(item.Id)).IsFreeShipping);
+            var shippingRequired = await (await _orderService.GetOrderItemsAsync(currentOrder.Id)).AnyAwaitAsync(async item =>
+            {
+                var product = await _productService.GetProductByIdAsync(item.ProductId);
+                return product is not null && !product.IsFreeShipping;
+            });
 
             if (shippingRequired)
             {
@@ -469,7 +473,10 @@ namespace Nop.Plugin.Api.Controllers
 
                 if (isValid)
                 {
-                    currentOrder.ShippingMethod = orderDelta.Dto.ShippingMethod;
+                    if (!string.IsNullOrEmpty(orderDelta.Dto.ShippingMethod))
+                    {
+                        currentOrder.ShippingMethod = orderDelta.Dto.ShippingMethod;
+                    }
                 }
                 else
                 {
@@ -479,8 +486,15 @@ namespace Nop.Plugin.Api.Controllers
 
             orderDelta.Merge(currentOrder);
 
-            customer.BillingAddressId = currentOrder.BillingAddressId = orderDelta.Dto.BillingAddress.Id;
-            customer.ShippingAddressId = currentOrder.ShippingAddressId = orderDelta.Dto.ShippingAddress.Id;
+            if (orderDelta.Dto.BillingAddress != null)
+            {
+                customer.BillingAddressId = currentOrder.BillingAddressId = orderDelta.Dto.BillingAddress.Id;
+            }
+
+            if (orderDelta.Dto.ShippingAddress != null)
+            {
+                customer.ShippingAddressId = currentOrder.ShippingAddressId = orderDelta.Dto.ShippingAddress.Id;
+            }
 
             await CustomerService.UpdateCustomerAsync(customer); // update billing and shipping addresses
 
@@ -491,7 +505,10 @@ namespace Nop.Plugin.Api.Controllers
             var ordersRootObject = new OrdersRootObject();
 
             var placedOrderDto = await _dtoHelper.PrepareOrderDTOAsync(currentOrder);
-            placedOrderDto.ShippingMethod = orderDelta.Dto.ShippingMethod;
+            if (!string.IsNullOrEmpty(orderDelta.Dto.ShippingMethod))
+            {
+                placedOrderDto.ShippingMethod = orderDelta.Dto.ShippingMethod;
+            }
 
             ordersRootObject.Orders.Add(placedOrderDto);
 
