@@ -453,7 +453,7 @@ namespace Nop.Plugin.Api.Controllers
             var shippingRequired = await (await _orderService.GetOrderItemsAsync(currentOrder.Id)).AnyAwaitAsync(async item =>
             {
                 var product = await _productService.GetProductByIdAsync(item.ProductId);
-                return product is not null && !product.IsFreeShipping;
+                return product is not null && product.IsShipEnabled;
             });
 
             if (shippingRequired)
