@@ -1,4 +1,4 @@
-﻿using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
@@ -11,6 +11,7 @@ using Nop.Plugin.Api.DTO.Categories;
 using Nop.Plugin.Api.DTO.Languages;
 using Nop.Plugin.Api.DTO.Manufacturers;
 using Nop.Plugin.Api.DTO.OrderItems;
+using Nop.Plugin.Api.DTO.OrderNotes;
 using Nop.Plugin.Api.DTO.Orders;
 using Nop.Plugin.Api.DTO.ProductAttributes;
 using Nop.Plugin.Api.DTO.Products;
@@ -30,6 +31,7 @@ namespace Nop.Plugin.Api.Helpers
         Task<OrderDto> PrepareOrderDTOAsync(Order order);
         Task<ShoppingCartItemDto> PrepareShoppingCartItemDTOAsync(ShoppingCartItem shoppingCartItem);
         Task<OrderItemDto> PrepareOrderItemDTOAsync(OrderItem orderItem);
+        Task<OrderNoteDto> PrepareOrderNoteDTOAsync(OrderNote orderNote);
         Task<StoreDto> PrepareStoreDTOAsync(Store store);
         Task<LanguageDto> PrepareLanguageDtoAsync(Language language);
         Task<CurrencyDto> PrepareCurrencyDtoAsync(Currency currency);

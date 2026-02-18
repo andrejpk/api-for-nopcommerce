@@ -14,6 +14,7 @@ using Nop.Plugin.Api.DTO.Images;
 using Nop.Plugin.Api.DTO.Languages;
 using Nop.Plugin.Api.DTO.Manufacturers;
 using Nop.Plugin.Api.DTO.OrderItems;
+using Nop.Plugin.Api.DTO.OrderNotes;
 using Nop.Plugin.Api.DTO.Orders;
 using Nop.Plugin.Api.DTO.ProductAttributes;
 using Nop.Plugin.Api.DTO.Products;
@@ -235,6 +236,11 @@ namespace Nop.Plugin.Api.Helpers
             dto.Product = await PrepareProductDTOAsync(await _productService.GetProductByIdAsync(orderItem.ProductId));
             dto.Attributes = _productAttributeConverter.Parse(orderItem.AttributesXml);
             return dto;
+        }
+
+        public Task<OrderNoteDto> PrepareOrderNoteDTOAsync(OrderNote orderNote)
+        {
+            return Task.FromResult(orderNote.ToDto());
         }
 
         public async Task<StoreDto> PrepareStoreDTOAsync(Store store)
