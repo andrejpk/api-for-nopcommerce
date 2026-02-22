@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Nop.Services.Localization;
 using System.Text;
 
@@ -68,7 +69,11 @@ namespace Nop.Plugin.Api.Helpers
             //TODO: JToken.Parse could throw an exeption if not valid JSON string is passed
             try
             {
-                return ToObject(JToken.Parse(json)) as Dictionary<string, object>;
+                using var reader = new JsonTextReader(new StringReader(json))
+                {
+                    DateTimeZoneHandling = DateTimeZoneHandling.Utc
+                };
+                return ToObject(JToken.Load(reader)) as Dictionary<string, object>;
             }
             catch (Exception)
             {
