@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Core.Domain.Orders;
 using Nop.Plugin.Api.Services;
 using NUnit.Framework;
-using Rhino.Mocks;
+using NUnit.Framework.Legacy;
+using NSubstitute;
 
 namespace Nop.Plugin.Api.Tests.ServicesTests.Orders.GetOrdersCount
 {
@@ -28,8 +29,8 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Orders.GetOrdersCount
                 new Order() {Id = 7, CustomerId = 1, Deleted = true}
             };
 
-            var orderRepo = MockRepository.GenerateStub<IRepository<Order>>();
-            orderRepo.Stub(x => x.TableNoTracking).Return(_existigOrders.AsQueryable());
+            var orderRepo = Substitute.For<IRepository<Order>>();
+            orderRepo.TableNoTracking.Returns(_existigOrders.AsQueryable());
 
             _orderApiService = new OrderApiService(orderRepo);
         }
@@ -45,7 +46,7 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Orders.GetOrdersCount
             var productsCount = _orderApiService.GetOrdersCount(customerId: customerId);
 
             // Assert
-            Assert.AreEqual(expectedCollectionCount, productsCount);
+            ClassicAssert.AreEqual(expectedCollectionCount, productsCount);
         }
 
         [Test]
@@ -57,7 +58,7 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Orders.GetOrdersCount
             var ordersCount = _orderApiService.GetOrdersCount(customerId: customerId);
 
             // Assert
-            Assert.AreEqual(0, ordersCount);
+            ClassicAssert.AreEqual(0, ordersCount);
         }
 
         [Test]
@@ -71,7 +72,7 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Orders.GetOrdersCount
             var ordersCount = _orderApiService.GetOrdersCount(customerId: customerId);
 
             // Assert
-            Assert.AreEqual(0, ordersCount);
+            ClassicAssert.AreEqual(0, ordersCount);
         }
     }
 }

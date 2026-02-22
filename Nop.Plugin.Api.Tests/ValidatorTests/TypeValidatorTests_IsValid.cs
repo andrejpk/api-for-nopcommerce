@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
-using Nop.Plugin.Api.DTOs.Products;
+using Nop.Plugin.Api.DTO.Products;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using Nop.Plugin.Api.Tests.SerializersTests.DummyObjects;
 using Nop.Plugin.Api.Validators;
 
@@ -25,7 +26,7 @@ namespace Nop.Plugin.Api.Tests.ValidatorTests
             bool result = cut.IsValid(properties);
 
             // Assert
-            Assert.IsTrue(result);
+            ClassicAssert.IsTrue(result);
         }
     }
 }

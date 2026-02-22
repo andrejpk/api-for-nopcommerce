@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Core.Domain.Orders;
-using Nop.Plugin.Api.Constants;
+using static Nop.Plugin.Api.Infrastructure.Constants;
 using Nop.Plugin.Api.Services;
 using NUnit.Framework;
-using Rhino.Mocks;
+using NUnit.Framework.Legacy;
+using NSubstitute;
 
 namespace Nop.Plugin.Api.Tests.ServicesTests.ShoppingCartItems.GetShoppingCartItems
 {
@@ -31,10 +32,10 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.ShoppingCartItems.GetShoppingCartIt
                 });
             }
 
-            var shoppingCartItemRepo = MockRepository.GenerateStub<IRepository<ShoppingCartItem>>();
-            shoppingCartItemRepo.Stub(x => x.TableNoTracking).Return(_existigShoppingCartItems.AsQueryable());
+            var shoppingCartItemRepo = Substitute.For<IRepository<ShoppingCartItem>>();
+            shoppingCartItemRepo.TableNoTracking.Returns(_existigShoppingCartItems.AsQueryable());
 
-            var storeContext = MockRepository.GenerateStub<IStoreContext>();
+            var storeContext = Substitute.For<IStoreContext>();
             storeContext.Stub(x => x.CurrentStore).Return(new Store()
             {
                 Id = 0
@@ -53,22 +54,22 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.ShoppingCartItems.GetShoppingCartIt
             var shoppingCartItems = _shoppingCartItemApiService.GetShoppingCartItems(limit: expectedLimit);
 
             // Assert
-            CollectionAssert.IsNotEmpty(shoppingCartItems);
-            Assert.AreEqual(expectedLimit, shoppingCartItems.Count);
+            ClassicAssert.IsNotEmpty(shoppingCartItems);
+            ClassicAssert.AreEqual(expectedLimit, shoppingCartItems.Count);
         }
 
         [Test]
         public void WhenCalledWithLimitParameter_GivenShoppingCartItemsBellowTheLimit_ShouldReturnCollectionWithCountEqualToPassedLimit()
         {
             //Arange
-            var limit = Configurations.MaxLimit + 10;
+            var limit = Constants.Configurations.MaxLimit + 10;
 
             //Act
             var shoppingCartItems = _shoppingCartItemApiService.GetShoppingCartItems(limit: limit);
 
             // Assert
-            CollectionAssert.IsNotEmpty(shoppingCartItems);
-            Assert.AreEqual(limit, shoppingCartItems.Count);
+            ClassicAssert.IsNotEmpty(shoppingCartItems);
+            ClassicAssert.AreEqual(limit, shoppingCartItems.Count);
         }
 
         [Test]
@@ -80,7 +81,7 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.ShoppingCartItems.GetShoppingCartIt
             var shoppingCartItems = _shoppingCartItemApiService.GetShoppingCartItems(limit: limit);
 
             // Assert
-            CollectionAssert.IsEmpty(shoppingCartItems);
+            ClassicAssert.IsEmpty(shoppingCartItems);
         }
     }
 }

@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Core.Domain.Catalog;
-using Nop.Plugin.Api.Constants;
+using static Nop.Plugin.Api.Infrastructure.Constants;
 using Nop.Plugin.Api.Services;
 using NUnit.Framework;
-using Rhino.Mocks;
+using NUnit.Framework.Legacy;
+using NSubstitute;
 
 namespace Nop.Plugin.Api.Tests.ServicesTests.ProductCategoryMappings.GetMappings
 {
@@ -34,8 +35,8 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.ProductCategoryMappings.GetMappings
             }
 
             // Arange
-            var mappingRepo = MockRepository.GenerateStub<IRepository<ProductCategory>>();
-            mappingRepo.Stub(x => x.TableNoTracking).Return(repo.AsQueryable());
+            var mappingRepo = Substitute.For<IRepository<ProductCategory>>();
+            mappingRepo.TableNoTracking.Returns(repo.AsQueryable());
 
             // Act
             var cut = new ProductCategoryMappingsApiService(mappingRepo);
@@ -43,7 +44,7 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.ProductCategoryMappings.GetMappings
             var result = cut.GetMappings(categoryId: categoryId);
 
             // Assert
-            Assert.IsEmpty(result);
+            ClassicAssert.IsEmpty(result);
         }
 
         [Test]
@@ -73,8 +74,8 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.ProductCategoryMappings.GetMappings
             });
 
             // Arange
-            var mappingRepo = MockRepository.GenerateStub<IRepository<ProductCategory>>();
-            mappingRepo.Stub(x => x.TableNoTracking).Return(repo.AsQueryable());
+            var mappingRepo = Substitute.For<IRepository<ProductCategory>>();
+            mappingRepo.TableNoTracking.Returns(repo.AsQueryable());
 
             // Act
             var cut = new ProductCategoryMappingsApiService(mappingRepo);
@@ -82,8 +83,8 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.ProductCategoryMappings.GetMappings
             var result = cut.GetMappings(categoryId: categoryId);
 
             // Assert
-            Assert.IsTrue(result.Select(x => new { x.CategoryId, x.ProductId })
-                                .SequenceEqual(repo.Where(x => x.CategoryId == categoryId).Take(Configurations.DefaultLimit).Select(x => new { x.CategoryId, x.ProductId })));
+            ClassicAssert.IsTrue(result.Select(x => new { x.CategoryId, x.ProductId })
+                                .SequenceEqual(repo.Where(x => x.CategoryId == categoryId).Take(Constants.Configurations.DefaultLimit).Select(x => new { x.CategoryId, x.ProductId })));
         }
     }
 }

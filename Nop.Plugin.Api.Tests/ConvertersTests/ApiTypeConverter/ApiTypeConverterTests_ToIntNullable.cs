@@ -1,5 +1,6 @@
 ﻿using Nop.Plugin.Api.Converters;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace Nop.Plugin.Api.Tests.ConvertersTests.ApiTypeConverter
 {
@@ -30,7 +31,7 @@ namespace Nop.Plugin.Api.Tests.ConvertersTests.ApiTypeConverter
             int? result = _apiTypeConverter.ToIntNullable(invalidInt);
 
             //Assert
-            Assert.IsNull(result);
+            ClassicAssert.IsNull(result);
         }
 
         [Test]
@@ -44,7 +45,7 @@ namespace Nop.Plugin.Api.Tests.ConvertersTests.ApiTypeConverter
             int? result = _apiTypeConverter.ToIntNullable(nullOrEmpty);
 
             //Assert
-            Assert.IsNull(result);
+            ClassicAssert.IsNull(result);
         }
 
         [Test]
@@ -62,7 +63,7 @@ namespace Nop.Plugin.Api.Tests.ConvertersTests.ApiTypeConverter
             int? result = _apiTypeConverter.ToIntNullable(validInt);
 
             //Assert
-            Assert.AreEqual(valid, result);
+            ClassicAssert.AreEqual(valid, result);
         }
     }
 }

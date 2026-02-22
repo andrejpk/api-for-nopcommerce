@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Plugin.Api.Services;
 using NUnit.Framework;
-using Rhino.Mocks;
+using NUnit.Framework.Legacy;
+using NSubstitute;
 
 namespace Nop.Plugin.Api.Tests.ServicesTests.Orders.GetOrdersCount
 {
@@ -30,8 +31,8 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Orders.GetOrdersCount
                 new Order() {Id = 7, OrderStatus = OrderStatus.Cancelled, PaymentStatus = PaymentStatus.Refunded, ShippingStatus = ShippingStatus.NotYetShipped }
             };
 
-            var orderRepo = MockRepository.GenerateStub<IRepository<Order>>();
-            orderRepo.Stub(x => x.TableNoTracking).Return(_existigOrders.AsQueryable());
+            var orderRepo = Substitute.For<IRepository<Order>>();
+            orderRepo.TableNoTracking.Returns(_existigOrders.AsQueryable());
 
             _orderApiService = new OrderApiService(orderRepo);
         }
@@ -48,7 +49,7 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Orders.GetOrdersCount
             var resultCount = _orderApiService.GetOrdersCount(status: orderStatus);
 
             // Assert
-            Assert.AreEqual(expectedCollectionCount, resultCount);
+            ClassicAssert.AreEqual(expectedCollectionCount, resultCount);
         }
 
         [Test]
@@ -63,7 +64,7 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Orders.GetOrdersCount
             var resultCount = _orderApiService.GetOrdersCount(paymentStatus: paymentStatus);
 
             // Assert
-            Assert.AreEqual(expectedCollectionCount, resultCount);
+            ClassicAssert.AreEqual(expectedCollectionCount, resultCount);
         }
 
         [Test]
@@ -78,7 +79,7 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Orders.GetOrdersCount
             var resultCount = _orderApiService.GetOrdersCount(shippingStatus: shippingStatus);
 
             // Assert
-            Assert.AreEqual(expectedCollectionCount, resultCount);
+            ClassicAssert.AreEqual(expectedCollectionCount, resultCount);
         }
 
         [Test]
@@ -95,7 +96,7 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Orders.GetOrdersCount
                               _orderApiService.GetOrdersCount(shippingStatus: shippingStatus); 
 
             // Assert
-            Assert.AreEqual(0, resultCount);
+            ClassicAssert.AreEqual(0, resultCount);
         }
     }
 }

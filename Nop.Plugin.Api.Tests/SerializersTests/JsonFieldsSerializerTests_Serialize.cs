@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using Newtonsoft.Json;
-using Nop.Plugin.Api.DTOs;
+using Nop.Plugin.Api.DTO;
 using Nop.Plugin.Api.Tests.SerializersTests.DummyObjects;
-using Rhino.Mocks;
+using NSubstitute;
 
 namespace Nop.Plugin.Api.Tests.SerializersTests
 {
@@ -36,16 +37,16 @@ namespace Nop.Plugin.Api.Tests.SerializersTests
             SerializableDummyObjectWithSimpleTypes dummySerializableObjectFromJson =
                 JsonConvert.DeserializeObject<SerializableDummyObjectWithSimpleTypes>(serializedObjectJson);
 
-            Assert.AreEqual(serializableObject.Items.Count, dummySerializableObjectFromJson.Items.Count);
-            Assert.AreEqual(serializableObject.Items[0], dummySerializableObjectFromJson.Items[0]);
-            Assert.AreEqual("first property value", dummySerializableObjectFromJson.Items[0].FirstProperty);
-            Assert.AreEqual("second property value", dummySerializableObjectFromJson.Items[0].SecondProperty);
+            ClassicAssert.AreEqual(serializableObject.Items.Count, dummySerializableObjectFromJson.Items.Count);
+            ClassicAssert.AreEqual(serializableObject.Items[0], dummySerializableObjectFromJson.Items[0]);
+            ClassicAssert.AreEqual("first property value", dummySerializableObjectFromJson.Items[0].FirstProperty);
+            ClassicAssert.AreEqual("second property value", dummySerializableObjectFromJson.Items[0].SecondProperty);
         }
         
         [Test]
         public void WhenNullObjectToSerializePassed_ShouldThrowArgumentNullException()
         {
-            Assert.Throws<ArgumentNullException>(WhenNulObjectToSearializePassed);
+            ClassicAssert.Throws<ArgumentNullException>(WhenNulObjectToSearializePassed);
         }
 
         private void WhenNulObjectToSearializePassed()
@@ -54,7 +55,7 @@ namespace Nop.Plugin.Api.Tests.SerializersTests
             IJsonFieldsSerializer cut = new JsonFieldsSerializer();
 
             //Act
-            cut.Serialize(Arg<ISerializableObject>.Is.Null, Arg<string>.Is.Anything);
+            cut.Serialize(null, string.Empty);
         }
 
         [Test]
@@ -78,7 +79,7 @@ namespace Nop.Plugin.Api.Tests.SerializersTests
             SerializableDummyObjectWithSimpleTypes dummySerializableObjectFromJson =
                 JsonConvert.DeserializeObject<SerializableDummyObjectWithSimpleTypes>(json);
 
-            Assert.AreEqual(0, dummySerializableObjectFromJson.Items.Count);
+            ClassicAssert.AreEqual(0, dummySerializableObjectFromJson.Items.Count);
         }
 
         [Test]
@@ -101,8 +102,8 @@ namespace Nop.Plugin.Api.Tests.SerializersTests
             SerializableDummyObjectWithSimpleTypes dummySerializableObjectFromJson =
                 JsonConvert.DeserializeObject<SerializableDummyObjectWithSimpleTypes>(json);
 
-            Assert.AreEqual(1, dummySerializableObjectFromJson.Items.Count);
-            Assert.AreEqual("first property value", dummySerializableObjectFromJson.Items[0].FirstProperty);
+            ClassicAssert.AreEqual(1, dummySerializableObjectFromJson.Items.Count);
+            ClassicAssert.AreEqual("first property value", dummySerializableObjectFromJson.Items[0].FirstProperty);
         }
 
         [Test]
@@ -124,8 +125,8 @@ namespace Nop.Plugin.Api.Tests.SerializersTests
             SerializableDummyObjectWithSimpleTypes dummySerializableObjectFromJson =
                 JsonConvert.DeserializeObject<SerializableDummyObjectWithSimpleTypes>(json);
 
-            Assert.AreEqual(1, dummySerializableObjectFromJson.Items.Count);
-            Assert.IsNull(dummySerializableObjectFromJson.Items[0].SecondProperty);
+            ClassicAssert.AreEqual(1, dummySerializableObjectFromJson.Items.Count);
+            ClassicAssert.IsNull(dummySerializableObjectFromJson.Items[0].SecondProperty);
         }
 
         /* Complex dummy object */
@@ -163,9 +164,9 @@ namespace Nop.Plugin.Api.Tests.SerializersTests
             SerializableDummyObjectWithComplexTypes complexDummySerializableObjectFromJson =
                 JsonConvert.DeserializeObject<SerializableDummyObjectWithComplexTypes>(json);
 
-            Assert.AreEqual(1, complexDummySerializableObjectFromJson.Items.Count);
-            Assert.AreEqual(1, complexDummySerializableObjectFromJson.Items[0].ListOfDummyObjectWithSimpleTypes.Count);
-            Assert.AreEqual("string value", complexDummySerializableObjectFromJson.Items[0].StringProperty);
+            ClassicAssert.AreEqual(1, complexDummySerializableObjectFromJson.Items.Count);
+            ClassicAssert.AreEqual(1, complexDummySerializableObjectFromJson.Items[0].ListOfDummyObjectWithSimpleTypes.Count);
+            ClassicAssert.AreEqual("string value", complexDummySerializableObjectFromJson.Items[0].StringProperty);
         }
 
         [Test]
@@ -201,7 +202,7 @@ namespace Nop.Plugin.Api.Tests.SerializersTests
             SerializableDummyObjectWithComplexTypes complexDummySerializableObjectFromJson =
                 JsonConvert.DeserializeObject<SerializableDummyObjectWithComplexTypes>(json);
 
-            Assert.AreEqual(0, complexDummySerializableObjectFromJson.Items.Count);
+            ClassicAssert.AreEqual(0, complexDummySerializableObjectFromJson.Items.Count);
         }
 
         [Test]
@@ -224,8 +225,8 @@ namespace Nop.Plugin.Api.Tests.SerializersTests
             SerializableDummyObjectWithComplexTypes complexDummySerializableObjectFromJson =
                 JsonConvert.DeserializeObject<SerializableDummyObjectWithComplexTypes>(json);
 
-            Assert.AreEqual(1, complexDummySerializableObjectFromJson.Items.Count);
-            Assert.AreEqual(0, complexDummySerializableObjectFromJson.Items[0].ListOfDummyObjectWithSimpleTypes.Count);
+            ClassicAssert.AreEqual(1, complexDummySerializableObjectFromJson.Items.Count);
+            ClassicAssert.AreEqual(0, complexDummySerializableObjectFromJson.Items[0].ListOfDummyObjectWithSimpleTypes.Count);
         }
         
         [Test]
@@ -261,7 +262,7 @@ namespace Nop.Plugin.Api.Tests.SerializersTests
             SerializableDummyObjectWithComplexTypes complexDummySerializableObjectFromJson =
                 JsonConvert.DeserializeObject<SerializableDummyObjectWithComplexTypes>(json);
 
-            Assert.AreEqual(0, complexDummySerializableObjectFromJson.Items.Count);
+            ClassicAssert.AreEqual(0, complexDummySerializableObjectFromJson.Items.Count);
         }
     }
 }

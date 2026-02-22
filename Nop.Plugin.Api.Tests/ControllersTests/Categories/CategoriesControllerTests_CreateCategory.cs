@@ -1,7 +1,9 @@
+using Nop.Plugin.Api.Tests.Helpers;
 ﻿//using System.Collections.Generic;
-//using AutoMock;
+//
 //using Nop.Plugin.Api.Controllers;
 //using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 //namespace Nop.Plugin.Api.Tests.ControllersTests.Categories
 //{
@@ -20,7 +22,7 @@
 //            IActionResult result = autoMocker.ClassUnderTest.CreateCategory(null);
 
 //            // Assert
-//            Assert.IsInstanceOf<BadRequestObjectResult>(result);
+//            ClassicAssert.IsInstanceOf<BadRequestObjectResult>(result);
 //        }
 
 //        [Test]
@@ -33,7 +35,7 @@
 //            IActionResult result = autoMocker.ClassUnderTest.CreateCategory(new Dictionary<string, object>());
 
 //            // Assert
-//            Assert.IsInstanceOf<BadRequestObjectResult>(result);
+//            ClassicAssert.IsInstanceOf<BadRequestObjectResult>(result);
 //        }
 
 //        [Test]
@@ -52,7 +54,7 @@
 //            });
 
 //            // Assert
-//            Assert.IsInstanceOf<BadRequestObjectResult>(result);
+//            ClassicAssert.IsInstanceOf<BadRequestObjectResult>(result);
 //        }
 
 //        // could not test anything with valid object because of the static extension methods that we are required to use when creating a new category

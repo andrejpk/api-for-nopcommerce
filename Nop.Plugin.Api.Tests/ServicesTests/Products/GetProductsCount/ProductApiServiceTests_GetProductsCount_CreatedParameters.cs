@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Vendors;
 using Nop.Plugin.Api.Services;
 using NUnit.Framework;
-using Rhino.Mocks;
+using NUnit.Framework.Legacy;
+using NSubstitute;
 
 namespace Nop.Plugin.Api.Tests.ServicesTests.Products.GetProductsCount
 {
@@ -35,14 +36,14 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Products.GetProductsCount
                 new Product() {Id = 7, Published = false, CreatedOnUtc = _baseDate.AddMonths(4) }
             };
 
-            var productRepo = MockRepository.GenerateStub<IRepository<Product>>();
-            productRepo.Stub(x => x.TableNoTracking).Return(_existigProducts.AsQueryable());
+            var productRepo = Substitute.For<IRepository<Product>>();
+            productRepo.TableNoTracking.Returns(_existigProducts.AsQueryable());
 
-            var productCategoryRepo = MockRepository.GenerateStub<IRepository<ProductCategory>>();
-            var vendorRepo = MockRepository.GenerateStub<IRepository<Vendor>>();
+            var productCategoryRepo = Substitute.For<IRepository<ProductCategory>>();
+            var vendorRepo = Substitute.For<IRepository<Vendor>>();
 
-            var storeMappingService = MockRepository.GenerateStub<IStoreMappingService>();
-            storeMappingService.Stub(x => x.Authorize(Arg<Product>.Is.Anything)).Return(true);
+            var storeMappingService = Substitute.For<IStoreMappingService>();
+            storeMappingService.Authorize(Arg<Product>.Is.Anything).Returns(true);
 
             _productApiService = new ProductApiService(productRepo, productCategoryRepo, vendorRepo, storeMappingService);
         }
@@ -60,7 +61,7 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Products.GetProductsCount
             var productsCount = _productApiService.GetProductsCount(createdAtMin: createdAtMinDate);
 
             // Assert
-            Assert.AreEqual(expectedProductsCount, productsCount);
+            ClassicAssert.AreEqual(expectedProductsCount, productsCount);
         }
 
         [Test]
@@ -73,7 +74,7 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Products.GetProductsCount
             var productsCount = _productApiService.GetProductsCount(createdAtMin: createdAtMinDate);
 
             // Assert
-            Assert.AreEqual(0, productsCount);
+            ClassicAssert.AreEqual(0, productsCount);
         }
 
         [Test]
@@ -88,7 +89,7 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Products.GetProductsCount
             var productsCount = _productApiService.GetProductsCount(createdAtMax: createdAtMaxDate);
 
             // Assert
-            Assert.AreEqual(expectedProductsCount, productsCount);
+            ClassicAssert.AreEqual(expectedProductsCount, productsCount);
         }
 
         [Test]
@@ -101,7 +102,7 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Products.GetProductsCount
             var productsCount = _productApiService.GetProductsCount(createdAtMax: createdAtMaxDate);
 
             // Assert
-            Assert.AreEqual(0, productsCount);
+            ClassicAssert.AreEqual(0, productsCount);
         }
     }
 }

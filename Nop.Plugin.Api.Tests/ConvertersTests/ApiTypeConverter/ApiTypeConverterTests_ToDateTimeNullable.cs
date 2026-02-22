@@ -2,6 +2,7 @@
 using System.Globalization;
 using Nop.Plugin.Api.Converters;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace Nop.Plugin.Api.Tests.ConvertersTests.ApiTypeConverter
 {
@@ -36,7 +37,7 @@ namespace Nop.Plugin.Api.Tests.ConvertersTests.ApiTypeConverter
             DateTime? result = _apiTypeConverter.ToUtcDateTimeNullable(invalidDate);
 
             //Assert
-            Assert.IsNull(result);
+            ClassicAssert.IsNull(result);
         }
 
         [Test]
@@ -50,7 +51,7 @@ namespace Nop.Plugin.Api.Tests.ConvertersTests.ApiTypeConverter
             DateTime? result = _apiTypeConverter.ToUtcDateTimeNullable(nullOrEmpty);
 
             //Assert
-            Assert.IsNull(result);
+            ClassicAssert.IsNull(result);
         }
         
         [Test]
@@ -68,7 +69,7 @@ namespace Nop.Plugin.Api.Tests.ConvertersTests.ApiTypeConverter
             DateTime? result = _apiTypeConverter.ToUtcDateTimeNullable(validDate);
 
             //Assert
-            Assert.AreEqual(expectedDateTimeUtc, result);
+            ClassicAssert.AreEqual(expectedDateTimeUtc, result);
         }
 
         [TestCase("2016-12-26T06:45:49Z")]
@@ -84,7 +85,7 @@ namespace Nop.Plugin.Api.Tests.ConvertersTests.ApiTypeConverter
             DateTime? result = _apiTypeConverter.ToUtcDateTimeNullable(validDate);
 
             //Assert
-            Assert.AreEqual(expectedDateTimeUtc, result);
+            ClassicAssert.AreEqual(expectedDateTimeUtc, result);
         }
     }
 }

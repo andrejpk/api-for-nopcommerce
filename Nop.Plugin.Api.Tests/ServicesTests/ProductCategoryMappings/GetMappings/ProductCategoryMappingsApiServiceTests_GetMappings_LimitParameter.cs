@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Plugin.Api.Services;
 using NUnit.Framework;
-using Rhino.Mocks;
+using NUnit.Framework.Legacy;
+using NSubstitute;
 
 namespace Nop.Plugin.Api.Tests.ServicesTests.ProductCategoryMappings.GetMappings
 {
@@ -32,8 +33,8 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.ProductCategoryMappings.GetMappings
                 });
             }
 
-            var productCategoryRepo = MockRepository.GenerateStub<IRepository<ProductCategory>>();
-            productCategoryRepo.Stub(x => x.TableNoTracking).Return(_existigMappings.AsQueryable());
+            var productCategoryRepo = Substitute.For<IRepository<ProductCategory>>();
+            productCategoryRepo.TableNoTracking.Returns(_existigMappings.AsQueryable());
 
             _productCategoryMappingsService = new ProductCategoryMappingsApiService(productCategoryRepo);
         }
@@ -49,8 +50,8 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.ProductCategoryMappings.GetMappings
 
             // Assert
             // Not Empty assert is a good practice when you assert something about collection. Because you can get a false positive if the collection is empty.
-            CollectionAssert.IsNotEmpty(categories);
-            Assert.AreEqual(expectedLimit, categories.Count);
+            ClassicAssert.IsNotEmpty(categories);
+            ClassicAssert.AreEqual(expectedLimit, categories.Count);
         }
 
         [Test]
@@ -64,8 +65,8 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.ProductCategoryMappings.GetMappings
 
             // Assert
             // Not Empty assert is a good practice when you assert something about collection. Because you can get a false positive if the collection is empty.
-            CollectionAssert.IsNotEmpty(categories);
-            Assert.AreEqual(expectedLimit, categories.Count);
+            ClassicAssert.IsNotEmpty(categories);
+            ClassicAssert.AreEqual(expectedLimit, categories.Count);
         }
 
         [Test]
@@ -78,7 +79,7 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.ProductCategoryMappings.GetMappings
             var categories = _productCategoryMappingsService.GetMappings(limit: expectedLimit);
 
             // Assert
-            CollectionAssert.IsEmpty(categories);
+            ClassicAssert.IsEmpty(categories);
         }
 
         [Test]
@@ -91,7 +92,7 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.ProductCategoryMappings.GetMappings
             var categories = _productCategoryMappingsService.GetMappings(limit: expectedLimit);
 
             // Assert
-            CollectionAssert.IsEmpty(categories);
+            ClassicAssert.IsEmpty(categories);
         }
     }
 }

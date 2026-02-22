@@ -4,7 +4,8 @@ using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Plugin.Api.Converters;
 using NUnit.Framework;
-using Rhino.Mocks;
+using NUnit.Framework.Legacy;
+using NSubstitute;
 
 namespace Nop.Plugin.Api.Tests.ConvertersTests.ApiTypeConverter
 {
@@ -38,7 +39,7 @@ namespace Nop.Plugin.Api.Tests.ConvertersTests.ApiTypeConverter
             var result = _apiTypeConverter.ToEnumNullable(invalidOrderStatus, type);
 
             //Assert
-            Assert.IsNull(result);
+            ClassicAssert.IsNull(result);
         }
 
         [Test]
@@ -52,7 +53,7 @@ namespace Nop.Plugin.Api.Tests.ConvertersTests.ApiTypeConverter
             var result = _apiTypeConverter.ToEnumNullable(Arg<string>.Is.Equal(nullOrEmpty), Arg<Type>.Is.Anything);
 
             //Assert
-            Assert.IsNull(result);
+            ClassicAssert.IsNull(result);
         }
 
         [Test]
@@ -71,7 +72,7 @@ namespace Nop.Plugin.Api.Tests.ConvertersTests.ApiTypeConverter
             var result = _apiTypeConverter.ToEnumNullable(validEnum, type);
 
             //Assert
-            Assert.AreEqual(enumValueParsed, result);
+            ClassicAssert.AreEqual(enumValueParsed, result);
         }
     }
 }

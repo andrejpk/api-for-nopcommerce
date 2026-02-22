@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Core.Domain.Orders;
 using Nop.Plugin.Api.Services;
 using NUnit.Framework;
-using Rhino.Mocks;
+using NUnit.Framework.Legacy;
+using NSubstitute;
 
 namespace Nop.Plugin.Api.Tests.ServicesTests.Orders.GetOrders
 {
@@ -29,8 +30,8 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Orders.GetOrders
 
             _existigOrders[5].Deleted = true;
 
-            var orderRepo = MockRepository.GenerateStub<IRepository<Order>>();
-            orderRepo.Stub(x => x.TableNoTracking).Return(_existigOrders.AsQueryable());
+            var orderRepo = Substitute.For<IRepository<Order>>();
+            orderRepo.TableNoTracking.Returns(_existigOrders.AsQueryable());
             
             _orderApiService = new OrderApiService(orderRepo);
         }
@@ -45,8 +46,8 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Orders.GetOrders
             var orders = _orderApiService.GetOrders(limit: expectedLimit);
 
             // Assert
-            CollectionAssert.IsNotEmpty(orders);
-            Assert.AreEqual(expectedLimit, orders.Count);
+            ClassicAssert.IsNotEmpty(orders);
+            ClassicAssert.AreEqual(expectedLimit, orders.Count);
         }
 
         [Test]
@@ -59,8 +60,8 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Orders.GetOrders
             var orders = _orderApiService.GetOrders(limit: expectedLimit + 10);
 
             // Assert
-            CollectionAssert.IsNotEmpty(orders);
-            Assert.AreEqual(expectedLimit, orders.Count);
+            ClassicAssert.IsNotEmpty(orders);
+            ClassicAssert.AreEqual(expectedLimit, orders.Count);
         }
 
         [Test]
@@ -73,7 +74,7 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Orders.GetOrders
             var orders = _orderApiService.GetOrders(limit: expectedLimit);
 
             // Assert
-            CollectionAssert.IsEmpty(orders);
+            ClassicAssert.IsEmpty(orders);
         }
 
         [Test]
@@ -86,7 +87,7 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Orders.GetOrders
             var orders = _orderApiService.GetOrders(limit: expectedLimit);
 
             // Assert
-            CollectionAssert.IsEmpty(orders);
+            ClassicAssert.IsEmpty(orders);
         }
     }
 }

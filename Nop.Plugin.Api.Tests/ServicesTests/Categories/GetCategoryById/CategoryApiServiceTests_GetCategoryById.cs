@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Plugin.Api.Services;
 using NUnit.Framework;
-using Rhino.Mocks;
+using NUnit.Framework.Legacy;
+using NSubstitute;
 
 namespace Nop.Plugin.Api.Tests.ServicesTests.Categories.GetCategoryById
 {
@@ -19,20 +20,20 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Categories.GetCategoryById
             int categoryId = 3;
             
             // Arange
-            var categoryRepo = MockRepository.GenerateStub<IRepository<Category>>();
-            categoryRepo.Stub(x => x.Table).Return((new List<Category>()).AsQueryable());
-            categoryRepo.Stub(x => x.GetById(categoryId)).Return(null);
+            var categoryRepo = Substitute.For<IRepository<Category>>();
+            categoryRepo.Table.Returns((new List<Category>()).AsQueryable());
+            categoryRepo.GetById(categoryId).Returns(null);
 
-            var productCategoryRepo = MockRepository.GenerateStub<IRepository<ProductCategory>>();
+            var productCategoryRepo = Substitute.For<IRepository<ProductCategory>>();
 
-            var storeMappingService = MockRepository.GenerateStub<IStoreMappingService>();
+            var storeMappingService = Substitute.For<IStoreMappingService>();
 
             // Act
             var cut = new CategoryApiService(categoryRepo, productCategoryRepo, storeMappingService);
             var result = cut.GetCategoryById(categoryId);
 
             // Assert
-            Assert.IsNull(result);
+            ClassicAssert.IsNull(result);
         }
 
         [Test]
@@ -41,17 +42,17 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Categories.GetCategoryById
         public void WhenNegativeOrZeroCategoryIdPassed_ShouldReturnNull(int negativeOrZeroCategoryId)
         {
             // Aranges
-            var categoryRepoStub = MockRepository.GenerateStub<IRepository<Category>>();
-            var productCategoryRepo = MockRepository.GenerateStub<IRepository<ProductCategory>>();
+            var categoryRepoStub = Substitute.For<IRepository<Category>>();
+            var productCategoryRepo = Substitute.For<IRepository<ProductCategory>>();
 
-            var storeMappingService = MockRepository.GenerateStub<IStoreMappingService>();
+            var storeMappingService = Substitute.For<IStoreMappingService>();
 
             // Act
             var cut = new CategoryApiService(categoryRepoStub, productCategoryRepo, storeMappingService);
             var result = cut.GetCategoryById(negativeOrZeroCategoryId);
 
             // Assert
-            Assert.IsNull(result);
+            ClassicAssert.IsNull(result);
         }
 
         [Test]
@@ -61,25 +62,25 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Categories.GetCategoryById
             Category category = new Category() { Id = 3, Name = "some name" };
 
             // Arange
-            var categoryRepo = MockRepository.GenerateStub<IRepository<Category>>();
+            var categoryRepo = Substitute.For<IRepository<Category>>();
 
             var list = new List<Category>();
             list.Add(category);
 
-            categoryRepo.Stub(x => x.Table).Return(list.AsQueryable());
+            categoryRepo.Table.Returns(list.AsQueryable());
 
-            categoryRepo.Stub(x => x.GetById(categoryId)).Return(category);
+            categoryRepo.GetById(categoryId).Returns(category);
 
-            var productCategoryRepo = MockRepository.GenerateStub<IRepository<ProductCategory>>();
+            var productCategoryRepo = Substitute.For<IRepository<ProductCategory>>();
 
-            var storeMappingService = MockRepository.GenerateStub<IStoreMappingService>();
+            var storeMappingService = Substitute.For<IStoreMappingService>();
 
             // Act
             var cut = new CategoryApiService(categoryRepo, productCategoryRepo, storeMappingService);
             var result = cut.GetCategoryById(categoryId);
 
             // Assert
-            Assert.AreSame(category, result);
+            ClassicAssert.AreSame(category, result);
         }
     }
 }

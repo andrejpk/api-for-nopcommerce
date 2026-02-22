@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using Nop.Plugin.Api.AutoMapper;
 
 namespace Nop.Plugin.Api.Tests
 {

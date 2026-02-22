@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Plugin.Api.Services;
 using NUnit.Framework;
-using Rhino.Mocks;
+using NUnit.Framework.Legacy;
+using NSubstitute;
 
 namespace Nop.Plugin.Api.Tests.ServicesTests.Categories.GetCategoriesCount
 {
@@ -34,13 +35,13 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Categories.GetCategoriesCount
                 new Category() {Id = 7, Published = false, CreatedOnUtc = _baseDate.AddMonths(4) }
             };
 
-            var categoryRepo = MockRepository.GenerateStub<IRepository<Category>>();
-            categoryRepo.Stub(x => x.TableNoTracking).Return(_existigCategories.AsQueryable());
+            var categoryRepo = Substitute.For<IRepository<Category>>();
+            categoryRepo.TableNoTracking.Returns(_existigCategories.AsQueryable());
 
-            var productCategoryRepo = MockRepository.GenerateStub<IRepository<ProductCategory>>();
+            var productCategoryRepo = Substitute.For<IRepository<ProductCategory>>();
 
-            var storeMappingService = MockRepository.GenerateStub<IStoreMappingService>();
-            storeMappingService.Stub(x => x.Authorize(Arg<Category>.Is.Anything)).Return(true);
+            var storeMappingService = Substitute.For<IStoreMappingService>();
+            storeMappingService.Authorize(Arg<Category>.Is.Anything).Returns(true);
 
             _categoryApiService = new CategoryApiService(categoryRepo, productCategoryRepo, storeMappingService);
         }
@@ -58,7 +59,7 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Categories.GetCategoriesCount
             var categoriesCount = _categoryApiService.GetCategoriesCount(createdAtMin: createdAtMinDate);
 
             // Assert
-            Assert.AreEqual(expectedCategoriesCount, categoriesCount);
+            ClassicAssert.AreEqual(expectedCategoriesCount, categoriesCount);
         }
 
         [Test]
@@ -71,7 +72,7 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Categories.GetCategoriesCount
             var categoriesCount = _categoryApiService.GetCategoriesCount(createdAtMin: createdAtMinDate);
 
             // Assert
-            Assert.AreEqual(0, categoriesCount);
+            ClassicAssert.AreEqual(0, categoriesCount);
         }
 
         [Test]
@@ -86,7 +87,7 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Categories.GetCategoriesCount
             var categoriesCount = _categoryApiService.GetCategoriesCount(createdAtMax: createdAtMaxDate);
 
             // Assert
-            Assert.AreEqual(expectedCategoriesCount, categoriesCount);
+            ClassicAssert.AreEqual(expectedCategoriesCount, categoriesCount);
         }
 
         [Test]
@@ -99,7 +100,7 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Categories.GetCategoriesCount
             var categoriesCount = _categoryApiService.GetCategoriesCount(createdAtMax: createdAtMaxDate);
 
             // Assert
-            Assert.AreEqual(0, categoriesCount);
+            ClassicAssert.AreEqual(0, categoriesCount);
         }
     }
 }

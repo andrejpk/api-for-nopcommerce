@@ -1,11 +1,12 @@
 ﻿using System.Net;
-using AutoMock;
+
 using Nop.Core.Domain.Catalog;
 using Nop.Plugin.Api.Controllers;
-using Nop.Plugin.Api.DTOs.ProductCategoryMappings;
+using Nop.Plugin.Api.DTO.ProductCategoryMappings;
 using Nop.Plugin.Api.Services;
 using NUnit.Framework;
-using Rhino.Mocks;
+using NUnit.Framework.Legacy;
+using NSubstitute;
 
 namespace Nop.Plugin.Api.Tests.ControllersTests.ProductCategoryMappings
 {
@@ -34,7 +35,7 @@ namespace Nop.Plugin.Api.Tests.ControllersTests.ProductCategoryMappings
             // Assert
             var statusCode = ActionResultExecutor.ExecuteResult(result);
 
-            Assert.AreEqual(HttpStatusCode.BadRequest, statusCode);
+            ClassicAssert.AreEqual(HttpStatusCode.BadRequest, statusCode);
         }
 
         [Test]
@@ -74,7 +75,7 @@ namespace Nop.Plugin.Api.Tests.ControllersTests.ProductCategoryMappings
             // Assert
             var statusCode = ActionResultExecutor.ExecuteResult(result);
 
-            Assert.AreEqual(HttpStatusCode.NotFound, statusCode);
+            ClassicAssert.AreEqual(HttpStatusCode.NotFound, statusCode);
         }
 
         [Test]

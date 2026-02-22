@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Vendors;
 using Nop.Plugin.Api.DataStructures;
 using Nop.Plugin.Api.Services;
 using NUnit.Framework;
-using Rhino.Mocks;
+using NUnit.Framework.Legacy;
+using NSubstitute;
 
 namespace Nop.Plugin.Api.Tests.ServicesTests.Products.GetProducts
 {
@@ -35,13 +36,13 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Products.GetProducts
             _existigProducts[51].Published = false;
             _existigProducts = _existigProducts.OrderBy(x => x.Id).ToList();
 
-            var productRepo = MockRepository.GenerateStub<IRepository<Product>>();
-            productRepo.Stub(x => x.TableNoTracking).Return(_existigProducts.AsQueryable());
+            var productRepo = Substitute.For<IRepository<Product>>();
+            productRepo.TableNoTracking.Returns(_existigProducts.AsQueryable());
 
-            var productCategoryRepo = MockRepository.GenerateStub<IRepository<ProductCategory>>();
-            var vendorRepo = MockRepository.GenerateStub<IRepository<Vendor>>();
+            var productCategoryRepo = Substitute.For<IRepository<ProductCategory>>();
+            var vendorRepo = Substitute.For<IRepository<Vendor>>();
 
-            var storeMappingService = MockRepository.GenerateStub<IStoreMappingService>();
+            var storeMappingService = Substitute.For<IStoreMappingService>();
 
             _productApiService = new ProductApiService(productRepo, productCategoryRepo, vendorRepo, storeMappingService);
         }
@@ -58,9 +59,9 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Products.GetProducts
             var products = _productApiService.GetProducts(limit: limit, page: page);
 
             // Assert
-            CollectionAssert.IsNotEmpty(products);
-            Assert.AreEqual(expectedCollection.Count(), products.Count);
-            Assert.IsTrue(products.Select(x => x.Id).SequenceEqual(expectedCollection.Select(x => x.Id)));
+            ClassicAssert.IsNotEmpty(products);
+            ClassicAssert.AreEqual(expectedCollection.Count(), products.Count);
+            ClassicAssert.IsTrue(products.Select(x => x.Id).SequenceEqual(expectedCollection.Select(x => x.Id)));
         }
 
         [Test]
@@ -75,10 +76,10 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Products.GetProducts
             var products = _productApiService.GetProducts(limit: limit, page: page);
 
             // Assert
-            CollectionAssert.IsNotEmpty(products);
-            Assert.AreEqual(expectedCollection.Count(), products.Count);
-            Assert.AreEqual(_existigProducts.First().Id, products.First().Id);
-            Assert.IsTrue(products.Select(x => x.Id).SequenceEqual(expectedCollection.Select(x => x.Id)));
+            ClassicAssert.IsNotEmpty(products);
+            ClassicAssert.AreEqual(expectedCollection.Count(), products.Count);
+            ClassicAssert.AreEqual(_existigProducts.First().Id, products.First().Id);
+            ClassicAssert.IsTrue(products.Select(x => x.Id).SequenceEqual(expectedCollection.Select(x => x.Id)));
         }
 
         [Test]
@@ -93,10 +94,10 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Products.GetProducts
             var products = _productApiService.GetProducts(limit: limit, page: page);
 
             // Assert
-            CollectionAssert.IsNotEmpty(products);
-            Assert.AreEqual(expectedCollection.Count(), products.Count);
-            Assert.AreEqual(_existigProducts.First().Id, products.First().Id);
-            Assert.IsTrue(products.Select(x => x.Id).SequenceEqual(expectedCollection.Select(x => x.Id)));
+            ClassicAssert.IsNotEmpty(products);
+            ClassicAssert.AreEqual(expectedCollection.Count(), products.Count);
+            ClassicAssert.AreEqual(_existigProducts.First().Id, products.First().Id);
+            ClassicAssert.IsTrue(products.Select(x => x.Id).SequenceEqual(expectedCollection.Select(x => x.Id)));
         }
 
         [Test]
@@ -110,7 +111,7 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Products.GetProducts
             var products = _productApiService.GetProducts(limit: limit, page: page);
 
             // Assert
-            CollectionAssert.IsEmpty(products);
+            ClassicAssert.IsEmpty(products);
         }
     }
 }

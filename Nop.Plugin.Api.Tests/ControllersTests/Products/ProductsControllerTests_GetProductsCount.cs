@@ -1,12 +1,13 @@
 ﻿//using System.Web.Http;
 //using System.Web.Http.Results;
 //using Nop.Plugin.Api.Controllers;
-//using Nop.Plugin.Api.DTOs.Products;
+//using Nop.Plugin.Api.DTO.Products;
 //using Nop.Plugin.Api.Models.ProductsParameters;
 //using Nop.Plugin.Api.Serializers;
 //using Nop.Plugin.Api.Services;
 //using NUnit.Framework;
-//using Rhino.Mocks;
+using NUnit.Framework.Legacy;
+//using NSubstitute;
 
 //namespace Nop.Plugin.Api.Tests.ControllersTests.Products
 //{
@@ -19,10 +20,10 @@
 //            var parameters = new ProductsCountParametersModel();
 
 //            // arrange
-//            var productsApiServiceStub = MockRepository.GenerateStub<IProductApiService>();
-//            productsApiServiceStub.Stub(x => x.GetProductsCount()).IgnoreArguments().Return(0);
+//            var productsApiServiceStub = Substitute.For<IProductApiService>();
+//            productsApiServiceStub.GetProductsCount()).IgnoreArguments(.Returns(0);
 
-//            IJsonFieldsSerializer jsonFieldsSerializer = MockRepository.GenerateStub<IJsonFieldsSerializer>();
+//            IJsonFieldsSerializer jsonFieldsSerializer = Substitute.For<IJsonFieldsSerializer>();
 
 //            var cut = new ProductsController(productsApiServiceStub, jsonFieldsSerializer);
 
@@ -30,8 +31,8 @@
 //            IActionResult result = cut.GetProductsCount(parameters);
 
 //            // assert
-//            Assert.IsInstanceOf<OkNegotiatedContentResult<ProductsCountRootObject>>(result);
-//            Assert.AreEqual(0, ((OkNegotiatedContentResult<ProductsCountRootObject>)result).Content.Count);
+//            ClassicAssert.IsInstanceOf<OkNegotiatedContentResult<ProductsCountRootObject>>(result);
+//            ClassicAssert.AreEqual(0, ((OkNegotiatedContentResult<ProductsCountRootObject>)result).Content.Count);
 //        }
 
 //        [Test]
@@ -40,10 +41,10 @@
 //            var parameters = new ProductsCountParametersModel();
 
 //            // arrange
-//            var productsApiServiceStub = MockRepository.GenerateStub<IProductApiService>();
-//            productsApiServiceStub.Stub(x => x.GetProductsCount()).IgnoreArguments().Return(1);
+//            var productsApiServiceStub = Substitute.For<IProductApiService>();
+//            productsApiServiceStub.GetProductsCount()).IgnoreArguments(.Returns(1);
 
-//            IJsonFieldsSerializer jsonFieldsSerializer = MockRepository.GenerateStub<IJsonFieldsSerializer>();
+//            IJsonFieldsSerializer jsonFieldsSerializer = Substitute.For<IJsonFieldsSerializer>();
 
 //            var cut = new ProductsController(productsApiServiceStub, jsonFieldsSerializer);
 
@@ -51,8 +52,8 @@
 //            IActionResult result = cut.GetProductsCount(parameters);
 
 //            // assert
-//            Assert.IsInstanceOf<OkNegotiatedContentResult<ProductsCountRootObject>>(result);
-//            Assert.AreEqual(1, ((OkNegotiatedContentResult<ProductsCountRootObject>)result).Content.Count);
+//            ClassicAssert.IsInstanceOf<OkNegotiatedContentResult<ProductsCountRootObject>>(result);
+//            ClassicAssert.AreEqual(1, ((OkNegotiatedContentResult<ProductsCountRootObject>)result).Content.Count);
 //        }
 
 //        [Test]
@@ -62,10 +63,10 @@
 //            int productsCount = 20;
 
 //            // arrange
-//            var productsApiServiceStub = MockRepository.GenerateStub<IProductApiService>();
-//            productsApiServiceStub.Stub(x => x.GetProductsCount()).IgnoreArguments().Return(productsCount);
+//            var productsApiServiceStub = Substitute.For<IProductApiService>();
+//            productsApiServiceStub.GetProductsCount()).IgnoreArguments(.Returns(productsCount);
 
-//            IJsonFieldsSerializer jsonFieldsSerializer = MockRepository.GenerateStub<IJsonFieldsSerializer>();
+//            IJsonFieldsSerializer jsonFieldsSerializer = Substitute.For<IJsonFieldsSerializer>();
 
 //            var cut = new ProductsController(productsApiServiceStub, jsonFieldsSerializer);
 
@@ -73,8 +74,8 @@
 //            IActionResult result = cut.GetProductsCount(productsCountParametersModel);
 
 //            // assert
-//            Assert.IsInstanceOf<OkNegotiatedContentResult<ProductsCountRootObject>>(result);
-//            Assert.AreEqual(productsCount, ((OkNegotiatedContentResult<ProductsCountRootObject>)result).Content.Count);
+//            ClassicAssert.IsInstanceOf<OkNegotiatedContentResult<ProductsCountRootObject>>(result);
+//            ClassicAssert.AreEqual(productsCount, ((OkNegotiatedContentResult<ProductsCountRootObject>)result).Content.Count);
 //        }
 //    }
 //}

@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Core.Domain.Orders;
 using Nop.Plugin.Api.DataStructures;
 using Nop.Plugin.Api.Services;
 using NUnit.Framework;
-using Rhino.Mocks;
+using NUnit.Framework.Legacy;
+using NSubstitute;
 
 namespace Nop.Plugin.Api.Tests.ServicesTests.Orders.GetOrders
 {
@@ -31,8 +32,8 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Orders.GetOrders
             _existigOrders[5].Deleted = true;
             _existigOrders = _existigOrders.OrderBy(x => x.Id).ToList();
 
-            var orderRepo = MockRepository.GenerateStub<IRepository<Order>>();
-            orderRepo.Stub(x => x.TableNoTracking).Return(_existigOrders.AsQueryable());
+            var orderRepo = Substitute.For<IRepository<Order>>();
+            orderRepo.TableNoTracking.Returns(_existigOrders.AsQueryable());
             
             _orderApiService = new OrderApiService(orderRepo);
         }
@@ -49,9 +50,9 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Orders.GetOrders
             var orders = _orderApiService.GetOrders(limit: limit, page: page);
 
             // Assert
-            CollectionAssert.IsNotEmpty(orders);
-            Assert.AreEqual(expectedCollection.Count(), orders.Count);
-            Assert.IsTrue(orders.Select(x => x.Id).SequenceEqual(expectedCollection.Select(x => x.Id)));
+            ClassicAssert.IsNotEmpty(orders);
+            ClassicAssert.AreEqual(expectedCollection.Count(), orders.Count);
+            ClassicAssert.IsTrue(orders.Select(x => x.Id).SequenceEqual(expectedCollection.Select(x => x.Id)));
         }
 
         [Test]
@@ -66,10 +67,10 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Orders.GetOrders
             var orders = _orderApiService.GetOrders(limit: limit, page: page);
 
             // Assert
-            CollectionAssert.IsNotEmpty(orders);
-            Assert.AreEqual(expectedCollection.Count(), orders.Count);
-            Assert.AreEqual(_existigOrders.First().Id, orders.First().Id);
-            Assert.IsTrue(orders.Select(x => x.Id).SequenceEqual(expectedCollection.Select(x => x.Id)));
+            ClassicAssert.IsNotEmpty(orders);
+            ClassicAssert.AreEqual(expectedCollection.Count(), orders.Count);
+            ClassicAssert.AreEqual(_existigOrders.First().Id, orders.First().Id);
+            ClassicAssert.IsTrue(orders.Select(x => x.Id).SequenceEqual(expectedCollection.Select(x => x.Id)));
         }
 
         [Test]
@@ -84,10 +85,10 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Orders.GetOrders
             var orders = _orderApiService.GetOrders(limit: limit, page: page);
 
             // Assert
-            CollectionAssert.IsNotEmpty(orders);
-            Assert.AreEqual(expectedCollection.Count(), orders.Count);
-            Assert.AreEqual(_existigOrders.First().Id, orders.First().Id);
-            Assert.IsTrue(orders.Select(x => x.Id).SequenceEqual(expectedCollection.Select(x => x.Id)));
+            ClassicAssert.IsNotEmpty(orders);
+            ClassicAssert.AreEqual(expectedCollection.Count(), orders.Count);
+            ClassicAssert.AreEqual(_existigOrders.First().Id, orders.First().Id);
+            ClassicAssert.IsTrue(orders.Select(x => x.Id).SequenceEqual(expectedCollection.Select(x => x.Id)));
         }
 
         [Test]
@@ -101,7 +102,7 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Orders.GetOrders
             var orders = _orderApiService.GetOrders(limit: limit, page: page);
 
             // Assert
-            CollectionAssert.IsEmpty(orders);
+            ClassicAssert.IsEmpty(orders);
         }
     }
 }

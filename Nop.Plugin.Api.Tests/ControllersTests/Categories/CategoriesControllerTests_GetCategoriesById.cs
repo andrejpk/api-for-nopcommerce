@@ -1,10 +1,11 @@
 ﻿using System.Net;
-using AutoMock;
+
 using Nop.Plugin.Api.Controllers;
-using Nop.Plugin.Api.DTOs.Categories;
+using Nop.Plugin.Api.DTO.Categories;
 using Nop.Plugin.Api.Services;
 using NUnit.Framework;
-using Rhino.Mocks;
+using NUnit.Framework.Legacy;
+using NSubstitute;
 
 namespace Nop.Plugin.Api.Tests.ControllersTests.Categories
 {
@@ -33,7 +34,7 @@ namespace Nop.Plugin.Api.Tests.ControllersTests.Categories
             // Assert
             var statusCode = ActionResultExecutor.ExecuteResult(result);
 
-            Assert.AreEqual(HttpStatusCode.BadRequest, statusCode);
+            ClassicAssert.AreEqual(HttpStatusCode.BadRequest, statusCode);
         }
 
         [Test]
@@ -72,7 +73,7 @@ namespace Nop.Plugin.Api.Tests.ControllersTests.Categories
             // Assert
             var statusCode = ActionResultExecutor.ExecuteResult(result);
 
-            Assert.AreEqual(HttpStatusCode.NotFound, statusCode);
+            ClassicAssert.AreEqual(HttpStatusCode.NotFound, statusCode);
         }
 
         // The static method category.GetSeName() breaks this test as we can't stub static methods :(

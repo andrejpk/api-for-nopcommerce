@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Core.Domain.Orders;
 using Nop.Plugin.Api.Services;
 using NUnit.Framework;
-using Rhino.Mocks;
+using NUnit.Framework.Legacy;
+using NSubstitute;
 
 namespace Nop.Plugin.Api.Tests.ServicesTests.Orders.GetOrdersCount
 {
@@ -15,15 +16,15 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Orders.GetOrdersCount
         public void WhenCalledWithDefaultParameters_GivenNoOrdersExist_ShouldReturnZero()
         {
             // Arange
-            var orderRepo = MockRepository.GenerateStub<IRepository<Order>>();
-            orderRepo.Stub(x => x.TableNoTracking).Return(new List<Order>().AsQueryable());
+            var orderRepo = Substitute.For<IRepository<Order>>();
+            orderRepo.TableNoTracking.Returns(new List<Order>().AsQueryable());
             
             // Act
             var cut = new OrderApiService(orderRepo);
             var ordersCount = cut.GetOrdersCount();
 
             // Assert
-            Assert.AreEqual(0, ordersCount);
+            ClassicAssert.AreEqual(0, ordersCount);
         }
 
         [Test]
@@ -34,15 +35,15 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Orders.GetOrdersCount
             existingOrders.Add(new Order() { Id = 2, Deleted = true });
 
             // Arange
-            var orderRepo = MockRepository.GenerateStub<IRepository<Order>>();
-            orderRepo.Stub(x => x.TableNoTracking).Return(existingOrders.AsQueryable());
+            var orderRepo = Substitute.For<IRepository<Order>>();
+            orderRepo.TableNoTracking.Returns(existingOrders.AsQueryable());
             
             // Act
             var cut = new OrderApiService(orderRepo);
             var countResult = cut.GetOrdersCount();
 
             // Assert
-            Assert.AreEqual(0, countResult);
+            ClassicAssert.AreEqual(0, countResult);
         }
 
         [Test]
@@ -54,15 +55,15 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Orders.GetOrdersCount
             existingOrders.Add(new Order() { Id = 3 });
 
             // Arange
-            var ordersRepo = MockRepository.GenerateStub<IRepository<Order>>();
-            ordersRepo.Stub(x => x.TableNoTracking).Return(existingOrders.AsQueryable());
+            var ordersRepo = Substitute.For<IRepository<Order>>();
+            ordersRepo.TableNoTracking.Returns(existingOrders.AsQueryable());
             
             // Act
             var cut = new OrderApiService(ordersRepo);
             var countResult = cut.GetOrdersCount();
 
             // Assert
-            Assert.AreEqual(2, countResult);
+            ClassicAssert.AreEqual(2, countResult);
         }
 
         [Test]
@@ -74,15 +75,15 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Orders.GetOrdersCount
             existingOrders.Add(new Order() { Id = 1 });
 
             // Arange
-            var ordersRepo = MockRepository.GenerateStub<IRepository<Order>>();
-            ordersRepo.Stub(x => x.TableNoTracking).Return(existingOrders.AsQueryable());
+            var ordersRepo = Substitute.For<IRepository<Order>>();
+            ordersRepo.TableNoTracking.Returns(existingOrders.AsQueryable());
 
             // Act
             var cut = new OrderApiService(ordersRepo);
             var countResult = cut.GetOrdersCount();
 
             // Assert
-            Assert.AreEqual(existingOrders.Count, countResult);
+            ClassicAssert.AreEqual(existingOrders.Count, countResult);
         }
     }
 }

@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Core.Domain.Orders;
 using Nop.Plugin.Api.DataStructures;
 using Nop.Plugin.Api.Services;
 using NUnit.Framework;
-using Rhino.Mocks;
+using NUnit.Framework.Legacy;
+using NSubstitute;
 
 namespace Nop.Plugin.Api.Tests.ServicesTests.ShoppingCartItems.GetShoppingCartItems
 {
@@ -31,10 +32,10 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.ShoppingCartItems.GetShoppingCartIt
                 });
             }
 
-            var shoppingCartItemRepo = MockRepository.GenerateStub<IRepository<ShoppingCartItem>>();
-            shoppingCartItemRepo.Stub(x => x.TableNoTracking).Return(_existigShoppingCartItems.AsQueryable());
+            var shoppingCartItemRepo = Substitute.For<IRepository<ShoppingCartItem>>();
+            shoppingCartItemRepo.TableNoTracking.Returns(_existigShoppingCartItems.AsQueryable());
 
-            var storeContext = MockRepository.GenerateStub<IStoreContext>();
+            var storeContext = Substitute.For<IStoreContext>();
             storeContext.Stub(x => x.CurrentStore).Return(new Store()
             {
                 Id = 0
@@ -55,9 +56,9 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.ShoppingCartItems.GetShoppingCartIt
             var result = _shoppingCartItemApiService.GetShoppingCartItems(limit: limit, page: page);
 
             // Assert
-            CollectionAssert.IsNotEmpty(result);
-            Assert.AreEqual(expectedCollection.Count(), result.Count);
-            Assert.IsTrue(result.Select(x => x.Id).SequenceEqual(expectedCollection.Select(x => x.Id)));
+            ClassicAssert.IsNotEmpty(result);
+            ClassicAssert.AreEqual(expectedCollection.Count(), result.Count);
+            ClassicAssert.IsTrue(result.Select(x => x.Id).SequenceEqual(expectedCollection.Select(x => x.Id)));
         }
 
         [Test]
@@ -73,10 +74,10 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.ShoppingCartItems.GetShoppingCartIt
             var result = _shoppingCartItemApiService.GetShoppingCartItems(limit: limit, page: page);
 
             // Assert
-            CollectionAssert.IsNotEmpty(result);
-            Assert.AreEqual(expectedCollection.Count(), result.Count);
-            Assert.AreEqual(_existigShoppingCartItems.First().Id, result.First().Id);
-            Assert.IsTrue(result.Select(x => x.Id).SequenceEqual(expectedCollection.Select(x => x.Id)));
+            ClassicAssert.IsNotEmpty(result);
+            ClassicAssert.AreEqual(expectedCollection.Count(), result.Count);
+            ClassicAssert.AreEqual(_existigShoppingCartItems.First().Id, result.First().Id);
+            ClassicAssert.IsTrue(result.Select(x => x.Id).SequenceEqual(expectedCollection.Select(x => x.Id)));
         }
 
         [Test]
@@ -90,7 +91,7 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.ShoppingCartItems.GetShoppingCartIt
             var result = _shoppingCartItemApiService.GetShoppingCartItems(limit: limit, page: page);
 
             // Assert
-            CollectionAssert.IsEmpty(result);
+            ClassicAssert.IsEmpty(result);
         }
     }
 }
