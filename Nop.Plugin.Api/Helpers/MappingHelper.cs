@@ -34,6 +34,20 @@ namespace Nop.Plugin.Api.Helpers
         // Used in the SetValue private method and also in the Delta.
         private void ConvertAndSetValueIfValid(object objectToBeUpdated, PropertyInfo objectProperty, object propertyValue)
         {
+            // Special handling for DateTime and DateTime? to preserve DateTimeKind.Utc
+            // Without this, converting to string and back loses the DateTimeKind marker,
+            // causing dates to be stored as local time instead of UTC in the database.
+            if (objectProperty.PropertyType == typeof(DateTime) || objectProperty.PropertyType == typeof(DateTime?))
+            {
+                if (propertyValue is DateTime dateTimeValue)
+                {
+                    // Directly set the DateTime value to preserve DateTimeKind
+                    objectProperty.SetValue(objectToBeUpdated, dateTimeValue);
+                    return;
+                }
+                // For nullable DateTime, null values will fall through to the converter below
+            }
+
             var converter = TypeDescriptor.GetConverter(objectProperty.PropertyType);
 
             var propertyValueAsString = string.Format(CultureInfo.InvariantCulture, "{0}", propertyValue);
