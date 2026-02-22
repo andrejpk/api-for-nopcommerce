@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
 using Nop.Plugin.Api.DTO;
 using Nop.Plugin.Api.Helpers;
 
@@ -6,6 +8,18 @@ namespace Nop.Plugin.Api.JSON.Serializers
 {
     public class JsonFieldsSerializer : IJsonFieldsSerializer
     {
+        private static readonly JsonSerializer _serializer = CreateSerializer();
+
+        private static JsonSerializer CreateSerializer()
+        {
+            var serializer = new JsonSerializer
+            {
+                DateTimeZoneHandling = DateTimeZoneHandling.Utc
+            };
+            serializer.Converters.Add(new StringEnumConverter());
+            return serializer;
+        }
+
         public string Serialize(ISerializableObject objectToSerialize, string jsonFields)
         {
             if (objectToSerialize == null)
@@ -32,7 +46,7 @@ namespace Nop.Plugin.Api.JSON.Serializers
 
         private string Serialize(object objectToSerialize, IList<string> jsonFields = null)
         {
-            var jToken = JToken.FromObject(objectToSerialize);
+            var jToken = JToken.FromObject(objectToSerialize, _serializer);
 
             if (jsonFields != null)
             {
