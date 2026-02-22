@@ -4,9 +4,10 @@ using System.Linq;
 using System.Reflection;
 using Nop.Core.Domain.Catalog;
 using Nop.Plugin.Api.Attributes;
-using Nop.Plugin.Api.DTOs.Categories;
+using Nop.Plugin.Api.DTO.Categories;
 using Nop.Plugin.Api.MappingExtensions;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace Nop.Plugin.Api.Tests.MappingTests
 {
@@ -65,10 +66,10 @@ namespace Nop.Plugin.Api.Tests.MappingTests
         //    Category resultEntity = entity.Merge(dto);
 
         //    // The name should be updated
-        //    Assert.AreEqual(dto.Name, resultEntity.Name);
+        //    ClassicAssert.AreEqual(dto.Name, resultEntity.Name);
         //    // The description shouldn't be updated
-        //    Assert.NotNull(entity.Description);
-        //    Assert.AreEqual(entity.Description, resultEntity.Description);
+        //    ClassicAssert.NotNull(entity.Description);
+        //    ClassicAssert.AreEqual(entity.Description, resultEntity.Description);
         //}
     }
 }

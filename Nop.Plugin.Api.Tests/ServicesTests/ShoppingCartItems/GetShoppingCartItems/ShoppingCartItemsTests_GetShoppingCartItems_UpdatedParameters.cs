@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Core.Domain.Orders;
-using Nop.Plugin.Api.Constants;
+using static Nop.Plugin.Api.Infrastructure.Constants;
 using Nop.Plugin.Api.Services;
 using NUnit.Framework;
-using Rhino.Mocks;
+using NUnit.Framework.Legacy;
+using NSubstitute;
 
 namespace Nop.Plugin.Api.Tests.ServicesTests.ShoppingCartItems.GetShoppingCartItems
 {
@@ -37,10 +38,10 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.ShoppingCartItems.GetShoppingCartIt
                 });
             }
 
-            var shoppingCartItemsRepo = MockRepository.GenerateStub<IRepository<ShoppingCartItem>>();
-            shoppingCartItemsRepo.Stub(x => x.TableNoTracking).Return(_existigShoppingCartItems.AsQueryable());
+            var shoppingCartItemsRepo = Substitute.For<IRepository<ShoppingCartItem>>();
+            shoppingCartItemsRepo.TableNoTracking.Returns(_existigShoppingCartItems.AsQueryable());
 
-            var storeContext = MockRepository.GenerateStub<IStoreContext>();
+            var storeContext = Substitute.For<IStoreContext>();
             storeContext.Stub(x => x.CurrentStore).Return(new Store()
             {
                 Id = 0
@@ -62,15 +63,15 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.ShoppingCartItems.GetShoppingCartIt
                 UpdatedOnUtc = updatedAtMinDate
             });
 
-            var expectedCollection = _existigShoppingCartItems.Where(x => x.UpdatedOnUtc > updatedAtMinDate).OrderBy(x => x.Id).Take(Configurations.DefaultLimit);
+            var expectedCollection = _existigShoppingCartItems.Where(x => x.UpdatedOnUtc > updatedAtMinDate).OrderBy(x => x.Id).Take(Constants.Configurations.DefaultLimit);
             var expectedShoppingCartItemsCount = expectedCollection.Count();
 
             // Act
             var result = _shoppingCartItemsApiService.GetShoppingCartItems(updatedAtMin: updatedAtMinDate);
 
             // Assert
-            Assert.AreEqual(expectedShoppingCartItemsCount, result.Count);
-            Assert.IsTrue(result.Select(x => x.Id).SequenceEqual(expectedCollection.Select(x => x.Id)));
+            ClassicAssert.AreEqual(expectedShoppingCartItemsCount, result.Count);
+            ClassicAssert.IsTrue(result.Select(x => x.Id).SequenceEqual(expectedCollection.Select(x => x.Id)));
         }
 
         [Test]
@@ -90,7 +91,7 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.ShoppingCartItems.GetShoppingCartIt
             var result = _shoppingCartItemsApiService.GetShoppingCartItems(updatedAtMin: updatedAtMinDate);
 
             // Assert
-            CollectionAssert.IsEmpty(result);
+            ClassicAssert.IsEmpty(result);
         }
 
         [Test]
@@ -107,7 +108,7 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.ShoppingCartItems.GetShoppingCartIt
             });
 
             var expectedCollection =
-                _existigShoppingCartItems.Where(x => x.UpdatedOnUtc < updatedAtMaxDate).OrderBy(x => x.Id).Take(Configurations.DefaultLimit);
+                _existigShoppingCartItems.Where(x => x.UpdatedOnUtc < updatedAtMaxDate).OrderBy(x => x.Id).Take(Constants.Configurations.DefaultLimit);
 
             var expectedShoppingCartItemsCount = expectedCollection.Count();
 
@@ -115,8 +116,8 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.ShoppingCartItems.GetShoppingCartIt
             var shoppingCartItems = _shoppingCartItemsApiService.GetShoppingCartItems(updatedAtMax: updatedAtMaxDate);
 
             // Assert
-            Assert.AreEqual(expectedShoppingCartItemsCount, shoppingCartItems.Count);
-            Assert.IsTrue(shoppingCartItems.Select(x => x.Id).SequenceEqual(expectedCollection.Select(x => x.Id)));
+            ClassicAssert.AreEqual(expectedShoppingCartItemsCount, shoppingCartItems.Count);
+            ClassicAssert.IsTrue(shoppingCartItems.Select(x => x.Id).SequenceEqual(expectedCollection.Select(x => x.Id)));
         }
 
         [Test]
@@ -129,7 +130,7 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.ShoppingCartItems.GetShoppingCartIt
             var result = _shoppingCartItemsApiService.GetShoppingCartItems(updatedAtMax: updatedAtMaxDate);
 
             // Assert
-            CollectionAssert.IsEmpty(result);
+            ClassicAssert.IsEmpty(result);
         }
     }
 }

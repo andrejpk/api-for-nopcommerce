@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Core.Domain.Orders;
 using Nop.Plugin.Api.Services;
 using NUnit.Framework;
-using Rhino.Mocks;
+using NUnit.Framework.Legacy;
+using NSubstitute;
 
 namespace Nop.Plugin.Api.Tests.ServicesTests.Orders.GetOrders
 {
@@ -15,15 +16,15 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Orders.GetOrders
         public void WhenCalledWithDefaultParameters_GivenNoOrdersExist_ShouldReturnEmptyCollection()
         {
             // Arange
-            var ordersRepo = MockRepository.GenerateStub<IRepository<Order>>();
-            ordersRepo.Stub(x => x.TableNoTracking).Return(new List<Order>().AsQueryable());
+            var ordersRepo = Substitute.For<IRepository<Order>>();
+            ordersRepo.TableNoTracking.Returns(new List<Order>().AsQueryable());
             
             // Act
             var cut = new OrderApiService(ordersRepo);
             var orders = cut.GetOrders();
 
             // Assert
-            CollectionAssert.IsEmpty(orders);
+            ClassicAssert.IsEmpty(orders);
         }
 
         [Test]
@@ -34,15 +35,15 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Orders.GetOrders
             existingOrders.Add(new Order() { Id = 2, Deleted = true });
 
             // Arange
-            var orderRepo = MockRepository.GenerateStub<IRepository<Order>>();
-            orderRepo.Stub(x => x.TableNoTracking).Return(existingOrders.AsQueryable());
+            var orderRepo = Substitute.For<IRepository<Order>>();
+            orderRepo.TableNoTracking.Returns(existingOrders.AsQueryable());
             
             // Act
             var cut = new OrderApiService(orderRepo);
             var orders = cut.GetOrders();
 
             // Assert
-            CollectionAssert.IsEmpty(orders);
+            ClassicAssert.IsEmpty(orders);
         }
 
         [Test]
@@ -56,17 +57,17 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Orders.GetOrders
             var expectedCollection = existingOrders.Where(x => !x.Deleted).OrderBy(x => x.Id);
 
             // Arange
-            var orderRepo = MockRepository.GenerateStub<IRepository<Order>>();
-            orderRepo.Stub(x => x.TableNoTracking).Return(existingOrders.AsQueryable());
+            var orderRepo = Substitute.For<IRepository<Order>>();
+            orderRepo.TableNoTracking.Returns(existingOrders.AsQueryable());
             
             // Act
             var cut = new OrderApiService(orderRepo);
             var orders = cut.GetOrders();
 
             // Assert
-            CollectionAssert.IsNotEmpty(orders);
-            Assert.AreEqual(expectedCollection.Count(), orders.Count);
-            Assert.IsTrue(orders.Select(x => x.Id).SequenceEqual(expectedCollection.Select(x => x.Id)));
+            ClassicAssert.IsNotEmpty(orders);
+            ClassicAssert.AreEqual(expectedCollection.Count(), orders.Count);
+            ClassicAssert.IsTrue(orders.Select(x => x.Id).SequenceEqual(expectedCollection.Select(x => x.Id)));
         }
 
         [Test]
@@ -80,17 +81,17 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Orders.GetOrders
             var expectedCollection = existingOrders.Where(x => !x.Deleted).OrderBy(x => x.Id);
 
             // Arange
-            var orderRepo = MockRepository.GenerateStub<IRepository<Order>>();
-            orderRepo.Stub(x => x.TableNoTracking).Return(existingOrders.AsQueryable());
+            var orderRepo = Substitute.For<IRepository<Order>>();
+            orderRepo.TableNoTracking.Returns(existingOrders.AsQueryable());
             
             // Act
             var cut = new OrderApiService(orderRepo);
             var orders = cut.GetOrders();
 
             // Assert
-            CollectionAssert.IsNotEmpty(orders);
-            Assert.AreEqual(expectedCollection.Count(), orders.Count);
-            Assert.IsTrue(orders.Select(x => x.Id).SequenceEqual(expectedCollection.Select(x => x.Id)));
+            ClassicAssert.IsNotEmpty(orders);
+            ClassicAssert.AreEqual(expectedCollection.Count(), orders.Count);
+            ClassicAssert.IsTrue(orders.Select(x => x.Id).SequenceEqual(expectedCollection.Select(x => x.Id)));
         }
     }
 }

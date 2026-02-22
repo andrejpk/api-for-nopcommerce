@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Core.Domain.Directory;
 using Nop.Plugin.Api.Services;
 using NUnit.Framework;
-using Rhino.Mocks;
+using NUnit.Framework.Legacy;
+using NSubstitute;
 
 namespace Nop.Plugin.Api.Tests.ServicesTests
 {
@@ -16,7 +17,7 @@ namespace Nop.Plugin.Api.Tests.ServicesTests
     //    [SetUp]
     //    public new void SetUp()
     //    {
-    //        var stateProvinceRepositoryStub = MockRepository.GenerateStub<IRepository<StateProvince>>();
+    //        var stateProvinceRepositoryStub = Substitute.For<IRepository<StateProvince>>();
 
     //        stateProvinceRepositoryStub.Stub(x => x.Table).Return((new List<StateProvince>()
     //        {
@@ -38,8 +39,8 @@ namespace Nop.Plugin.Api.Tests.ServicesTests
     //    {
     //        StateProvince state = _stateProvinceApiService.GetStateProvinceByName("test state 1");
 
-    //        Assert.IsNotNull(state);
-    //        Assert.AreEqual("test state 1", state.Name);
+    //        ClassicAssert.IsNotNull(state);
+    //        ClassicAssert.AreEqual("test state 1", state.Name);
     //    }
 
     //    [Test]
@@ -47,7 +48,7 @@ namespace Nop.Plugin.Api.Tests.ServicesTests
     //    {
     //        StateProvince state = _stateProvinceApiService.GetStateProvinceByName("non existing state name");
 
-    //        Assert.IsNull(state);
+    //        ClassicAssert.IsNull(state);
     //    }
     //}
 }

@@ -2,15 +2,16 @@
 //using System.Web.Http;
 //using System.Web.Http.Results;
 //using Nop.Core.Domain.Catalog;
-//using Nop.Plugin.Api.Constants;
+//using static Nop.Plugin.Api.Infrastructure.Constants;
 //using Nop.Plugin.Api.Controllers;
-//using Nop.Plugin.Api.DTOs.Products;
+//using Nop.Plugin.Api.DTO.Products;
 //using Nop.Plugin.Api.MappingExtensions;
 //using Nop.Plugin.Api.Models.ProductsParameters;
 //using Nop.Plugin.Api.Serializers;
 //using Nop.Plugin.Api.Services;
 //using NUnit.Framework;
-//using Rhino.Mocks;
+using NUnit.Framework.Legacy;
+//using NSubstitute;
 
 //namespace Nop.Plugin.Api.Tests.ControllersTests.Products
 //{
@@ -28,9 +29,9 @@
 //            };
 
 //            //Arange
-//            IProductApiService productApiServiceStub = MockRepository.GenerateStub<IProductApiService>();
+//            IProductApiService productApiServiceStub = Substitute.For<IProductApiService>();
 
-//            IJsonFieldsSerializer jsonFieldsSerializerStub = MockRepository.GenerateStub<IJsonFieldsSerializer>();
+//            IJsonFieldsSerializer jsonFieldsSerializerStub = Substitute.For<IJsonFieldsSerializer>();
 
 //            var cut = new ProductsController(productApiServiceStub, jsonFieldsSerializerStub);
 
@@ -38,7 +39,7 @@
 //            IActionResult result = cut.GetProducts(parameters);
 
 //            //Assert
-//            Assert.IsInstanceOf<BadRequestErrorMessageResult>(result);
+//            ClassicAssert.IsInstanceOf<BadRequestErrorMessageResult>(result);
 //        }
 
 //        [Test]
@@ -52,9 +53,9 @@
 //            };
 
 //            //Arange
-//            IProductApiService productApiServiceStub = MockRepository.GenerateStub<IProductApiService>();
+//            IProductApiService productApiServiceStub = Substitute.For<IProductApiService>();
 
-//            IJsonFieldsSerializer jsonFieldsSerializerStub = MockRepository.GenerateStub<IJsonFieldsSerializer>();
+//            IJsonFieldsSerializer jsonFieldsSerializerStub = Substitute.For<IJsonFieldsSerializer>();
 
 //            var cut = new ProductsController(productApiServiceStub, jsonFieldsSerializerStub);
 
@@ -62,7 +63,7 @@
 //            IActionResult result = cut.GetProducts(parameters);
 
 //            //Assert
-//            Assert.IsInstanceOf<BadRequestErrorMessageResult>(result);
+//            ClassicAssert.IsInstanceOf<BadRequestErrorMessageResult>(result);
 //        }
 
 //        [Test]
@@ -85,7 +86,7 @@
 //                                                    parameters.VendorName,
 //                                                    parameters.PublishedStatus)).Return(new List<Product>());
 
-//            IJsonFieldsSerializer jsonFieldsSerializer = MockRepository.GenerateStub<IJsonFieldsSerializer>();
+//            IJsonFieldsSerializer jsonFieldsSerializer = Substitute.For<IJsonFieldsSerializer>();
 
 //            var cut = new ProductsController(productsApiServiceMock, jsonFieldsSerializer);
 
@@ -104,8 +105,8 @@
 //            var parameters = new ProductsParametersModel();
 
 //            //Arange
-//            IProductApiService productApiServiceStub = MockRepository.GenerateStub<IProductApiService>();
-//            productApiServiceStub.Stub(x => x.GetProducts()).Return(returnedProductsCollection);
+//            IProductApiService productApiServiceStub = Substitute.For<IProductApiService>();
+//            productApiServiceStub.GetProducts().Returns(returnedProductsCollection);
 
 //            IJsonFieldsSerializer jsonFieldsSerializerMock = MockRepository.GenerateMock<IJsonFieldsSerializer>();
 
@@ -129,8 +130,8 @@
 //            };
 
 //            //Arange
-//            IProductApiService productApiServiceStub = MockRepository.GenerateStub<IProductApiService>();
-//            productApiServiceStub.Stub(x => x.GetProducts()).Return(new List<Product>());
+//            IProductApiService productApiServiceStub = Substitute.For<IProductApiService>();
+//            productApiServiceStub.GetProducts().Returns(new List<Product>());
 
 //            IJsonFieldsSerializer jsonFieldsSerializerMock = MockRepository.GenerateMock<IJsonFieldsSerializer>();
 
@@ -158,8 +159,8 @@
 //            var parameters = new ProductsParametersModel();
 
 //            //Arange
-//            IProductApiService productApiServiceStub = MockRepository.GenerateStub<IProductApiService>();
-//            productApiServiceStub.Stub(x => x.GetProducts()).Return(returnedProductsDtoCollection);
+//            IProductApiService productApiServiceStub = Substitute.For<IProductApiService>();
+//            productApiServiceStub.GetProducts().Returns(returnedProductsDtoCollection);
 
 //            IJsonFieldsSerializer jsonFieldsSerializerMock = MockRepository.GenerateMock<IJsonFieldsSerializer>();
 

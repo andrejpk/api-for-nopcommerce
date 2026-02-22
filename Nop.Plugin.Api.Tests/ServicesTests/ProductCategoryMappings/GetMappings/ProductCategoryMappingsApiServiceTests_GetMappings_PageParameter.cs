@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Plugin.Api.DataStructures;
 using Nop.Plugin.Api.Services;
 using NUnit.Framework;
-using Rhino.Mocks;
+using NUnit.Framework.Legacy;
+using NSubstitute;
 
 namespace Nop.Plugin.Api.Tests.ServicesTests.ProductCategoryMappings.GetMappings
 {
@@ -35,8 +36,8 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.ProductCategoryMappings.GetMappings
 
             _mappings = _mappings.OrderBy(x => x.Id).ToList();
             
-            var productCategoryRepo = MockRepository.GenerateStub<IRepository<ProductCategory>>();
-            productCategoryRepo.Stub(x => x.TableNoTracking).Return(_mappings.AsQueryable());
+            var productCategoryRepo = Substitute.For<IRepository<ProductCategory>>();
+            productCategoryRepo.TableNoTracking.Returns(_mappings.AsQueryable());
 
             _mappingService = new ProductCategoryMappingsApiService(productCategoryRepo);
         }
@@ -54,9 +55,9 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.ProductCategoryMappings.GetMappings
 
             // Assert
             // Not Empty assert is a good practice when you assert something about collection. Because you can get a false positive if the collection is empty.
-            CollectionAssert.IsNotEmpty(mappings);
-            Assert.AreEqual(expectedCollection.Count(), mappings.Count);
-            Assert.IsTrue(mappings.Select(x => new { x.CategoryId, x.ProductId })
+            ClassicAssert.IsNotEmpty(mappings);
+            ClassicAssert.AreEqual(expectedCollection.Count(), mappings.Count);
+            ClassicAssert.IsTrue(mappings.Select(x => new { x.CategoryId, x.ProductId })
                                   .SequenceEqual(expectedCollection.Select(x => new { x.CategoryId, x.ProductId })));
         }
 
@@ -73,10 +74,10 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.ProductCategoryMappings.GetMappings
 
             // Assert
             // Not Empty assert is a good practice when you assert something about collection. Because you can get a false positive if the collection is empty.
-            CollectionAssert.IsNotEmpty(mappings);
-            Assert.AreEqual(expectedCollection.Count(), mappings.Count);
-            Assert.AreEqual(_mappings.First().Id, mappings.First().Id);
-            Assert.IsTrue(mappings.Select(x => new { x.CategoryId, x.ProductId })
+            ClassicAssert.IsNotEmpty(mappings);
+            ClassicAssert.AreEqual(expectedCollection.Count(), mappings.Count);
+            ClassicAssert.AreEqual(_mappings.First().Id, mappings.First().Id);
+            ClassicAssert.IsTrue(mappings.Select(x => new { x.CategoryId, x.ProductId })
                                  .SequenceEqual(expectedCollection.Select(x => new { x.CategoryId, x.ProductId })));
         }
 
@@ -93,10 +94,10 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.ProductCategoryMappings.GetMappings
 
             // Assert
             // Not Empty assert is a good practice when you assert something about collection. Because you can get a false positive if the collection is empty.
-            CollectionAssert.IsNotEmpty(mappings);
-            Assert.AreEqual(expectedCollection.Count(), mappings.Count);
-            Assert.AreEqual(_mappings.First().Id, mappings.First().Id);
-            Assert.IsTrue(mappings.Select(x => new { x.CategoryId, x.ProductId })
+            ClassicAssert.IsNotEmpty(mappings);
+            ClassicAssert.AreEqual(expectedCollection.Count(), mappings.Count);
+            ClassicAssert.AreEqual(_mappings.First().Id, mappings.First().Id);
+            ClassicAssert.IsTrue(mappings.Select(x => new { x.CategoryId, x.ProductId })
                                   .SequenceEqual(expectedCollection.Select(x => new { x.CategoryId, x.ProductId })));
         }
 
@@ -111,7 +112,7 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.ProductCategoryMappings.GetMappings
             var categories = _mappingService.GetMappings(limit: limit, page: page);
 
             // Assert
-            CollectionAssert.IsEmpty(categories);
+            ClassicAssert.IsEmpty(categories);
         }
     }
 }

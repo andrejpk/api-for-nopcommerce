@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Vendors;
 using Nop.Plugin.Api.Services;
 using NUnit.Framework;
-using Rhino.Mocks;
+using NUnit.Framework.Legacy;
+using NSubstitute;
 
 namespace Nop.Plugin.Api.Tests.ServicesTests.Products.GetProducts
 {
@@ -18,20 +19,20 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Products.GetProducts
         public void WhenCalledWithDefaultParameters_GivenNoProductsExist_ShouldReturnEmptyCollection()
         {
             // Arange
-            var productsRepo = MockRepository.GenerateStub<IRepository<Product>>();
-            productsRepo.Stub(x => x.TableNoTracking).Return(new List<Product>().AsQueryable());
+            var productsRepo = Substitute.For<IRepository<Product>>();
+            productsRepo.TableNoTracking.Returns(new List<Product>().AsQueryable());
 
-            var productCategoryRepo = MockRepository.GenerateStub<IRepository<ProductCategory>>();
-            var vendorRepo = MockRepository.GenerateStub<IRepository<Vendor>>();
+            var productCategoryRepo = Substitute.For<IRepository<ProductCategory>>();
+            var vendorRepo = Substitute.For<IRepository<Vendor>>();
 
-            var storeMappingService = MockRepository.GenerateStub<IStoreMappingService>();
+            var storeMappingService = Substitute.For<IStoreMappingService>();
 
             // Act
             var cut = new ProductApiService(productsRepo, productCategoryRepo, vendorRepo, storeMappingService);
             var products = cut.GetProducts();
 
             // Assert
-            CollectionAssert.IsEmpty(products);
+            ClassicAssert.IsEmpty(products);
         }
 
         [Test]
@@ -42,20 +43,20 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Products.GetProducts
             existingProducts.Add(new Product() { Id = 2, Deleted = true });
 
             // Arange
-            var productRepo = MockRepository.GenerateStub<IRepository<Product>>();
-            productRepo.Stub(x => x.TableNoTracking).Return(existingProducts.AsQueryable());
+            var productRepo = Substitute.For<IRepository<Product>>();
+            productRepo.TableNoTracking.Returns(existingProducts.AsQueryable());
 
-            var productCategoryRepo = MockRepository.GenerateStub<IRepository<ProductCategory>>();
-            var vendorRepo = MockRepository.GenerateStub<IRepository<Vendor>>();
+            var productCategoryRepo = Substitute.For<IRepository<ProductCategory>>();
+            var vendorRepo = Substitute.For<IRepository<Vendor>>();
 
-            var storeMappingService = MockRepository.GenerateStub<IStoreMappingService>();
+            var storeMappingService = Substitute.For<IStoreMappingService>();
 
             // Act
             var cut = new ProductApiService(productRepo, productCategoryRepo, vendorRepo, storeMappingService);
             var products = cut.GetProducts();
 
             // Assert
-            CollectionAssert.IsEmpty(products);
+            ClassicAssert.IsEmpty(products);
         }
 
         [Test]
@@ -69,22 +70,22 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Products.GetProducts
             var expectedCollection = existingProducts.Where(x => !x.Deleted).OrderBy(x => x.Id);
 
             // Arange
-            var productRepo = MockRepository.GenerateStub<IRepository<Product>>();
-            productRepo.Stub(x => x.TableNoTracking).Return(existingProducts.AsQueryable());
+            var productRepo = Substitute.For<IRepository<Product>>();
+            productRepo.TableNoTracking.Returns(existingProducts.AsQueryable());
 
-            var productCategoryRepo = MockRepository.GenerateStub<IRepository<ProductCategory>>();
-            var vendorRepo = MockRepository.GenerateStub<IRepository<Vendor>>();
+            var productCategoryRepo = Substitute.For<IRepository<ProductCategory>>();
+            var vendorRepo = Substitute.For<IRepository<Vendor>>();
 
-            var storeMappingService = MockRepository.GenerateStub<IStoreMappingService>();
+            var storeMappingService = Substitute.For<IStoreMappingService>();
 
             // Act
             var cut = new ProductApiService(productRepo, productCategoryRepo, vendorRepo, storeMappingService);
             var products = cut.GetProducts();
 
             // Assert
-            CollectionAssert.IsNotEmpty(products);
-            Assert.AreEqual(expectedCollection.Count(), products.Count);
-            Assert.IsTrue(products.Select(x => x.Id).SequenceEqual(expectedCollection.Select(x => x.Id)));
+            ClassicAssert.IsNotEmpty(products);
+            ClassicAssert.AreEqual(expectedCollection.Count(), products.Count);
+            ClassicAssert.IsTrue(products.Select(x => x.Id).SequenceEqual(expectedCollection.Select(x => x.Id)));
         }
 
         [Test]
@@ -98,22 +99,22 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Products.GetProducts
             var expectedCollection = existingProducts.Where(x => !x.Deleted).OrderBy(x => x.Id);
 
             // Arange
-            var productRepo = MockRepository.GenerateStub<IRepository<Product>>();
-            productRepo.Stub(x => x.TableNoTracking).Return(existingProducts.AsQueryable());
+            var productRepo = Substitute.For<IRepository<Product>>();
+            productRepo.TableNoTracking.Returns(existingProducts.AsQueryable());
 
-            var productCategoryRepo = MockRepository.GenerateStub<IRepository<ProductCategory>>();
-            var vendorRepo = MockRepository.GenerateStub<IRepository<Vendor>>();
+            var productCategoryRepo = Substitute.For<IRepository<ProductCategory>>();
+            var vendorRepo = Substitute.For<IRepository<Vendor>>();
 
-            var storeMappingService = MockRepository.GenerateStub<IStoreMappingService>();
+            var storeMappingService = Substitute.For<IStoreMappingService>();
 
             // Act
             var cut = new ProductApiService(productRepo, productCategoryRepo, vendorRepo, storeMappingService);
             var products = cut.GetProducts();
 
             // Assert
-            CollectionAssert.IsNotEmpty(products);
-            Assert.AreEqual(expectedCollection.Count(), products.Count);
-            Assert.IsTrue(products.Select(x => x.Id).SequenceEqual(expectedCollection.Select(x => x.Id)));
+            ClassicAssert.IsNotEmpty(products);
+            ClassicAssert.AreEqual(expectedCollection.Count(), products.Count);
+            ClassicAssert.IsTrue(products.Select(x => x.Id).SequenceEqual(expectedCollection.Select(x => x.Id)));
         }
     }
 }

@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using Nop.Plugin.Api.Converters;
 using Nop.Plugin.Api.Tests.ConvertersTests.ObjectConverter.DummyObjects;
 using NUnit.Framework;
-using Rhino.Mocks;
+using NUnit.Framework.Legacy;
+using NSubstitute;
 
 namespace Nop.Plugin.Api.Tests.ConvertersTests.ObjectConverter
 {
@@ -35,7 +36,7 @@ namespace Nop.Plugin.Api.Tests.ConvertersTests.ObjectConverter
         public void WhenCollectionIsNull_ShouldReturnInstanceOfAnObjectOfTheSpecifiedType()
         {
             //Arange
-            IApiTypeConverter apiTypeConverterStub = MockRepository.GenerateStub<IApiTypeConverter>();
+            IApiTypeConverter apiTypeConverterStub = Substitute.For<IApiTypeConverter>();
 
             IObjectConverter objectConverter = new Converters.ObjectConverter(apiTypeConverterStub);
 
@@ -45,15 +46,15 @@ namespace Nop.Plugin.Api.Tests.ConvertersTests.ObjectConverter
             SomeTestingObject someTestingObject = objectConverter.ToObject<SomeTestingObject>(nullCollection);
 
             //Assert
-            Assert.IsNotNull(someTestingObject);
-            Assert.IsInstanceOf(typeof(SomeTestingObject), someTestingObject);
+            ClassicAssert.IsNotNull(someTestingObject);
+            ClassicAssert.IsInstanceOf(typeof(SomeTestingObject), someTestingObject);
         }
 
         [Test]
         public void WhenCollectionIsNull_ShouldReturnInstanceOfAnObjectWithUnsetProperties()
         {
             //Arange
-            IApiTypeConverter apiTypeConverterStub = MockRepository.GenerateStub<IApiTypeConverter>();
+            IApiTypeConverter apiTypeConverterStub = Substitute.For<IApiTypeConverter>();
 
             IObjectConverter objectConverter = new Converters.ObjectConverter(apiTypeConverterStub);
 
@@ -63,17 +64,17 @@ namespace Nop.Plugin.Api.Tests.ConvertersTests.ObjectConverter
             SomeTestingObject someTestingObject = objectConverter.ToObject<SomeTestingObject>(nullCollection);
 
             //Assert
-            Assert.AreEqual(0, someTestingObject.IntProperty);
-            Assert.AreEqual(null, someTestingObject.StringProperty);
-            Assert.AreEqual(null, someTestingObject.DateTimeNullableProperty);
-            Assert.AreEqual(null, someTestingObject.BooleanNullableStatusProperty);
+            ClassicAssert.AreEqual(0, someTestingObject.IntProperty);
+            ClassicAssert.AreEqual(null, someTestingObject.StringProperty);
+            ClassicAssert.AreEqual(null, someTestingObject.DateTimeNullableProperty);
+            ClassicAssert.AreEqual(null, someTestingObject.BooleanNullableStatusProperty);
         }
 
         [Test]
         public void WhenCollectionIsEmpty_ShouldReturnInstanceOfAnObjectWithUnsetProperties()
         {
             //Arange
-            IApiTypeConverter apiTypeConverterStub = MockRepository.GenerateStub<IApiTypeConverter>();
+            IApiTypeConverter apiTypeConverterStub = Substitute.For<IApiTypeConverter>();
 
             IObjectConverter objectConverter = new Converters.ObjectConverter(apiTypeConverterStub);
 
@@ -83,10 +84,10 @@ namespace Nop.Plugin.Api.Tests.ConvertersTests.ObjectConverter
             SomeTestingObject someTestingObject = objectConverter.ToObject<SomeTestingObject>(emptyCollection);
 
             //Assert
-            Assert.AreEqual(0, someTestingObject.IntProperty);
-            Assert.AreEqual(null, someTestingObject.StringProperty);
-            Assert.AreEqual(null, someTestingObject.DateTimeNullableProperty);
-            Assert.AreEqual(null, someTestingObject.BooleanNullableStatusProperty);
+            ClassicAssert.AreEqual(0, someTestingObject.IntProperty);
+            ClassicAssert.AreEqual(null, someTestingObject.StringProperty);
+            ClassicAssert.AreEqual(null, someTestingObject.DateTimeNullableProperty);
+            ClassicAssert.AreEqual(null, someTestingObject.BooleanNullableStatusProperty);
         }
         [Test]
         public void WhenCollectionIsEmpty_ShoulNotCallAnyOfTheApiTypeConverterMethods()
@@ -167,7 +168,7 @@ namespace Nop.Plugin.Api.Tests.ConvertersTests.ObjectConverter
         public void WhenCollectionContainsValidStringProperty_ShouldSetTheObjectStringPropertyValueToTheCollectionStringPropertyValue(string stringPropertyName)
         {
             //Arange
-            IApiTypeConverter apiTypeConverterStub = MockRepository.GenerateStub<IApiTypeConverter>();
+            IApiTypeConverter apiTypeConverterStub = Substitute.For<IApiTypeConverter>();
 
             IObjectConverter objectConverter = new Converters.ObjectConverter(apiTypeConverterStub);
 
@@ -180,7 +181,7 @@ namespace Nop.Plugin.Api.Tests.ConvertersTests.ObjectConverter
             SomeTestingObject someTestingObject = objectConverter.ToObject<SomeTestingObject>(collection);
 
             //Assert
-            Assert.AreEqual("some value", someTestingObject.StringProperty);
+            ClassicAssert.AreEqual("some value", someTestingObject.StringProperty);
         }
 
         [Test]
@@ -188,7 +189,7 @@ namespace Nop.Plugin.Api.Tests.ConvertersTests.ObjectConverter
         public void WhenCollectionContainsInvalidStringProperty_ShouldReturnTheObjectWithItsStringPropertySetToTheDefaultValue(string invalidStringPropertyName)
         {
             //Arange
-            IApiTypeConverter apiTypeConverterStub = MockRepository.GenerateStub<IApiTypeConverter>();
+            IApiTypeConverter apiTypeConverterStub = Substitute.For<IApiTypeConverter>();
 
             IObjectConverter objectConverter = new Converters.ObjectConverter(apiTypeConverterStub);
 
@@ -201,7 +202,7 @@ namespace Nop.Plugin.Api.Tests.ConvertersTests.ObjectConverter
             SomeTestingObject someTestingObject = objectConverter.ToObject<SomeTestingObject>(collection);
 
             //Assert
-            Assert.IsNull(someTestingObject.StringProperty);
+            ClassicAssert.IsNull(someTestingObject.StringProperty);
         }
 
         [Test]

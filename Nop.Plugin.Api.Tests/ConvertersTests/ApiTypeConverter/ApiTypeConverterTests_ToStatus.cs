@@ -1,5 +1,6 @@
 ﻿using Nop.Plugin.Api.Converters;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace Nop.Plugin.Api.Tests.ConvertersTests.ApiTypeConverter
 {
@@ -29,7 +30,7 @@ namespace Nop.Plugin.Api.Tests.ConvertersTests.ApiTypeConverter
             bool? result = _apiTypeConverter.ToStatus(invalidStatus);
 
             //Assert
-            Assert.IsNull(result);
+            ClassicAssert.IsNull(result);
         }
 
         [Test]
@@ -43,7 +44,7 @@ namespace Nop.Plugin.Api.Tests.ConvertersTests.ApiTypeConverter
             bool? result = _apiTypeConverter.ToStatus(nullOrEmpty);
 
             //Assert
-            Assert.IsNull(result);
+            ClassicAssert.IsNull(result);
         }
 
         [Test]
@@ -58,7 +59,7 @@ namespace Nop.Plugin.Api.Tests.ConvertersTests.ApiTypeConverter
             bool? result = _apiTypeConverter.ToStatus(validPublishedStatus);
 
             //Assert
-            Assert.IsTrue(result.Value);
+            ClassicAssert.IsTrue(result.Value);
         }
 
         [Test]
@@ -73,7 +74,7 @@ namespace Nop.Plugin.Api.Tests.ConvertersTests.ApiTypeConverter
             bool? result = _apiTypeConverter.ToStatus(validUnpublishedStatus);
 
             //Assert
-            Assert.IsFalse(result.Value);
+            ClassicAssert.IsFalse(result.Value);
         }
     }
 }

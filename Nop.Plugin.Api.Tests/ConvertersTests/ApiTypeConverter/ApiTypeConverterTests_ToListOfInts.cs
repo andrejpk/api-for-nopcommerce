@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Plugin.Api.Converters;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace Nop.Plugin.Api.Tests.ConvertersTests.ApiTypeConverter
 {
@@ -32,7 +33,7 @@ namespace Nop.Plugin.Api.Tests.ConvertersTests.ApiTypeConverter
             IList<int> result = _apiTypeConverter.ToListOfInts(invalidList);
 
             //Assert
-            Assert.IsNull(result);
+            ClassicAssert.IsNull(result);
         }
 
         [Test]
@@ -46,7 +47,7 @@ namespace Nop.Plugin.Api.Tests.ConvertersTests.ApiTypeConverter
             IList<int> result = _apiTypeConverter.ToListOfInts(nullOrEmpty);
 
             //Assert
-            Assert.IsNull(result);
+            ClassicAssert.IsNull(result);
         }
 
         [Test]
@@ -63,7 +64,7 @@ namespace Nop.Plugin.Api.Tests.ConvertersTests.ApiTypeConverter
             IList<int> result = _apiTypeConverter.ToListOfInts(validList);
 
             //Assert
-            CollectionAssert.AreEqual(expectedList, result);
+            ClassicAssert.AreEqual(expectedList, result);
         }
 
         [Test]
@@ -96,8 +97,8 @@ namespace Nop.Plugin.Api.Tests.ConvertersTests.ApiTypeConverter
             IList<int> result = _apiTypeConverter.ToListOfInts(mixedList);
 
             //Assert
-            CollectionAssert.IsNotEmpty(result);
-            CollectionAssert.AreEqual(expectedList, result);
+            ClassicAssert.IsNotEmpty(result);
+            ClassicAssert.AreEqual(expectedList, result);
         }
 
         [Test]
@@ -125,9 +126,9 @@ namespace Nop.Plugin.Api.Tests.ConvertersTests.ApiTypeConverter
             IList<int> result = _apiTypeConverter.ToListOfInts(mixedList);
 
             //Assert
-            Assert.AreEqual(1, result.Count);
-            CollectionAssert.IsNotEmpty(result);
-            CollectionAssert.AreEqual(expectedList, result);
+            ClassicAssert.AreEqual(1, result.Count);
+            ClassicAssert.IsNotEmpty(result);
+            ClassicAssert.AreEqual(expectedList, result);
         }
     }
 }

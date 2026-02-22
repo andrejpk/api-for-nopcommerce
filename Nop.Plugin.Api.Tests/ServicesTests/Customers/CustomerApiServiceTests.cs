@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
-using Nop.Plugin.Api.DTOs.Customers;
+using Nop.Plugin.Api.DTO.Customers;
 using Nop.Plugin.Api.Services;
 using NUnit.Framework;
-using Rhino.Mocks;
+using NUnit.Framework.Legacy;
+using NSubstitute;
 
 namespace Nop.Plugin.Api.Tests.ServicesTests.Customers
 {
@@ -22,8 +23,8 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Customers
     //    [SetUp]
     //    public new void SetUp()
     //    {
-    //        var customerRepositoryStub = MockRepository.GenerateStub<IRepository<Customer>>();
-    //        var genericAttributeRepositoryStub = MockRepository.GenerateStub<IRepository<GenericAttribute>>();
+    //        var customerRepositoryStub = Substitute.For<IRepository<Customer>>();
+    //        var genericAttributeRepositoryStub = Substitute.For<IRepository<GenericAttribute>>();
 
     //        customerRepositoryStub.Stub(x => x.Table).Return((new List<Customer>()
     //        {
@@ -89,11 +90,11 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Customers
     //    {
     //        var customersResult = _customerApiService.GetCustomersDtos();
 
-    //        Assert.IsNotNull(customersResult);
-    //        Assert.IsNotEmpty(customersResult);
-    //        Assert.AreEqual(2, customersResult.Count);
-    //        Assert.AreEqual("test@customer1.com", customersResult[0].Email);            
-    //        Assert.AreEqual("test@customer2.com", customersResult[1].Email);
+    //        ClassicAssert.IsNotNull(customersResult);
+    //        ClassicAssert.IsNotEmpty(customersResult);
+    //        ClassicAssert.AreEqual(2, customersResult.Count);
+    //        ClassicAssert.AreEqual("test@customer1.com", customersResult[0].Email);            
+    //        ClassicAssert.AreEqual("test@customer2.com", customersResult[1].Email);
     //    }
 
     //    [Test]
@@ -101,10 +102,10 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Customers
     //    {
     //        var customersResult = _customerApiService.GetCustomersDtos(limit: 1);
 
-    //        Assert.IsNotNull(customersResult);
-    //        Assert.IsNotEmpty(customersResult);
-    //        Assert.AreEqual(1, customersResult.Count);
-    //        Assert.AreEqual("test@customer1.com", customersResult[0].Email);
+    //        ClassicAssert.IsNotNull(customersResult);
+    //        ClassicAssert.IsNotEmpty(customersResult);
+    //        ClassicAssert.AreEqual(1, customersResult.Count);
+    //        ClassicAssert.AreEqual("test@customer1.com", customersResult[0].Email);
     //    }
     //}
 }

@@ -6,7 +6,8 @@
 //using Nop.Plugin.Api.ModelBinders;
 //using Nop.Plugin.Api.Tests.ModelBinderTests.DummyObjects;
 //using NUnit.Framework;
-//using Rhino.Mocks;
+using NUnit.Framework.Legacy;
+//using NSubstitute;
 
 //namespace Nop.Plugin.Api.Tests.ModelBinderTests
 //{
@@ -32,8 +33,8 @@
 //        {
 //            // Arrange
 //            var bindingContext = new DefaultModelBindingContext();
-//            var modelProvider = MockRepository.GenerateStub<DefaultModelMetadataProvider>();
-//            var detailsProvider = MockRepository.GenerateStub<DefaultCompositeMetadataDetailsProvider>();
+//            var modelProvider = Substitute.For<DefaultModelMetadataProvider>();
+//            var detailsProvider = Substitute.For<DefaultCompositeMetadataDetailsProvider>();
 //            var metaData = new DefaultModelMetadata(modelProvider, detailsProvider, new DefaultMetadataDetails());
 //            bindingContext.ModelMetadata = metaData;
 
@@ -41,7 +42,7 @@
 //            _binder.BindModelAsync(bindingContext);
 
 //            // Assert
-//            Assert.IsInstanceOf<DummyModel>(bindingContext.Model);
+//            ClassicAssert.IsInstanceOf<DummyModel>(bindingContext.Model);
 //        }
 
 //        [Test]
@@ -61,7 +62,7 @@
 //            httpActionContext.ControllerContext = httpControllerContext;
 
 //            var bindingContext = new ModelBindingContext();
-//            var provider = MockRepository.GenerateStub<ModelMetadataProvider>();
+//            var provider = Substitute.For<ModelMetadataProvider>();
 //            var metaData = new ModelMetadata(provider, null, null, typeof(DummyModel), null);
 //            bindingContext.ModelMetadata = metaData;
 
@@ -69,7 +70,7 @@
 //            _binder.BindModel(httpActionContext, bindingContext);
 
 //            // Assert
-//            Assert.AreEqual(5, ((DummyModel)bindingContext.Model).IntProperty);
+//            ClassicAssert.AreEqual(5, ((DummyModel)bindingContext.Model).IntProperty);
 //        }
 
 //        [Test]
@@ -89,7 +90,7 @@
 //            httpActionContext.ControllerContext = httpControllerContext;
 
 //            var bindingContext = new ModelBindingContext();
-//            var provider = MockRepository.GenerateStub<ModelMetadataProvider>();
+//            var provider = Substitute.For<ModelMetadataProvider>();
 //            var metaData = new ModelMetadata(provider, null, null, typeof(DummyModel), null);
 //            bindingContext.ModelMetadata = metaData;
 
@@ -97,7 +98,7 @@
 //            _binder.BindModel(httpActionContext, bindingContext);
 
 //            // Assert
-//            Assert.AreEqual("some value", ((DummyModel)bindingContext.Model).StringProperty);
+//            ClassicAssert.AreEqual("some value", ((DummyModel)bindingContext.Model).StringProperty);
 //        }
 
 //        [Test]
@@ -117,7 +118,7 @@
 //            httpActionContext.ControllerContext = httpControllerContext;
 
 //            var bindingContext = new ModelBindingContext();
-//            var provider = MockRepository.GenerateStub<ModelMetadataProvider>();
+//            var provider = Substitute.For<ModelMetadataProvider>();
 //            var metaData = new ModelMetadata(provider, null, null, typeof(DummyModel), null);
 //            bindingContext.ModelMetadata = metaData;
 
@@ -125,7 +126,7 @@
 //            _binder.BindModel(httpActionContext, bindingContext);
 
 //            // Assert
-//            Assert.AreEqual(new DateTime(2016, 12, 12), ((DummyModel)bindingContext.Model).DateTimeNullableProperty.Value);
+//            ClassicAssert.AreEqual(new DateTime(2016, 12, 12), ((DummyModel)bindingContext.Model).DateTimeNullableProperty.Value);
 //        }
 
 //        [Test]
@@ -145,7 +146,7 @@
 //            httpActionContext.ControllerContext = httpControllerContext;
 
 //            var bindingContext = new ModelBindingContext();
-//            var provider = MockRepository.GenerateStub<ModelMetadataProvider>();
+//            var provider = Substitute.For<ModelMetadataProvider>();
 //            var metaData = new ModelMetadata(provider, null, null, typeof(DummyModel), null);
 //            bindingContext.ModelMetadata = metaData;
 
@@ -153,7 +154,7 @@
 //            _binder.BindModel(httpActionContext, bindingContext);
 
 //            // Assert
-//            Assert.AreEqual(true, ((DummyModel)bindingContext.Model).BooleanNullableStatusProperty.Value);
+//            ClassicAssert.AreEqual(true, ((DummyModel)bindingContext.Model).BooleanNullableStatusProperty.Value);
 //        }
 
 //        [Test]
@@ -168,7 +169,7 @@
 //            httpActionContext.ControllerContext = httpControllerContext;
 
 //            var bindingContext = new ModelBindingContext();
-//            var provider = MockRepository.GenerateStub<ModelMetadataProvider>();
+//            var provider = Substitute.For<ModelMetadataProvider>();
 //            var metaData = new ModelMetadata(provider, null, null, typeof(DummyModel), null);
 //            bindingContext.ModelMetadata = metaData;
 
@@ -176,7 +177,7 @@
 //            bool result = _binder.BindModel(httpActionContext, bindingContext);
 
 //            // Assert
-//            Assert.IsTrue(result);
+//            ClassicAssert.IsTrue(result);
 //        }
 //    }
 //}

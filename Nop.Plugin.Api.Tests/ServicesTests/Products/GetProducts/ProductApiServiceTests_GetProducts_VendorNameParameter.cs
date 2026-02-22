@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Vendors;
 using Nop.Plugin.Api.Services;
 using NUnit.Framework;
-using Rhino.Mocks;
+using NUnit.Framework.Legacy;
+using NSubstitute;
 
 namespace Nop.Plugin.Api.Tests.ServicesTests.Products.GetProducts
 {
@@ -34,10 +35,10 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Products.GetProducts
                 new Product() {Id = 9, VendorId = 4 }
             };
 
-            var productRepo = MockRepository.GenerateStub<IRepository<Product>>();
-            productRepo.Stub(x => x.TableNoTracking).Return(_existigProducts.AsQueryable());
+            var productRepo = Substitute.For<IRepository<Product>>();
+            productRepo.TableNoTracking.Returns(_existigProducts.AsQueryable());
 
-            var productCategoryRepo = MockRepository.GenerateStub<IRepository<ProductCategory>>();
+            var productCategoryRepo = Substitute.For<IRepository<ProductCategory>>();
 
             _existingVendors = new List<Vendor>()
             {
@@ -48,10 +49,10 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Products.GetProducts
                 new Vendor() {Id = 5, Name = "vendor 5", Active = true}
             };
 
-            var vendorRepo = MockRepository.GenerateStub<IRepository<Vendor>>();
-            vendorRepo.Stub(x => x.TableNoTracking).Return(_existingVendors.AsQueryable());
+            var vendorRepo = Substitute.For<IRepository<Vendor>>();
+            vendorRepo.TableNoTracking.Returns(_existingVendors.AsQueryable());
 
-            var storeMappingService = MockRepository.GenerateStub<IStoreMappingService>();
+            var storeMappingService = Substitute.For<IStoreMappingService>();
 
             _productApiService = new ProductApiService(productRepo, productCategoryRepo, vendorRepo, storeMappingService);
         }
@@ -72,9 +73,9 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Products.GetProducts
             var products = _productApiService.GetProducts(vendorName: vendorName);
 
             // Assert
-            CollectionAssert.IsNotEmpty(products);
-            Assert.AreEqual(expectedCollection.Count(), products.Count);
-            Assert.IsTrue(products.Select(x => x.Id).SequenceEqual(expectedCollection.Select(x => x.Id)));
+            ClassicAssert.IsNotEmpty(products);
+            ClassicAssert.AreEqual(expectedCollection.Count(), products.Count);
+            ClassicAssert.IsTrue(products.Select(x => x.Id).SequenceEqual(expectedCollection.Select(x => x.Id)));
         }
 
         [Test]
@@ -87,7 +88,7 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Products.GetProducts
             var products = _productApiService.GetProducts(vendorName: vendorName);
 
             // Assert
-            CollectionAssert.IsEmpty(products);
+            ClassicAssert.IsEmpty(products);
         }
 
         [Test]
@@ -100,7 +101,7 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Products.GetProducts
             var products = _productApiService.GetProducts(vendorName: vendorName);
 
             // Assert
-            CollectionAssert.IsEmpty(products);
+            ClassicAssert.IsEmpty(products);
         }
 
         [Test]
@@ -113,7 +114,7 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Products.GetProducts
             var products = _productApiService.GetProducts(vendorName: vendorName);
 
             // Assert
-            CollectionAssert.IsEmpty(products);
+            ClassicAssert.IsEmpty(products);
         }
 
         [Test]
@@ -128,9 +129,9 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Products.GetProducts
             var products = _productApiService.GetProducts(vendorName: vendorName);
 
             // Assert
-            CollectionAssert.IsNotEmpty(products);
-            Assert.AreEqual(expectedCollection.Count(), products.Count);
-            Assert.IsTrue(products.Select(x => x.Id).SequenceEqual(expectedCollection.Select(x => x.Id)));
+            ClassicAssert.IsNotEmpty(products);
+            ClassicAssert.AreEqual(expectedCollection.Count(), products.Count);
+            ClassicAssert.IsTrue(products.Select(x => x.Id).SequenceEqual(expectedCollection.Select(x => x.Id)));
         }
 
         [Test]
@@ -143,7 +144,7 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Products.GetProducts
             var products = _productApiService.GetProducts(vendorName: vendorName);
 
             // Assert
-            CollectionAssert.IsEmpty(products);
+            ClassicAssert.IsEmpty(products);
         }
     }
 }

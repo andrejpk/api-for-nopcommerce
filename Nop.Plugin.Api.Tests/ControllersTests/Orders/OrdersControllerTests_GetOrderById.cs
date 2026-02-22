@@ -1,12 +1,13 @@
 ﻿using System.Net;
-using AutoMock;
+
 using Nop.Core.Domain.Orders;
 using Nop.Plugin.Api.Controllers;
-using Nop.Plugin.Api.DTOs.Orders;
+using Nop.Plugin.Api.DTO.Orders;
 using Nop.Plugin.Api.Helpers;
 using Nop.Plugin.Api.Services;
 using NUnit.Framework;
-using Rhino.Mocks;
+using NUnit.Framework.Legacy;
+using NSubstitute;
 
 namespace Nop.Plugin.Api.Tests.ControllersTests.Orders
 {
@@ -37,7 +38,7 @@ namespace Nop.Plugin.Api.Tests.ControllersTests.Orders
             // Assert
             var statusCode = ActionResultExecutor.ExecuteResult(result);
 
-            Assert.AreEqual(HttpStatusCode.NotFound, statusCode);
+            ClassicAssert.AreEqual(HttpStatusCode.NotFound, statusCode);
         }
 
         [Test]
@@ -58,7 +59,7 @@ namespace Nop.Plugin.Api.Tests.ControllersTests.Orders
             // Assert
             var statusCode = ActionResultExecutor.ExecuteResult(result);
 
-            Assert.AreEqual(HttpStatusCode.BadRequest, statusCode);
+            ClassicAssert.AreEqual(HttpStatusCode.BadRequest, statusCode);
         }
 
         [Test]

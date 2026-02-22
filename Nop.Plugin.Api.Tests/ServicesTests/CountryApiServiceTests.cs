@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Core.Domain.Directory;
 using Nop.Plugin.Api.Services;
 using NUnit.Framework;
-using Rhino.Mocks;
+using NUnit.Framework.Legacy;
+using NSubstitute;
 
 namespace Nop.Plugin.Api.Tests.ServicesTests
 {
@@ -16,7 +17,7 @@ namespace Nop.Plugin.Api.Tests.ServicesTests
     //    [SetUp]
     //    public new void SetUp()
     //    {
-    //        var countryRepositoryStub = MockRepository.GenerateStub<IRepository<Country>>();
+    //        var countryRepositoryStub = Substitute.For<IRepository<Country>>();
 
     //        countryRepositoryStub.Stub(x => x.Table).Return((new List<Country>()
     //        {
@@ -40,8 +41,8 @@ namespace Nop.Plugin.Api.Tests.ServicesTests
     //    {
     //        var countryResult = _countryApiService.GetCountryByName("test country 1");
 
-    //        Assert.IsNotNull(countryResult);
-    //        Assert.AreEqual("test country 1", countryResult.Name);
+    //        ClassicAssert.IsNotNull(countryResult);
+    //        ClassicAssert.AreEqual("test country 1", countryResult.Name);
     //    }
 
     //    [Test]
@@ -49,7 +50,7 @@ namespace Nop.Plugin.Api.Tests.ServicesTests
     //    {
     //        var countryResult = _countryApiService.GetCountryByName("non existing country name");
 
-    //        Assert.IsNull(countryResult);
+    //        ClassicAssert.IsNull(countryResult);
     //    }
     //}
 }

@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Core.Domain.Orders;
 using Nop.Plugin.Api.Services;
 using NUnit.Framework;
-using Rhino.Mocks;
+using NUnit.Framework.Legacy;
+using NSubstitute;
 
 namespace Nop.Plugin.Api.Tests.ServicesTests.Orders.GetOrderById
 {
@@ -17,16 +18,16 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Orders.GetOrderById
             int orderId = 3;
             
             // Arange
-            var orderRepo = MockRepository.GenerateStub<IRepository<Order>>();
-            orderRepo.Stub(x => x.Table).Return((new List<Order>()).AsQueryable());
-            orderRepo.Stub(x => x.GetById(orderId)).Return(null);
+            var orderRepo = Substitute.For<IRepository<Order>>();
+            orderRepo.Table.Returns((new List<Order>()).AsQueryable());
+            orderRepo.GetById(orderId).Returns(null);
 
             // Act  
             var cut = new OrderApiService(orderRepo);
             var result = cut.GetOrderById(orderId);
 
             // Assert
-            Assert.IsNull(result);
+            ClassicAssert.IsNull(result);
         }
 
         [Test]
@@ -35,14 +36,14 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Orders.GetOrderById
         public void WhenNegativeOrZeroOrderIdPassed_ShouldReturnNull(int negativeOrZeroOrderId)
         {
             // Aranges
-            var orderRepoStub = MockRepository.GenerateStub<IRepository<Order>>();
+            var orderRepoStub = Substitute.For<IRepository<Order>>();
 
             // Act
             var cut = new OrderApiService(orderRepoStub);
             var result = cut.GetOrderById(negativeOrZeroOrderId);
 
             // Assert
-            Assert.IsNull(result);
+            ClassicAssert.IsNull(result);
         }
 
         [Test]
@@ -52,20 +53,20 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Orders.GetOrderById
             var order = new Order() { Id = 3 };
 
             // Arange
-            var orderRepo = MockRepository.GenerateStub<IRepository<Order>>();
+            var orderRepo = Substitute.For<IRepository<Order>>();
 
             var list = new List<Order>();
             list.Add(order);
 
-            orderRepo.Stub(x => x.Table).Return(list.AsQueryable());
-            orderRepo.Stub(x => x.GetById(orderId)).Return(order);
+            orderRepo.Table.Returns(list.AsQueryable());
+            orderRepo.GetById(orderId).Returns(order);
             
             // Act
             var cut = new OrderApiService(orderRepo);
             var result = cut.GetOrderById(orderId);
 
             // Assert
-            Assert.AreSame(order, result);
+            ClassicAssert.AreSame(order, result);
         }
     }
 }

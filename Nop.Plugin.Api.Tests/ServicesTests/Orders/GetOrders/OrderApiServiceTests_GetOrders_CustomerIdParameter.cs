@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Core.Domain.Orders;
 using Nop.Plugin.Api.Services;
 using NUnit.Framework;
-using Rhino.Mocks;
+using NUnit.Framework.Legacy;
+using NSubstitute;
 
 namespace Nop.Plugin.Api.Tests.ServicesTests.Orders.GetOrders
 {
@@ -28,8 +29,8 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Orders.GetOrders
                 new Order() {Id = 7, CustomerId = 2}
             };
 
-            var productRepo = MockRepository.GenerateStub<IRepository<Order>>();
-            productRepo.Stub(x => x.TableNoTracking).Return(_existigOrders.AsQueryable());
+            var productRepo = Substitute.For<IRepository<Order>>();
+            productRepo.TableNoTracking.Returns(_existigOrders.AsQueryable());
             
             _orderApiService = new OrderApiService(productRepo);
         }
@@ -46,9 +47,9 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Orders.GetOrders
             var orders = _orderApiService.GetOrders(customerId: customerId);
 
             // Assert
-            CollectionAssert.IsNotEmpty(orders);
-            Assert.AreEqual(expectedCollection.Count(), orders.Count);
-            Assert.IsTrue(orders.Select(x => x.Id).SequenceEqual(expectedCollection.Select(x => x.Id)));
+            ClassicAssert.IsNotEmpty(orders);
+            ClassicAssert.AreEqual(expectedCollection.Count(), orders.Count);
+            ClassicAssert.IsTrue(orders.Select(x => x.Id).SequenceEqual(expectedCollection.Select(x => x.Id)));
         }
 
         [Test]
@@ -60,7 +61,7 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Orders.GetOrders
             var orders = _orderApiService.GetOrders(customerId: customerId);
 
             // Assert
-            CollectionAssert.IsEmpty(orders);
+            ClassicAssert.IsEmpty(orders);
         }
 
         [Test]
@@ -74,7 +75,7 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Orders.GetOrders
             var orders = _orderApiService.GetOrders(customerId: customerId);
 
             // Assert
-            CollectionAssert.IsEmpty(orders);
+            ClassicAssert.IsEmpty(orders);
         }
     }
 }

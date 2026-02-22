@@ -1,13 +1,15 @@
+using Nop.Plugin.Api.Tests.Helpers;
 ﻿//using Nop.Core.Domain.Catalog;
 //using Nop.Plugin.Api.Controllers;
-//using Nop.Plugin.Api.DTOs.Products;
+//using Nop.Plugin.Api.DTO.Products;
 //using Nop.Plugin.Api.Services;
 //using NUnit.Framework;
-//using Rhino.Mocks;
+using NUnit.Framework.Legacy;
+//using NSubstitute;
 
 //namespace Nop.Plugin.Api.Tests.ControllersTests.Products
 //{
-//    using AutoMock;
+//    
 //    using Microsoft.AspNetCore.Mvc;
 //    using Nop.Plugin.Api.JSON.Serializers;
 
@@ -26,7 +28,7 @@
 //            IActionResult result = autoMocker.ClassUnderTest.GetProductById(nonPositiveProductId);
 
 //            // Assert
-//            Assert.IsInstanceOf<NotFoundResult>(result);
+//            ClassicAssert.IsInstanceOf<NotFoundResult>(result);
 //        }
 
 //        [Test]
@@ -58,7 +60,7 @@
 //            IActionResult result = autoMocker.ClassUnderTest.GetProductById(nonExistingProductId);
 
 //            // Assert
-//            Assert.IsInstanceOf<NotFoundObjectResult>(result);
+//            ClassicAssert.IsInstanceOf<NotFoundObjectResult>(result);
 //        }
 
 //        [Test]

@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
-using Nop.Plugin.Api.Constants;
+using static Nop.Plugin.Api.Infrastructure.Constants;
 using Nop.Plugin.Api.Services;
 using NUnit.Framework;
-using Rhino.Mocks;
+using NUnit.Framework.Legacy;
+using NSubstitute;
 
 namespace Nop.Plugin.Api.Tests.ServicesTests.ShoppingCartItems.GetShoppingCartItems
 {
@@ -36,10 +37,10 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.ShoppingCartItems.GetShoppingCartIt
                 });
             }
 
-            var shoppingCartItemsRepo = MockRepository.GenerateStub<IRepository<ShoppingCartItem>>();
-            shoppingCartItemsRepo.Stub(x => x.TableNoTracking).Return(_shoppingCartItems.AsQueryable());
+            var shoppingCartItemsRepo = Substitute.For<IRepository<ShoppingCartItem>>();
+            shoppingCartItemsRepo.TableNoTracking.Returns(_shoppingCartItems.AsQueryable());
 
-            var storeContext = MockRepository.GenerateStub<IStoreContext>();
+            var storeContext = Substitute.For<IStoreContext>();
             storeContext.Stub(x => x.CurrentStore).Return(new Store()
             {
                 Id = 0
@@ -53,13 +54,13 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.ShoppingCartItems.GetShoppingCartIt
         {
             // Arange
             int customerId = 5;
-            var expectedResult = _shoppingCartItems.Where(x => x.CustomerId == customerId).OrderBy(x => x.Id).Take(Configurations.DefaultLimit);
+            var expectedResult = _shoppingCartItems.Where(x => x.CustomerId == customerId).OrderBy(x => x.Id).Take(Constants.Configurations.DefaultLimit);
 
             // Act 
             var result = _shoppingCartItemApiService.GetShoppingCartItems(customerId);
 
             // Assert
-            Assert.IsTrue(expectedResult.Select(x => new {x.Id, x.CustomerId})
+            ClassicAssert.IsTrue(expectedResult.Select(x => new {x.Id, x.CustomerId})
                                         .SequenceEqual(result.Select(x => new {x.Id, x.CustomerId})));
         }
         
@@ -72,7 +73,7 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.ShoppingCartItems.GetShoppingCartIt
             var result = _shoppingCartItemApiService.GetShoppingCartItems(customerId);
 
             // Assert
-            Assert.IsEmpty(result);
+            ClassicAssert.IsEmpty(result);
         }
         
         [Test]
@@ -85,7 +86,7 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.ShoppingCartItems.GetShoppingCartIt
             var result = _shoppingCartItemApiService.GetShoppingCartItems(nonExistendCustomerId);
 
             // Assert
-            Assert.IsEmpty(result);
+            ClassicAssert.IsEmpty(result);
         }
     }
 }

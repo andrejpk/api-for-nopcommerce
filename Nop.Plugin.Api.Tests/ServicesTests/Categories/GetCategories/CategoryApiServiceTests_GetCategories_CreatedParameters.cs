@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Plugin.Api.Services;
 using NUnit.Framework;
-using Rhino.Mocks;
+using NUnit.Framework.Legacy;
+using NSubstitute;
 
 namespace Nop.Plugin.Api.Tests.ServicesTests.Categories.GetCategories
 {
@@ -34,12 +35,12 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Categories.GetCategories
                 new Category() {Id = 7, Published = false, CreatedOnUtc = _baseDate.AddMonths(4) }
             };
 
-            var categoryRepo = MockRepository.GenerateStub<IRepository<Category>>();
-            categoryRepo.Stub(x => x.TableNoTracking).Return(_existigCategories.AsQueryable());
+            var categoryRepo = Substitute.For<IRepository<Category>>();
+            categoryRepo.TableNoTracking.Returns(_existigCategories.AsQueryable());
 
-            var productCategoryRepo = MockRepository.GenerateStub<IRepository<ProductCategory>>();
+            var productCategoryRepo = Substitute.For<IRepository<ProductCategory>>();
 
-            var storeMappingService = MockRepository.GenerateStub<IStoreMappingService>();
+            var storeMappingService = Substitute.For<IStoreMappingService>();
 
             _categoryApiService = new CategoryApiService(categoryRepo, productCategoryRepo, storeMappingService);
         }
@@ -58,9 +59,9 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Categories.GetCategories
 
             // Assert
             // Not Empty assert is a good practice when you assert something about collection. Because you can get a false positive if the collection is empty.
-            CollectionAssert.IsNotEmpty(categories);
-            Assert.AreEqual(expectedCategoriesCount, categories.Count);
-            Assert.IsTrue(categories.Select(x => x.Id).SequenceEqual(expectedCollection.Select(x => x.Id)));
+            ClassicAssert.IsNotEmpty(categories);
+            ClassicAssert.AreEqual(expectedCategoriesCount, categories.Count);
+            ClassicAssert.IsTrue(categories.Select(x => x.Id).SequenceEqual(expectedCollection.Select(x => x.Id)));
         }
 
         [Test]
@@ -73,7 +74,7 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Categories.GetCategories
             var categories = _categoryApiService.GetCategories(createdAtMin: createdAtMinDate);
 
             // Assert
-            CollectionAssert.IsEmpty(categories);
+            ClassicAssert.IsEmpty(categories);
         }
         
         [Test]
@@ -89,9 +90,9 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Categories.GetCategories
 
             // Assert
             // Not Empty assert is a good practice when you assert something about collection. Because you can get a false positive if the collection is empty.
-            CollectionAssert.IsNotEmpty(categories);
-            Assert.AreEqual(expectedCategoriesCount, categories.Count);
-            Assert.IsTrue(categories.Select(x => x.Id).SequenceEqual(expectedCollection.Select(x => x.Id)));
+            ClassicAssert.IsNotEmpty(categories);
+            ClassicAssert.AreEqual(expectedCategoriesCount, categories.Count);
+            ClassicAssert.IsTrue(categories.Select(x => x.Id).SequenceEqual(expectedCollection.Select(x => x.Id)));
         }
 
         [Test]
@@ -104,7 +105,7 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Categories.GetCategories
             var categories = _categoryApiService.GetCategories(createdAtMax: createdAtMaxDate);
 
             // Assert
-            CollectionAssert.IsEmpty(categories);
+            ClassicAssert.IsEmpty(categories);
         }
     }
 }

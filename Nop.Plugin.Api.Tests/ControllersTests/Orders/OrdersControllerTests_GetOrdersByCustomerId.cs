@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
-using AutoMock;
+
 using Nop.Core.Domain.Orders;
 using Nop.Plugin.Api.Controllers;
 using Nop.Plugin.Api.Services;
 using NUnit.Framework;
-using Rhino.Mocks;
+using NUnit.Framework.Legacy;
+using NSubstitute;
+using Nop.Plugin.Api.Tests.Helpers;
 
 namespace Nop.Plugin.Api.Tests.ControllersTests.Orders
 {

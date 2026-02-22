@@ -7,7 +7,8 @@
 //using Nop.Plugin.Api.Helpers;
 //using Nop.Plugin.Api.ModelBinders;
 //using NUnit.Framework;
-//using Rhino.Mocks;
+using NUnit.Framework.Legacy;
+//using NSubstitute;
 
 //namespace Nop.Plugin.Api.Tests.ModelBinderTests
 //{
@@ -34,7 +35,7 @@
 //            httpActionContext.ControllerContext = httpControllerContext;
 
 //            var bindingContext = new ModelBindingContext();
-//            var provider = MockRepository.GenerateStub<ModelMetadataProvider>();
+//            var provider = Substitute.For<ModelMetadataProvider>();
 //            var metaData = new ModelMetadata(provider, null, null, typeof(Dictionary<string, object>), null);
 //            bindingContext.ModelMetadata = metaData;
 
@@ -42,7 +43,7 @@
 //            _binder.BindModel(httpActionContext, bindingContext);
 
 //            // Assert
-//            Assert.IsInstanceOf<Dictionary<string, object>>(bindingContext.Model);
+//            ClassicAssert.IsInstanceOf<Dictionary<string, object>>(bindingContext.Model);
 //        }
 
 //        [Test]
@@ -67,7 +68,7 @@
 //            httpActionContext.ControllerContext = httpControllerContext;
 
 //            var bindingContext = new ModelBindingContext();
-//            var provider = MockRepository.GenerateStub<ModelMetadataProvider>();
+//            var provider = Substitute.For<ModelMetadataProvider>();
 //            var metaData = new ModelMetadata(provider, null, null, typeof(Dictionary<string, object>), null);
 //            bindingContext.ModelMetadata = metaData;
 
@@ -75,7 +76,7 @@
 //            _binder.BindModel(httpActionContext, bindingContext);
 
 //            // Assert
-//            Assert.AreEqual(categoryName, ((Dictionary<string, object>)bindingContext.Model)["name"]);
+//            ClassicAssert.AreEqual(categoryName, ((Dictionary<string, object>)bindingContext.Model)["name"]);
 //        }
 //    }
 //}

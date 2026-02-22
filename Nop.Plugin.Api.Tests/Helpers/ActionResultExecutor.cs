@@ -3,13 +3,13 @@
     using System.Net;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
-    using Rhino.Mocks;
+    using NSubstitute;
 
     public static class ActionResultExecutor
     {
         public static HttpStatusCode ExecuteResult(IActionResult result)
         {
-            var actionContext = MockRepository.GenerateStub<ActionContext>();
+            var actionContext = Substitute.For<ActionContext>();
             actionContext.HttpContext = new DefaultHttpContext();
 
             result.ExecuteResultAsync(actionContext);

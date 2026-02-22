@@ -1,14 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Net;
-using AutoMock;
+
 using Nop.Core.Domain.Orders;
-using Nop.Plugin.Api.Constants;
+using static Nop.Plugin.Api.Infrastructure.Constants;
 using Nop.Plugin.Api.Controllers;
-using Nop.Plugin.Api.DTOs.ShoppingCarts;
+using Nop.Plugin.Api.DTO.ShoppingCarts;
 using Nop.Plugin.Api.Models.ShoppingCartsParameters;
 using Nop.Plugin.Api.Services;
 using NUnit.Framework;
-using Rhino.Mocks;
+using NUnit.Framework.Legacy;
+using NSubstitute;
 
 namespace Nop.Plugin.Api.Tests.ControllersTests.ShoppingCartItems
 {
@@ -41,7 +42,7 @@ namespace Nop.Plugin.Api.Tests.ControllersTests.ShoppingCartItems
             //Assert
             var statusCode = ActionResultExecutor.ExecuteResult(result);
 
-            Assert.AreEqual(HttpStatusCode.BadRequest, statusCode);
+            ClassicAssert.AreEqual(HttpStatusCode.BadRequest, statusCode);
         }
 
         [Test]
@@ -67,7 +68,7 @@ namespace Nop.Plugin.Api.Tests.ControllersTests.ShoppingCartItems
             //Assert
             var statusCode = ActionResultExecutor.ExecuteResult(result);
 
-            Assert.AreEqual(HttpStatusCode.BadRequest, statusCode);
+            ClassicAssert.AreEqual(HttpStatusCode.BadRequest, statusCode);
         }
 
         [Test]

@@ -1,5 +1,5 @@
 ﻿using System;
-using AutoMock;
+
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
@@ -7,14 +7,16 @@ using Nop.Plugin.Api.Controllers;
 using Nop.Plugin.Api.Models.OrdersParameters;
 using Nop.Plugin.Api.Services;
 using NUnit.Framework;
-using Rhino.Mocks;
+using NUnit.Framework.Legacy;
+using NSubstitute;
+using Nop.Plugin.Api.Tests.Helpers;
 
 namespace Nop.Plugin.Api.Tests.ControllersTests.Orders
 {
     using Microsoft.AspNetCore.Mvc;
     using Nop.Core;
     using Nop.Core.Domain.Stores;
-    using Nop.Plugin.Api.DTOs.Orders;
+    using Nop.Plugin.Api.DTO.Orders;
     using Nop.Plugin.Api.JSON.Serializers;
 
     [TestFixture]
@@ -42,8 +44,8 @@ namespace Nop.Plugin.Api.Tests.ControllersTests.Orders
             IActionResult result = _autoMocker.ClassUnderTest.GetOrdersCount(ordersCountParameters);
 
             // assert
-            Assert.IsInstanceOf<OkObjectResult>(result);
-            Assert.AreEqual(0, ((OrdersCountRootObject)((OkObjectResult)result).Value).Count);
+            ClassicAssert.IsInstanceOf<OkObjectResult>(result);
+            ClassicAssert.AreEqual(0, ((OrdersCountRootObject)((OkObjectResult)result).Value).Count);
         }
 
         [Test]
@@ -59,8 +61,8 @@ namespace Nop.Plugin.Api.Tests.ControllersTests.Orders
             IActionResult result = _autoMocker.ClassUnderTest.GetOrdersCount(ordersCountParameters);
 
             // assert
-            Assert.IsInstanceOf<OkObjectResult>(result);
-            Assert.AreEqual(1, ((OrdersCountRootObject)((OkObjectResult)result).Value).Count);
+            ClassicAssert.IsInstanceOf<OkObjectResult>(result);
+            ClassicAssert.AreEqual(1, ((OrdersCountRootObject)((OkObjectResult)result).Value).Count);
         }
 
         [Test]
@@ -76,8 +78,8 @@ namespace Nop.Plugin.Api.Tests.ControllersTests.Orders
             IActionResult result = _autoMocker.ClassUnderTest.GetOrdersCount(ordersCountParameters);
 
             // assert
-            Assert.IsInstanceOf<OkObjectResult>(result);
-            Assert.AreEqual(20000, ((OrdersCountRootObject)((OkObjectResult)result).Value).Count);
+            ClassicAssert.IsInstanceOf<OkObjectResult>(result);
+            ClassicAssert.AreEqual(20000, ((OrdersCountRootObject)((OkObjectResult)result).Value).Count);
         }
 
         [Test]

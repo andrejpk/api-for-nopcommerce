@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Vendors;
 using Nop.Plugin.Api.Services;
 using NUnit.Framework;
-using Rhino.Mocks;
+using NUnit.Framework.Legacy;
+using NSubstitute;
 
 namespace Nop.Plugin.Api.Tests.ServicesTests.Products.GetProductsCount
 {
@@ -18,21 +19,21 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Products.GetProductsCount
         public void WhenCalledWithDefaultParameters_GivenNoProductsExist_ShouldReturnZero()
         {
             // Arange
-            var productsRepo = MockRepository.GenerateStub<IRepository<Product>>();
-            productsRepo.Stub(x => x.TableNoTracking).Return(new List<Product>().AsQueryable());
+            var productsRepo = Substitute.For<IRepository<Product>>();
+            productsRepo.TableNoTracking.Returns(new List<Product>().AsQueryable());
 
-            var productCategoryRepo = MockRepository.GenerateStub<IRepository<ProductCategory>>();
-            var vendorRepo = MockRepository.GenerateStub<IRepository<Vendor>>();
+            var productCategoryRepo = Substitute.For<IRepository<ProductCategory>>();
+            var vendorRepo = Substitute.For<IRepository<Vendor>>();
 
-            var storeMappingService = MockRepository.GenerateStub<IStoreMappingService>();
-            storeMappingService.Stub(x => x.Authorize(Arg<Product>.Is.Anything)).Return(true);
+            var storeMappingService = Substitute.For<IStoreMappingService>();
+            storeMappingService.Authorize(Arg<Product>.Is.Anything).Returns(true);
 
             // Act
             var cut = new ProductApiService(productsRepo, productCategoryRepo, vendorRepo, storeMappingService);
             var productsCount = cut.GetProductsCount();
 
             // Assert
-            Assert.AreEqual(0, productsCount);
+            ClassicAssert.AreEqual(0, productsCount);
         }
 
         [Test]
@@ -43,21 +44,21 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Products.GetProductsCount
             existingProducts.Add(new Product() { Id = 2, Deleted = true });
 
             // Arange
-            var productRepo = MockRepository.GenerateStub<IRepository<Product>>();
-            productRepo.Stub(x => x.TableNoTracking).Return(existingProducts.AsQueryable());
+            var productRepo = Substitute.For<IRepository<Product>>();
+            productRepo.TableNoTracking.Returns(existingProducts.AsQueryable());
 
-            var productCategoryRepo = MockRepository.GenerateStub<IRepository<ProductCategory>>();
-            var vendorRepo = MockRepository.GenerateStub<IRepository<Vendor>>();
+            var productCategoryRepo = Substitute.For<IRepository<ProductCategory>>();
+            var vendorRepo = Substitute.For<IRepository<Vendor>>();
 
-            var storeMappingService = MockRepository.GenerateStub<IStoreMappingService>();
-            storeMappingService.Stub(x => x.Authorize(Arg<Product>.Is.Anything)).Return(true);
+            var storeMappingService = Substitute.For<IStoreMappingService>();
+            storeMappingService.Authorize(Arg<Product>.Is.Anything).Returns(true);
 
             // Act
             var cut = new ProductApiService(productRepo, productCategoryRepo, vendorRepo, storeMappingService);
             var countResult = cut.GetProductsCount();
 
             // Assert
-            Assert.AreEqual(0, countResult);
+            ClassicAssert.AreEqual(0, countResult);
         }
 
         [Test]
@@ -69,21 +70,21 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Products.GetProductsCount
             existingProducts.Add(new Product() { Id = 3 });
 
             // Arange
-            var productRepo = MockRepository.GenerateStub<IRepository<Product>>();
-            productRepo.Stub(x => x.TableNoTracking).Return(existingProducts.AsQueryable());
+            var productRepo = Substitute.For<IRepository<Product>>();
+            productRepo.TableNoTracking.Returns(existingProducts.AsQueryable());
 
-            var productCategoryRepo = MockRepository.GenerateStub<IRepository<ProductCategory>>();
-            var vendorRepo = MockRepository.GenerateStub<IRepository<Vendor>>();
+            var productCategoryRepo = Substitute.For<IRepository<ProductCategory>>();
+            var vendorRepo = Substitute.For<IRepository<Vendor>>();
 
-            var storeMappingService = MockRepository.GenerateStub<IStoreMappingService>();
-            storeMappingService.Stub(x => x.Authorize(Arg<Product>.Is.Anything)).Return(true);
+            var storeMappingService = Substitute.For<IStoreMappingService>();
+            storeMappingService.Authorize(Arg<Product>.Is.Anything).Returns(true);
 
             // Act
             var cut = new ProductApiService(productRepo, productCategoryRepo, vendorRepo, storeMappingService);
             var countResult = cut.GetProductsCount();
 
             // Assert
-            Assert.AreEqual(2, countResult);
+            ClassicAssert.AreEqual(2, countResult);
         }
 
         [Test]
@@ -95,21 +96,21 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.Products.GetProductsCount
             existingProducts.Add(new Product() { Id = 1 });
 
             // Arange
-            var productRepo = MockRepository.GenerateStub<IRepository<Product>>();
-            productRepo.Stub(x => x.TableNoTracking).Return(existingProducts.AsQueryable());
+            var productRepo = Substitute.For<IRepository<Product>>();
+            productRepo.TableNoTracking.Returns(existingProducts.AsQueryable());
 
-            var productCategoryRepo = MockRepository.GenerateStub<IRepository<ProductCategory>>();
-            var vendorRepo = MockRepository.GenerateStub<IRepository<Vendor>>();
+            var productCategoryRepo = Substitute.For<IRepository<ProductCategory>>();
+            var vendorRepo = Substitute.For<IRepository<Vendor>>();
 
-            var storeMappingService = MockRepository.GenerateStub<IStoreMappingService>();
-            storeMappingService.Stub(x => x.Authorize(Arg<Product>.Is.Anything)).Return(true);
+            var storeMappingService = Substitute.For<IStoreMappingService>();
+            storeMappingService.Authorize(Arg<Product>.Is.Anything).Returns(true);
 
             // Act
             var cut = new ProductApiService(productRepo, productCategoryRepo, vendorRepo, storeMappingService);
             var countResult = cut.GetProductsCount();
 
             // Assert
-            Assert.AreEqual(existingProducts.Count, countResult);
+            ClassicAssert.AreEqual(existingProducts.Count, countResult);
         }
     }
 }

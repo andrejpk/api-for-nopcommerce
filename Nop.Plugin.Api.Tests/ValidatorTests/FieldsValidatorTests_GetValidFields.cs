@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using Nop.Plugin.Api.Tests.SerializersTests.DummyObjects;
 using Nop.Plugin.Api.Validators;
 
@@ -19,7 +20,7 @@ namespace Nop.Plugin.Api.Tests.ValidatorTests
             Dictionary<string, bool> result = cut.GetValidFields(emptyFields, typeof(DummyObjectWithSimpleTypes));
 
             // Assert
-            Assert.IsEmpty(result);
+            ClassicAssert.IsEmpty(result);
         }
 
         [Test]
@@ -36,7 +37,7 @@ namespace Nop.Plugin.Api.Tests.ValidatorTests
             //Act
             Dictionary<string, bool> result = cut.GetValidFields(validFields, typeof(DummyObjectWithSimpleTypes));
 
-            Assert.IsNotEmpty(result);
+            ClassicAssert.IsNotEmpty(result);
         }
 
         [Test]
@@ -51,8 +52,8 @@ namespace Nop.Plugin.Api.Tests.ValidatorTests
             //Act
             Dictionary<string, bool> result = cut.GetValidFields(validFields, typeof(DummyObjectWithSimpleTypes));
 
-            Assert.True(result.ContainsKey("firstproperty"));
-            Assert.True(result.ContainsKey("secondproperty"));
+            ClassicAssert.True(result.ContainsKey("firstproperty"));
+            ClassicAssert.True(result.ContainsKey("secondproperty"));
         }
 
         [Test]
@@ -67,8 +68,8 @@ namespace Nop.Plugin.Api.Tests.ValidatorTests
             //Act
             Dictionary<string, bool> result = cut.GetValidFields(validFields, typeof(DummyObjectWithSimpleTypes));
 
-            Assert.True(result.ContainsKey("firstproperty"));
-            Assert.True(result.ContainsKey("secondproperty"));
+            ClassicAssert.True(result.ContainsKey("firstproperty"));
+            ClassicAssert.True(result.ContainsKey("secondproperty"));
         }
 
         [Test]
@@ -81,7 +82,7 @@ namespace Nop.Plugin.Api.Tests.ValidatorTests
             //Act
             Dictionary<string, bool> result = cut.GetValidFields(validField, typeof(DummyObjectWithSimpleTypes));
 
-            Assert.True(result.ContainsKey("firstproperty"));
+            ClassicAssert.True(result.ContainsKey("firstproperty"));
         }
 
         [Test]
@@ -96,9 +97,9 @@ namespace Nop.Plugin.Api.Tests.ValidatorTests
             //Act
             Dictionary<string, bool> result = cut.GetValidFields(mixedFields, typeof(DummyObjectWithSimpleTypes));
 
-            Assert.AreEqual(2, result.Count);
-            Assert.True(result.ContainsKey("firstproperty"));
-            Assert.True(result.ContainsKey("secondproperty"));
+            ClassicAssert.AreEqual(2, result.Count);
+            ClassicAssert.True(result.ContainsKey("firstproperty"));
+            ClassicAssert.True(result.ContainsKey("secondproperty"));
         }
 
         [Test]
@@ -112,7 +113,7 @@ namespace Nop.Plugin.Api.Tests.ValidatorTests
             //Act
             Dictionary<string, bool> result = cut.GetValidFields(invalidFields, typeof(DummyObjectWithSimpleTypes));
 
-            Assert.IsEmpty(result);
+            ClassicAssert.IsEmpty(result);
         }
 
         [Test]
@@ -132,7 +133,7 @@ namespace Nop.Plugin.Api.Tests.ValidatorTests
             //Act
             Dictionary<string, bool> result = cut.GetValidFields(invalidFields, typeof(DummyObjectWithSimpleTypes));
 
-            Assert.IsEmpty(result);
+            ClassicAssert.IsEmpty(result);
         }
     }
 }

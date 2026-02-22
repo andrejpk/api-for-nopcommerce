@@ -1,9 +1,11 @@
-﻿using AutoMock;
+﻿
 using Nop.Plugin.Api.Controllers;
-using Nop.Plugin.Api.DTOs.Customers;
+using Nop.Plugin.Api.DTO.Customers;
 using Nop.Plugin.Api.Services;
 using NUnit.Framework;
-using Rhino.Mocks;
+using NUnit.Framework.Legacy;
+using NSubstitute;
+using Nop.Plugin.Api.Tests.Helpers;
 
 namespace Nop.Plugin.Api.Tests.ControllersTests.Customers
 {
@@ -26,8 +28,8 @@ namespace Nop.Plugin.Api.Tests.ControllersTests.Customers
             IActionResult result = autoMocker.ClassUnderTest.GetCustomersCount();
 
             // assert
-            Assert.IsInstanceOf<OkObjectResult>(result);
-            Assert.AreEqual(0, ((CustomersCountRootObject)((OkObjectResult)result).Value).Count);
+            ClassicAssert.IsInstanceOf<OkObjectResult>(result);
+            ClassicAssert.AreEqual(0, ((CustomersCountRootObject)((OkObjectResult)result).Value).Count);
         }
 
         [Test]
@@ -43,8 +45,8 @@ namespace Nop.Plugin.Api.Tests.ControllersTests.Customers
             IActionResult result = autoMocker.ClassUnderTest.GetCustomersCount();
 
             // assert
-            Assert.IsInstanceOf<OkObjectResult>(result);
-            Assert.AreEqual(1, ((CustomersCountRootObject)((OkObjectResult)result).Value).Count);
+            ClassicAssert.IsInstanceOf<OkObjectResult>(result);
+            ClassicAssert.AreEqual(1, ((CustomersCountRootObject)((OkObjectResult)result).Value).Count);
         }
 
         [Test]
@@ -60,8 +62,8 @@ namespace Nop.Plugin.Api.Tests.ControllersTests.Customers
             IActionResult result = autoMocker.ClassUnderTest.GetCustomersCount();
 
             // assert
-            Assert.IsInstanceOf<OkObjectResult>(result);
-            Assert.AreEqual(20000, ((CustomersCountRootObject)((OkObjectResult)result).Value).Count);
+            ClassicAssert.IsInstanceOf<OkObjectResult>(result);
+            ClassicAssert.AreEqual(20000, ((CustomersCountRootObject)((OkObjectResult)result).Value).Count);
         }
     }
 }
