@@ -41,6 +41,7 @@ namespace Nop.Plugin.Api.Infrastructure
             services.AddScoped<IOrderApiService, OrderApiService>();
             services.AddScoped<IShoppingCartItemApiService, ShoppingCartItemApiService>();
             services.AddScoped<IOrderItemApiService, OrderItemApiService>();
+            services.AddScoped<IOrderNoteApiService, OrderNoteApiService>();
             services.AddScoped<IShipmentApiService, ShipmentApiService>();
             services.AddScoped<IProductAttributesApiService, ProductAttributesApiService>();
             services.AddScoped<IProductPictureService, ProductPictureService>();

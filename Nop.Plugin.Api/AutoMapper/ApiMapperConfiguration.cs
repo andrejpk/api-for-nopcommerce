@@ -21,6 +21,7 @@ using Nop.Plugin.Api.DTO.Languages;
 using Nop.Plugin.Api.DTO.Manufacturers;
 using Nop.Plugin.Api.DTO.NewsLetterSubscriptions;
 using Nop.Plugin.Api.DTO.OrderItems;
+using Nop.Plugin.Api.DTO.OrderNotes;
 using Nop.Plugin.Api.DTO.Orders;
 using Nop.Plugin.Api.DTO.ProductAttributes;
 using Nop.Plugin.Api.DTO.ProductCategoryMappings;
@@ -75,6 +76,7 @@ namespace Nop.Plugin.Api.AutoMapper
             CreateCustomerToDTOMap();
 
             CreateMap<OrderItem, OrderItemDto>();
+            CreateMap<OrderNote, OrderNoteDto>();
             CreateOrderEntityToOrderDtoMap();
             CreateMap<GiftCardUsageHistory, GiftCardUsageHistoryDto>();
             CreateMap<Shipment, ShipmentDto>();
