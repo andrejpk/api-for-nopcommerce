@@ -70,6 +70,63 @@ jobs:
           echo "⚠️ Plugin directory not found at expected location"
           exit 1
         fi
+    
+    - name: Extract plugin version from plugin.json
+      id: plugin_version
+      run: |
+        VERSION=$(jq -r '.Version' nopCommerce/src/Presentation/Nop.Web/Plugins/Nop.Plugin.Api/plugin.json)
+        SYSTEM_NAME=$(jq -r '.SystemName' nopCommerce/src/Presentation/Nop.Web/Plugins/Nop.Plugin.Api/plugin.json)
+        
+        # Validate that we got valid values
+        if [ -z "$VERSION" ] || [ "$VERSION" = "null" ]; then
+          echo "❌ Failed to extract Version from plugin.json"
+          exit 1
+        fi
+        if [ -z "$SYSTEM_NAME" ] || [ "$SYSTEM_NAME" = "null" ]; then
+          echo "❌ Failed to extract SystemName from plugin.json"
+          exit 1
+        fi
+        
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        echo "system_name=$SYSTEM_NAME" >> $GITHUB_OUTPUT
+        echo "Plugin Version: $VERSION"
+        echo "System Name: $SYSTEM_NAME"
+    
+    - name: Create plugin artifact ZIP
+      run: |
+        PLUGIN_DIR="nopCommerce/src/Presentation/Nop.Web/Plugins/Nop.Plugin.Api"
+        ARTIFACT_NAME="Plugin.${{ steps.plugin_version.outputs.system_name }}.v${{ steps.plugin_version.outputs.version }}.zip"
+        
+        echo "Creating plugin artifact: $ARTIFACT_NAME"
+        
+        # Create ZIP with plugin folder contents at root level
+        cd "$PLUGIN_DIR"
+        zip -r "../../../../../$ARTIFACT_NAME" . -x '*.pdb' -x '*.deps.json' -x 'ref/*' || {
+          echo "❌ Failed to create ZIP artifact"
+          exit 1
+        }
+        cd -
+        
+        # Verify ZIP was created
+        if [ ! -f "$ARTIFACT_NAME" ]; then
+          echo "❌ ZIP artifact was not created"
+          exit 1
+        fi
+        
+        echo "Artifact created successfully!"
+        ls -lh "$ARTIFACT_NAME"
+        
+        # Verify ZIP contents
+        echo ""
+        echo "ZIP contents:"
+        unzip -l "$ARTIFACT_NAME" | head -20
+    
+    - name: Upload plugin artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: Plugin.${{ steps.plugin_version.outputs.system_name }}.v${{ steps.plugin_version.outputs.version }}
+        path: Plugin.${{ steps.plugin_version.outputs.system_name }}.v${{ steps.plugin_version.outputs.version }}.zip
+        if-no-files-found: error
       
     # Note: Tests are commented out due to .NET Framework 4.6.1 compatibility issues
     # The test project (Nop.Plugin.Api.Tests) uses net461 which is not supported on Linux runners
