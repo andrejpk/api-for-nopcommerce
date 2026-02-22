@@ -56,7 +56,38 @@ jobs:
         echo "Building API plugin projects (excluding outdated ClientApp)..."
         dotnet build Nop.Plugin.Api/Nop.Plugin.Api.csproj --configuration ${{ env.CONFIGURATION }}
       working-directory: api-for-nopcommerce
-    
+
+    - name: Build required nopCommerce dependencies for tests
+      run: |
+        echo "Building nopCommerce.Data and Nop.Services for tests..."
+        dotnet build nopCommerce/src/Libraries/Nop.Data/Nop.Data.csproj --configuration ${{ env.CONFIGURATION }}
+        dotnet build nopCommerce/src/Libraries/Nop.Services/Nop.Services.csproj --configuration ${{ env.CONFIGURATION }}
+
+    - name: Build tests
+      run: |
+        echo "Building test project..."
+        dotnet build Nop.Plugin.Api.Tests/Nop.Plugin.Api.Tests.csproj --configuration ${{ env.CONFIGURATION }}
+      working-directory: api-for-nopcommerce
+
+    - name: Run tests
+      run: |
+        echo "Running tests..."
+        dotnet test Nop.Plugin.Api.Tests/Nop.Plugin.Api.Tests.csproj \
+          --configuration ${{ env.CONFIGURATION }} \
+          --no-build \
+          --verbosity normal \
+          --logger "trx;LogFileName=test-results.trx" \
+          --logger "console;verbosity=detailed"
+      working-directory: api-for-nopcommerce
+
+    - name: Upload test results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results
+        path: api-for-nopcommerce/TestResults/*.trx
+        retention-days: 7
+
     - name: Verify build output
       run: |
         echo "✅ Build completed successfully!"
@@ -70,13 +101,6 @@ jobs:
           echo "⚠️ Plugin directory not found at expected location"
           exit 1
         fi
-      
-    # Note: Tests are commented out due to .NET Framework 4.6.1 compatibility issues
-    # The test project (Nop.Plugin.Api.Tests) uses net461 which is not supported on Linux runners
-    # To enable tests, the test project needs to be upgraded to .NET 6+ and project references fixed
-    # - name: Run tests
-    #   run: dotnet test --configuration ${{ env.CONFIGURATION }} --no-build --verbosity normal
-    #   working-directory: api-for-nopcommerce
     
     - name: Upload build output
       uses: actions/upload-artifact@v4
