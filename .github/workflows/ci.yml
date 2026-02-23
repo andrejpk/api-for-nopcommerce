@@ -72,7 +72,7 @@ jobs:
     - name: Run tests
       run: |
         echo "Running tests..."
-        dotnet test Nop.Plugin.Api.Tests/Nop.Plugin.Api.Tests.csproj \
+        dotnet test \
           --configuration ${{ env.CONFIGURATION }} \
           --no-build \
           --verbosity normal \
