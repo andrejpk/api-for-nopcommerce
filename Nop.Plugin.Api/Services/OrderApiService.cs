@@ -34,7 +34,7 @@ namespace Nop.Plugin.Api.Services
         }
 
         public IList<Order> GetOrders(
-            IList<int> ids = null, DateTime? createdAtMin = null, DateTime? createdAtMax = null,
+            IList<int>? ids = null, DateTime? createdAtMin = null, DateTime? createdAtMax = null,
             int limit = Constants.Configurations.DefaultLimit, int page = Constants.Configurations.DefaultPageValue,
             int sinceId = Constants.Configurations.DefaultSinceId,
             OrderStatus? status = null, PaymentStatus? paymentStatus = null, ShippingStatus? shippingStatus = null, int? customerId = null,
@@ -70,7 +70,7 @@ namespace Nop.Plugin.Api.Services
 
         private IQueryable<Order> GetOrdersQuery(
             DateTime? createdAtMin = null, DateTime? createdAtMax = null, OrderStatus? status = null,
-            PaymentStatus? paymentStatus = null, ShippingStatus? shippingStatus = null, IList<int> ids = null,
+            PaymentStatus? paymentStatus = null, ShippingStatus? shippingStatus = null, IList<int>? ids = null,
             int? customerId = null, int? storeId = null) =>
             _orderRepository.Table
                 .Where(order => !order.Deleted)
@@ -158,7 +158,7 @@ namespace Nop.Plugin.Api.Services
             _ => order.Where(o => o.CustomerId == customerId)
         };
         
-        public static IQueryable<Order> WhereOrderIdIn(this IQueryable<Order> order, IList<int> orderIds) => orderIds switch
+        public static IQueryable<Order> WhereOrderIdIn(this IQueryable<Order> order, IList<int>? orderIds) => orderIds switch
         {
             null => order,
             _ => order.Where(o => orderIds.Contains(o.Id))
