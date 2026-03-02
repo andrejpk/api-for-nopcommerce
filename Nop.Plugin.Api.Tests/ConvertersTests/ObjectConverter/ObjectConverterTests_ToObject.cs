@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Nop.Plugin.Api.Converters;
+using Nop.Plugin.Api.Models.OrdersParameters;
 using Nop.Plugin.Api.Tests.ConvertersTests.ObjectConverter.DummyObjects;
 using NUnit.Framework;
 using NUnit.Framework.Legacy;
@@ -390,5 +391,29 @@ namespace Nop.Plugin.Api.Tests.ConvertersTests.ObjectConverter
             //Assert
             apiTypeConverterMock.AssertWasNotCalled(x => x.ToEnumNullable(Arg<string>.Is.Anything, Arg<Type>.Is.Anything));
         }
-    }   
+
+        [Test]
+        [TestCase("ids")]
+        [TestCase("Ids")]
+        public void WhenCollectionContainsIdsPropertyForOrdersModel_ShouldCallTheToListOfIntsMethod(string idsPropertyName)
+        {
+            //Arange
+            var expectedList = new List<int> { 1, 2, 3 };
+            IApiTypeConverter apiTypeConverterMock = MockRepository.GenerateMock<IApiTypeConverter>();
+            apiTypeConverterMock.Expect(x => x.ToListOfInts(Arg<string>.Is.Anything)).IgnoreArguments().Return(expectedList);
+
+            IObjectConverter objectConverter = new Converters.ObjectConverter(apiTypeConverterMock);
+
+            ICollection<KeyValuePair<string, string>> collection = new List<KeyValuePair<string, string>>()
+            {
+                new KeyValuePair<string, string>(idsPropertyName, "1,2,3")
+            };
+
+            //Act
+            objectConverter.ToObject<OrdersParametersModel>(collection);
+
+            //Assert
+            apiTypeConverterMock.VerifyAllExpectations();
+        }
+    }
 }
