@@ -85,29 +85,23 @@ namespace Nop.Plugin.Api.Services
                 .Distinct()
                 .OrderBy(order => order.Id);
 
-        public IList<Order> GetOrdersForProductId(int productId, 
-            DateTime? createdAtMin = null, DateTime? createdAtMax = null, 
-            OrderStatus? status = null, int? storeId = null
-            ) =>
+        public IList<Order> GetOrdersForProductId(int productId,
+            DateTime? createdAtMin = null, DateTime? createdAtMax = null) =>
             _orderRepository.Table
                 .Where(order => !order.Deleted)
                 .WhereCreatedAtMin(createdAtMin)
                 .WhereCreatedAtMax(createdAtMax)
-                .WhereOrderStatus(status)
-                .WhereStoreId(storeId)
                 .WhereHasProductId(productId, _orderItemRepository)
                 .Distinct()
                 .OrderBy(order => order.Id)
                 .ToApiList();
 
-        public IList<Order> GetOrdersForCategoryId(int categoryId, 
-            DateTime? createdAtMin = null, DateTime? createdAtMax = null, 
-            OrderStatus? status = null, int? storeId = null) =>
+        public IList<Order> GetOrdersForCategoryId(int categoryId,
+            DateTime? createdAtMin = null, DateTime? createdAtMax = null) =>
             _orderRepository.Table
+                .Where(order => !order.Deleted)
                 .WhereCreatedAtMin(createdAtMin)
                 .WhereCreatedAtMax(createdAtMax)
-                .WhereOrderStatus(status)
-                .WhereStoreId(storeId)
                 .WhereHasCategoryId(categoryId, _orderItemRepository, _productCategoryRepository)
                 .Distinct()
                 .OrderBy(order => order.Id)

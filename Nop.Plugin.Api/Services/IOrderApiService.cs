@@ -24,11 +24,9 @@ namespace Nop.Plugin.Api.Services
             int? customerId = null, int? storeId = null);
 
         public IList<Order> GetOrdersForProductId(int productId,
-            DateTime? createdAtMin = null, DateTime? createdAtMax = null,
-            OrderStatus? status = null, int? storeId = null);
+            DateTime? createdAtMin = null, DateTime? createdAtMax = null);
 
         public IList<Order> GetOrdersForCategoryId(int categoryId,
-            DateTime? createdAtMin = null, DateTime? createdAtMax = null,
-            OrderStatus? status = null, int? storeId = null);
+            DateTime? createdAtMin = null, DateTime? createdAtMax = null);
     }
 }

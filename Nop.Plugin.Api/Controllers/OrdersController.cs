@@ -273,11 +273,9 @@ namespace Nop.Plugin.Api.Controllers
         public async Task<IActionResult> GetOrdersByProductId(
             [FromRoute] int productId,
             [FromQuery] DateTime? createdAtMin = null,
-            [FromQuery] DateTime? createdAtMax = null,
-            [FromQuery] OrderStatus? status = null,
-            [FromQuery] int? storeId = null)
+            [FromQuery] DateTime? createdAtMax = null)
         {
-            IList<OrderDto> ordersForProduct = await _orderApiService.GetOrdersForProductId(productId, createdAtMin, createdAtMax, status, storeId)
+            IList<OrderDto> ordersForProduct = await _orderApiService.GetOrdersForProductId(productId, createdAtMin, createdAtMax)
                 .SelectAwait(async x => await _dtoHelper.PrepareOrderDTOAsync(x)).ToListAsync();
 
             var ordersRootObject = new OrdersRootObject { Orders = ordersForProduct };
@@ -299,11 +297,9 @@ namespace Nop.Plugin.Api.Controllers
         public async Task<IActionResult> GetOrdersByCategoryId(
             [FromRoute] int categoryId,
             [FromQuery] DateTime? createdAtMin = null,
-            [FromQuery] DateTime? createdAtMax = null,
-            [FromQuery] OrderStatus? status = null,
-            [FromQuery] int? storeId = null)
+            [FromQuery] DateTime? createdAtMax = null)
         {
-            IList<OrderDto> ordersForCategory = await _orderApiService.GetOrdersForCategoryId(categoryId, createdAtMin, createdAtMax, status, storeId)
+            IList<OrderDto> ordersForCategory = await _orderApiService.GetOrdersForCategoryId(categoryId, createdAtMin, createdAtMax)
                 .SelectAwait(async x => await _dtoHelper.PrepareOrderDTOAsync(x)).ToListAsync();
 
             var ordersRootObject = new OrdersRootObject { Orders = ordersForCategory };
