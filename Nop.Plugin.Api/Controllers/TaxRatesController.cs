@@ -121,7 +121,7 @@ namespace Nop.Plugin.Api.Controllers
         [GetRequestsErrorInterceptorActionFilter]
         public IActionResult GetTaxRatesCount([FromQuery] TaxRatesCountParametersModel parameters)
         {
-            var count = _taxRateApiService.GetTaxRatesCount(parameters.StoreId, parameters.TaxCategoryId,
+            var count = _taxRateApiService.GetTaxRatesCount(parameters.Ids, parameters.StoreId, parameters.TaxCategoryId,
                 parameters.CountryId, parameters.StateProvinceId, parameters.Zip);
 
             return Ok(new TaxRatesCountRootObject { Count = count });
@@ -318,7 +318,24 @@ namespace Nop.Plugin.Api.Controllers
                 return Error(HttpStatusCode.BadRequest, "tax_rates", "no tax rates provided");
             }
 
-            var existingByKey = batch.TaxRates.Any(x => x.Id <= 0)
+            for (var i = 0; i < batch.TaxRates.Count; i++)
+            {
+                if (batch.TaxRates[i] == null)
+                {
+                    ModelState.AddModelError($"tax_rates[{i}]", "item must be an object");
+                }
+                else if (batch.TaxRates[i].Id < 0)
+                {
+                    ModelState.AddModelError($"tax_rates[{i}].id", "invalid id");
+                }
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return Error();
+            }
+
+            var existingByKey = batch.TaxRates.Any(x => x.Id == 0)
                 ? await _taxRateApiService.GetTaxRatesByNaturalKeyAsync()
                 : new Dictionary<string, TaxRate>();
 
@@ -343,7 +360,16 @@ namespace Nop.Plugin.Api.Controllers
                         continue;
                     }
 
+                    var oldKey = NaturalKeyOf(taxRate);
                     ApplyDto(dto, taxRate);
+                    var newKey = NaturalKeyOf(taxRate);
+
+                    // keep the natural-key index in sync so later id-less items match this pending update
+                    if (oldKey != newKey && existingByKey.TryGetValue(oldKey, out var indexed) && ReferenceEquals(indexed, taxRate))
+                    {
+                        existingByKey.Remove(oldKey);
+                    }
+                    existingByKey.TryAdd(newKey, taxRate);
 
                     if (!toUpdate.Contains(taxRate))
                     {
@@ -358,8 +384,7 @@ namespace Nop.Plugin.Api.Controllers
                         continue;
                     }
 
-                    var key = _taxRateApiService.GetNaturalKey(candidate.StoreId, candidate.TaxCategoryId, candidate.CountryId,
-                        candidate.StateProvinceId, candidate.Zip);
+                    var key = NaturalKeyOf(candidate);
 
                     if (existingByKey.TryGetValue(key, out taxRate))
                     {
@@ -448,6 +473,12 @@ namespace Nop.Plugin.Api.Controllers
         }
 
         #region Helpers
+
+        private string NaturalKeyOf(TaxRate taxRate)
+        {
+            return _taxRateApiService.GetNaturalKey(taxRate.StoreId, taxRate.TaxCategoryId, taxRate.CountryId,
+                taxRate.StateProvinceId, taxRate.Zip);
+        }
 
         /// <summary>
         ///     Builds a new entity from a dto. Adds model errors (with the given key prefix) and returns null

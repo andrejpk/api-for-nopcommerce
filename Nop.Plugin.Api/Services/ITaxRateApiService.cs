@@ -17,6 +17,7 @@ namespace Nop.Plugin.Api.Services
             int sinceId = Constants.Configurations.DefaultSinceId);
 
         int GetTaxRatesCount(
+            IList<int> ids = null,
             int? storeId = null,
             int? taxCategoryId = null,
             int? countryId = null,

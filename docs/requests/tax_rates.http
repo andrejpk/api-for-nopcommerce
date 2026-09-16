@@ -3,6 +3,7 @@
 
 ### Get tax rates (paged, filterable)
 GET {{host}}/api/tax_rates?country_id=1&limit=50&page=1
+# also: ?ids=1,2,3  ?store_id=0  ?tax_category_id=1  ?state_province_id=40  ?zip=90210  ?since_id=100
 Authorization: Bearer {{auth_token}}
 
 ### Count tax rates

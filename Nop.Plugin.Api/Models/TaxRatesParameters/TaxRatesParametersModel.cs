@@ -1,8 +1,12 @@
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Nop.Plugin.Api.Infrastructure;
+using Nop.Plugin.Api.ModelBinders;
 
 namespace Nop.Plugin.Api.Models.TaxRatesParameters
 {
+    // JsonProperty is used only for swagger; ParametersModelBinder maps snake_case query keys to properties
+    [ModelBinder(typeof(ParametersModelBinder<TaxRatesParametersModel>))]
     public class TaxRatesParametersModel
     {
         public TaxRatesParametersModel()

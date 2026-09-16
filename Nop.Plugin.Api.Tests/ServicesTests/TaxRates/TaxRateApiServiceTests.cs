@@ -105,6 +105,7 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.TaxRates
         {
             Assert.That(_service.GetTaxRatesCount(), Is.EqualTo(4));
             Assert.That(_service.GetTaxRatesCount(taxCategoryId: 1), Is.EqualTo(3));
+            Assert.That(_service.GetTaxRatesCount(ids: new List<int> { 1, 4, 99 }), Is.EqualTo(2));
         }
 
         [Test]

@@ -42,13 +42,14 @@ namespace Nop.Plugin.Api.Services
         }
 
         public int GetTaxRatesCount(
+            IList<int> ids = null,
             int? storeId = null,
             int? taxCategoryId = null,
             int? countryId = null,
             int? stateProvinceId = null,
             string zip = null)
         {
-            return GetTaxRatesQuery(null, storeId, taxCategoryId, countryId, stateProvinceId, zip).Count();
+            return GetTaxRatesQuery(ids, storeId, taxCategoryId, countryId, stateProvinceId, zip).Count();
         }
 
         public Task<TaxRate> GetTaxRateByIdAsync(int id)

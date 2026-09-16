@@ -50,7 +50,7 @@ Retrieve tax rates, ordered by id.
 
 | GET | /api/tax_rates |
 |:---|:---|
-| ids | Restrict results to these ids (`?ids=1&ids=2`) |
+| ids | Comma-separated list of ids to restrict results to (`?ids=1,2,3`) |
 | store_id | Only rates for this store (`0` = rates for all stores) |
 | tax_category_id | Only rates for this tax category |
 | country_id | Only rates for this country |
@@ -82,7 +82,7 @@ HTTP/1.1 200 OK
 </p></details>
 
 ## GET /api/tax_rates/count
-Count tax rates. Accepts the same filters as the list endpoint (except paging).
+Count tax rates. Accepts the same filters as the list endpoint (`ids`, `store_id`, `tax_category_id`, `country_id`, `state_province_id`, `zip`).
 
 ```json
 { "count": 1234 }
