@@ -75,6 +75,23 @@ namespace Nop.Plugin.Api.Tests.ServicesTests.TaxRates
         }
 
         [Test]
+        public void GetTaxRates_EmptyZipFilterMatchesNullAndEmpty()
+        {
+            var result = _service.GetTaxRates(zip: "");
+
+            Assert.That(result.Select(x => x.Id), Is.EqualTo(new[] { 1, 2, 4 }));
+        }
+
+        [Test]
+        public async Task GetTaxRatesByNaturalKeyAsync_RestrictsToCountries()
+        {
+            var index = await _service.GetTaxRatesByNaturalKeyAsync(new[] { 3 });
+
+            Assert.That(index.Count, Is.EqualTo(1));
+            Assert.That(index.Values.Single().Id, Is.EqualTo(4));
+        }
+
+        [Test]
         public void GetTaxRates_ZipFilterIsTrimmed()
         {
             var result = _service.GetTaxRates(zip: " 90210 ");

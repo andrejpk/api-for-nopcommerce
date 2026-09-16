@@ -72,10 +72,20 @@ namespace Nop.Plugin.Api.Services
             return await _taxRateRepository.GetByIdsAsync(ids);
         }
 
-        public async Task<IDictionary<string, TaxRate>> GetTaxRatesByNaturalKeyAsync()
+        public async Task<IDictionary<string, TaxRate>> GetTaxRatesByNaturalKeyAsync(IEnumerable<int> countryIds = null)
         {
+            var countryIdList = countryIds?.Distinct().ToList();
+
             // getCacheKey: null => bypass the repository cache so we always match against current rows
-            var all = await _taxRateRepository.GetAllAsync(query => query.OrderBy(tr => tr.Id), getCacheKey: null);
+            var all = await _taxRateRepository.GetAllAsync(query =>
+            {
+                if (countryIdList != null)
+                {
+                    query = query.Where(tr => countryIdList.Contains(tr.CountryId));
+                }
+
+                return query.OrderBy(tr => tr.Id);
+            }, getCacheKey: null);
 
             var result = new Dictionary<string, TaxRate>(StringComparer.Ordinal);
             foreach (var taxRate in all)
@@ -194,7 +204,10 @@ namespace Nop.Plugin.Api.Services
             if (zip != null)
             {
                 var normalizedZip = NormalizeZip(zip);
-                query = query.Where(tr => tr.Zip == normalizedZip);
+                // an empty zip means "all zips"; rows written by the tax plugin may store that as NULL
+                query = normalizedZip.Length == 0
+                    ? query.Where(tr => tr.Zip == null || tr.Zip == string.Empty)
+                    : query.Where(tr => tr.Zip == normalizedZip);
             }
 
             if (sinceId > 0)

@@ -29,10 +29,11 @@ namespace Nop.Plugin.Api.Services
         Task<IList<TaxRate>> GetTaxRatesByIdsAsync(IList<int> ids);
 
         /// <summary>
-        /// Returns all tax rates, keyed by their natural key
-        /// (store, tax category, country, state/province, zip). Used for upsert matching.
+        /// Returns tax rates keyed by their natural key (store, tax category, country, state/province, zip).
+        /// Used for upsert matching. When <paramref name="countryIds"/> is given only rates for those
+        /// countries are loaded; otherwise the whole table is indexed.
         /// </summary>
-        Task<IDictionary<string, TaxRate>> GetTaxRatesByNaturalKeyAsync();
+        Task<IDictionary<string, TaxRate>> GetTaxRatesByNaturalKeyAsync(IEnumerable<int> countryIds = null);
 
         string GetNaturalKey(int storeId, int taxCategoryId, int countryId, int stateProvinceId, string zip);
 

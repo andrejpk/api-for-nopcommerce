@@ -335,12 +335,23 @@ namespace Nop.Plugin.Api.Controllers
                 return Error();
             }
 
-            var existingByKey = batch.TaxRates.Any(x => x.Id == 0)
-                ? await _taxRateApiService.GetTaxRatesByNaturalKeyAsync()
-                : new Dictionary<string, TaxRate>();
-
             var requestedIds = batch.TaxRates.Where(x => x.Id > 0).Select(x => x.Id).Distinct().ToList();
             var existingById = (await _taxRateApiService.GetTaxRatesByIdsAsync(requestedIds)).ToDictionary(x => x.Id);
+
+            // only load candidate rows for the countries referenced by id-less items
+            var idLessCountryIds = batch.TaxRates.Where(x => x.Id == 0 && x.CountryId.HasValue).Select(x => x.CountryId.Value).Distinct().ToList();
+            var existingByKey = idLessCountryIds.Count > 0
+                ? await _taxRateApiService.GetTaxRatesByNaturalKeyAsync(idLessCountryIds)
+                : new Dictionary<string, TaxRate>();
+
+            // the two lookups are separate queries, so make the index point at the same instances we update by id
+            foreach (var key in existingByKey.Keys.ToList())
+            {
+                if (existingById.TryGetValue(existingByKey[key].Id, out var sameRow))
+                {
+                    existingByKey[key] = sameRow;
+                }
+            }
 
             var toInsert = new List<TaxRate>();
             var toUpdate = new List<TaxRate>();
@@ -365,11 +376,11 @@ namespace Nop.Plugin.Api.Controllers
                     var newKey = NaturalKeyOf(taxRate);
 
                     // keep the natural-key index in sync so later id-less items match this pending update
-                    if (oldKey != newKey && existingByKey.TryGetValue(oldKey, out var indexed) && ReferenceEquals(indexed, taxRate))
+                    if (oldKey != newKey && existingByKey.TryGetValue(oldKey, out var indexed) && indexed.Id == taxRate.Id)
                     {
                         existingByKey.Remove(oldKey);
                     }
-                    existingByKey.TryAdd(newKey, taxRate);
+                    existingByKey[newKey] = taxRate;
 
                     if (!toUpdate.Contains(taxRate))
                     {
