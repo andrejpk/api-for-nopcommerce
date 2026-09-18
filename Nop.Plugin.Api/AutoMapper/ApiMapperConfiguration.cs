@@ -36,6 +36,7 @@ using Nop.Plugin.Api.DTOs.GiftCards;
 using Nop.Plugin.Api.DTOs.ShipmentItems;
 using Nop.Plugin.Api.DTOs.StateProvinces;
 using Nop.Plugin.Api.DTOs.Taxes;
+using Nop.Plugin.Api.DTOs.TaxRates;
 using Nop.Plugin.Api.DTOs.Topics;
 using Nop.Plugin.Api.MappingExtensions;
 
@@ -106,6 +107,8 @@ namespace Nop.Plugin.Api.AutoMapper
             CreateMap<Currency, CurrencyDto>();
 
             CreateMap<TaxCategory, TaxCategoryDto>();
+
+            CreateMap<TaxRate, TaxRateDto>();
         }
 
         public int Order => 0;

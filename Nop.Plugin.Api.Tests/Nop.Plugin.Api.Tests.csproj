@@ -33,6 +33,7 @@
 	<ItemGroup>
 	  <!-- Exclude tests that need API signature updates -->
 	  <Compile Remove="ControllersTests/**/*.cs" />
+	  <Compile Include="ControllersTests/TaxRates/**/*.cs" />
 	  <Compile Remove="ModelBinderTests/**/*.cs" />
 	  <Compile Remove="ConvertersTests/**/*.cs" />
 
