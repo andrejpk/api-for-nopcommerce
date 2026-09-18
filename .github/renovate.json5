@@ -1,0 +1,47 @@
+{
+  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
+  extends: [
+    'config:recommended',
+    // Conventional commits so semantic-release picks up dependency fixes.
+    ':semanticCommits',
+    'schedule:weekly',
+    // One weekly PR for all minor/patch updates.
+    'group:allNonMajor',
+    // Majors stay on the Dependency Dashboard until approved, then get their own PR.
+    ':approveMajorUpdates',
+    'group:githubArtifactActions',
+    ':maintainLockFilesMonthly',
+  ],
+  labels: ['dependencies'],
+  // Covers NuGet advisories, which GitHub's alerts alone don't feed into Renovate.
+  osvVulnerabilityAlerts: true,
+
+  packageRules: [
+    {
+      description: 'Not built by CI, so updates there cannot be verified',
+      matchFileNames: [
+        'ClientApp/**',
+        'ApiBindingsGenerator/**',
+        'Dockerfile',
+      ],
+      enabled: false,
+    },
+
+    // The plugin is loaded into the nopCommerce 4.90 host (net9.0) and shares its
+    // assemblies, so don't offer versions the host can't load.
+    {
+      // Also suppresses vulnerability alerts: the fix (15.1.1+) needs a nopCommerce upgrade.
+      description: 'AutoMapper must match the nopCommerce host (14.0.0); 15+ is commercially licensed',
+      matchPackageNames: ['AutoMapper'],
+      enabled: false,
+    },
+    {
+      description: 'Plugin targets net9.0; ASP.NET Core / Extensions 10+ require net10.0',
+      matchPackageNames: [
+        'Microsoft.AspNetCore.**',
+        'Microsoft.Extensions.**',
+      ],
+      allowedVersions: '<10',
+    },
+  ],
+}
