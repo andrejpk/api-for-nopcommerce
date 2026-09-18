@@ -11,7 +11,7 @@ namespace Nop.Plugin.Api.Services
         IList<Order> GetOrdersByCustomerId(int customerId);
 
         IList<Order> GetOrders(
-            ISet<int>? ids = null, DateTime? createdAtMin = null, DateTime? createdAtMax = null,
+            IList<int>? ids = null, DateTime? createdAtMin = null, DateTime? createdAtMax = null,
             int limit = Constants.Configurations.DefaultLimit, int page = Constants.Configurations.DefaultPageValue,
             int sinceId = Constants.Configurations.DefaultSinceId, OrderStatus? status = null, PaymentStatus? paymentStatus = null,
             ShippingStatus? shippingStatus = null, int? customerId = null, int? storeId = null);
@@ -24,11 +24,9 @@ namespace Nop.Plugin.Api.Services
             int? customerId = null, int? storeId = null);
 
         public IList<Order> GetOrdersForProductId(int productId,
-            DateTime? createdAtMin = null, DateTime? createdAtMax = null,
-            OrderStatus? status = null, int? storeId = null);
+            DateTime? createdAtMin = null, DateTime? createdAtMax = null);
 
         public IList<Order> GetOrdersForCategoryId(int categoryId,
-            DateTime? createdAtMin = null, DateTime? createdAtMax = null,
-            OrderStatus? status = null, int? storeId = null);
+            DateTime? createdAtMin = null, DateTime? createdAtMax = null);
     }
 }

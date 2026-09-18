@@ -1,0 +1,72 @@
+# Country/state/zip tax rates (requires the "Manual (Fixed or By Country/State/Zip)" tax plugin to be installed)
+# import authn.http
+
+### Get tax rates (paged, filterable)
+GET {{host}}/api/tax_rates?country_id=1&limit=50&page=1
+# also: ?ids=1,2,3  ?store_id=0  ?tax_category_id=1  ?state_province_id=40  ?zip=90210  ?since_id=100
+Authorization: Bearer {{auth_token}}
+
+### Count tax rates
+GET {{host}}/api/tax_rates/count?country_id=1
+Authorization: Bearer {{auth_token}}
+
+### Create a single tax rate
+POST {{host}}/api/tax_rates
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json-patch+json
+
+{
+  "tax_rate": {
+    "store_id": 0,
+    "tax_category_id": 1,
+    "country_id": 1,
+    "state_province_id": 0,
+    "zip": "",
+    "percentage": 7.25
+  }
+}
+
+> {% client.global.set("taxRateId", response.body.tax_rates[0].id); %}
+
+### Get a single tax rate
+GET {{host}}/api/tax_rates/{{taxRateId}}
+Authorization: Bearer {{auth_token}}
+
+### Update a single tax rate (only the fields provided are changed)
+PUT {{host}}/api/tax_rates/{{taxRateId}}
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json-patch+json
+
+{
+  "tax_rate": {
+    "percentage": 8.0
+  }
+}
+
+### Bulk upsert tax rates
+# Items with "id" update that row. Items without "id" are matched on
+# store_id + tax_category_id + country_id + state_province_id + zip and updated if found, otherwise created.
+POST {{host}}/api/tax_rates/batch
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "tax_rates": [
+    { "tax_category_id": 1, "country_id": 1, "state_province_id": 0, "zip": "", "percentage": 6.0 },
+    { "tax_category_id": 1, "country_id": 1, "state_province_id": 40, "zip": "90210", "percentage": 9.5 },
+    { "id": {{taxRateId}}, "percentage": 7.5 }
+  ]
+}
+
+### Bulk delete tax rates
+POST {{host}}/api/tax_rates/batch_delete
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "ids": [{{taxRateId}}, 99999]
+}
+
+### Delete a single tax rate
+DELETE {{host}}/api/tax_rates/{{taxRateId}}
+Authorization: Bearer {{auth_token}}

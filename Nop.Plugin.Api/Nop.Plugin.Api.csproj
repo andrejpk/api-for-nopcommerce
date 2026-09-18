@@ -43,6 +43,13 @@
 
 
   <ItemGroup>
+    <!-- AutoMapper must stay at 14.0.0 to match nopCommerce 4.90 (Nop.Core pins it and the runtime loads nop's copy, so
+         the plugin cannot upgrade independently). GHSA-rvv3-g6hj-g44x (DoS via uncontrolled recursion in mapping)
+         otherwise fails the Release build via NU1903 + TreatWarningsAsErrors. Remove once nopCommerce moves to >= 15.1.1. -->
+    <NuGetAuditSuppress Include="https://github.com/advisories/GHSA-rvv3-g6hj-g44x" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="14.0.0" />
     <PackageReference Include="JetBrains.Annotations" Version="2024.3.0" />
     <!-- Use JwtBearer 8.x to align with nopCommerce's IdentityModel 7.x dependencies -->
